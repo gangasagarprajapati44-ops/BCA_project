@@ -20,32 +20,34 @@
         <!-- 🔊 साउंड सिस्टम बटन -->
         <button onclick="speakTopic()">🔊 Listen Explanation (Hindi)</button>
         
-        <!-- थ्योरी जो स्क्रीन पर दिखेगी और सुनाई देगी -->
+        <!-- आसान थ्योरी जो स्क्रीन पर दिखेगी और सुनाई देगी -->
         <p class="theory" id="theory-text">
             RAM का मतलब Random Access Memory है। यह कंप्यूटर की मुख्य मेमोरी होती है जो बहुत तेज़ होती है। जब आप कंप्यूटर पर कोई काम करते हैं, तो वह डेटा अस्थायी रूप से RAM में स्टोर होता है। कंप्यूटर बंद होने पर RAM का सारा डेटा डिलीट हो जाता है। 
             दूसरी तरफ, ROM का मतलब Read Only Memory है। यह एक स्थायी मेमोरी है। इसमें कंप्यूटर को चालू करने के लिए ज़रूरी निर्देश पहले से लिखे होते हैं। कंप्यूटर बंद होने पर भी ROM का डेटा डिलीट नहीं होता है।
         </p>
 
-        <!-- 📐 3D मॉडल डिस्प्ले एरिया -->
+        <!-- 📐 3D मॉडल डिस्प्ले एरिया (इंटरैक्टिव) -->
         <div class="container3d">
-            <!-- 3D लोड करने वाला टूल (इसे स्क्रिप्ट कहते हैं) -->
+            <!-- Spline Viewer टूल स्क्रिप्ट -->
             <script type="module" src="https://unpkg.com"></script>
             
-            <!-- आपका असली 3D रैम मॉडल लिंक -->
-            <spline-viewer url="<script type="module" src="https://cdn.spline.design/@splinetool/viewer@2.0.82/build/spline-viewer.webgpu.js"></script>
-<spline-viewer url="https://prod.spline.design/dqwwLWx5h1xcgWm3/scene.splinecode"></spline-viewer>"></spline-viewer>
+            <!-- नीचे दिए गए url में आप अपना खुद का Spline 3D लिंक भी डाल सकते हैं -->
+            <spline-viewer url="https://prod.spline.design/dqwwLWx5h1xcgWm3/scene.splinecode"></spline-viewer>
         </div>
     </div>
 
     <script>
         function speakTopic() {
+            // पुराने चल रहे ऑडियो को रोकना ताकि आवाज़ गूंजे नहीं
             window.speechSynthesis.cancel();
+            
             const text = document.getElementById('theory-text').innerText;
             const speech = new SpeechSynthesisUtterance(text);
-            speech.lang = 'hi-IN'; 
-            speech.rate = 0.95;    
+            speech.lang = 'hi-IN'; // शुद्ध भारतीय आवाज के लिए
+            speech.rate = 0.95;    // समझने में आसान स्पीड
             window.speechSynthesis.speak(speech);
         }
     </script>
 </body>
 </html>
+
