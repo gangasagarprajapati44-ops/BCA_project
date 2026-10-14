@@ -12,8 +12,9 @@
         .container3d { width: 100%; height: 450px; background: transparent; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; }
         model-viewer { width: 100%; height: 100%; background-color: transparent; }
     </style>
-    <!-- Google Model Viewer का मुख्य टूल स्क्रिप्ट -->
-    <script type="module" src="https://googleapis.com"></script>
+    
+    <!-- ✅ यहाँ सही Model Viewer Script जोड़ी गई है -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
@@ -29,18 +30,17 @@
 
         <!-- 📐 3D मॉडल डिस्प्ले एरिया -->
         <div class="container3d">
-           <model-viewer src="random_access_memory.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" poster="poster.webp" shadow-intensity="1">
-    <div class="progress-bar hide" slot="progress-bar">
-        <div class="update-bar"></div>
-    </div>
-    <button slot="ar-button" id="ar-button">
-        View in your space
-    </button>
-    <div id="ar-prompt">
-        <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
-    </div>
-</model-viewer>
-
+            <model-viewer src="random_access_memory.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" shadow-intensity="1">
+                <div class="progress-bar hide" slot="progress-bar">
+                    <div class="update-bar"></div>
+                </div>
+                <button slot="ar-button" id="ar-button">
+                    View in your space
+                </button>
+                <div id="ar-prompt">
+                    <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
+                </div>
+            </model-viewer>
         </div>
     </div>
 
@@ -56,4 +56,3 @@
     </script>
 </body>
 </html>
-
