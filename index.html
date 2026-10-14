@@ -20,17 +20,19 @@
         <!-- 🔊 साउंड सिस्टम बटन -->
         <button onclick="speakTopic()">🔊 Listen Explanation (Hindi)</button>
         
-        <!-- आसान थ्योरी जो स्क्रीन पर दिखेगी और सुनाई देगी -->
+        <!-- थ्योरी जो स्क्रीन पर दिखेगी और सुनाई देगी -->
         <p class="theory" id="theory-text">
             RAM का मतलब Random Access Memory है। यह कंप्यूटर की मुख्य मेमोरी होती है जो बहुत तेज़ होती है। जब आप कंप्यूटर पर कोई काम करते हैं, तो वह डेटा अस्थायी रूप से RAM में स्टोर होता है। कंप्यूटर बंद होने पर RAM का सारा डेटा डिलीट हो जाता है। 
             दूसरी तरफ, ROM का मतलब Read Only Memory है। यह एक स्थायी मेमोरी है। इसमें कंप्यूटर को चालू करने के लिए ज़रूरी निर्देश पहले से लिखे होते हैं। कंप्यूटर बंद होने पर भी ROM का डेटा डिलीट नहीं होता है।
         </p>
 
-        <!-- 📐 3D मॉडल डिस्प्लेエリア (इन्टरैक्टिव) -->
+        <!-- 📐 3D मॉडल डिस्प्ले एरिया -->
         <div class="container3d">
-            <!-- Spline Viewer टूल स्क्रिप्ट -->
+            <!-- 3D लोड करने वाला टूल (इसे स्क्रिप्ट कहते हैं) -->
             <script type="module" src="https://unpkg.com"></script>
-            <spline-viewer url="https://prod.spline.design/dqwwLWx5h1xcgWm3/scene.splinecode"></spline-viewer>
+            
+            <!-- आपका असली 3D रैम मॉडल लिंक -->
+            <spline-viewer url="https://spline.design"></spline-viewer>
         </div>
     </div>
 
