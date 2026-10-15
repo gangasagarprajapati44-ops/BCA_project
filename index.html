@@ -2,43 +2,48 @@
 <html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <title>BCA 3D Learning Platform - RAM vs ROM</title>
+    <title>BCA 3D Learning Platform - RAM vs ROM Master Module</title>
     <style>
-        body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; display: flex; justify-content: center; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 850px; width: 100%; margin-bottom: 20px; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; background: #f4f4f9; display: flex; justify-content: center; color: #333; }
+        .platform-container { max-width: 900px; width: 100%; display: flex; flex-direction: column; gap: 20px; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); }
         
-        .nav-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
-        .nav-btn { background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-size: 15px; font-weight: bold; transition: 0.3s; }
-        .nav-btn.active { background: #007bff; }
+        .nav-buttons { display: flex; gap: 15px; margin-bottom: 20px; }
+        .nav-btn { background: #6c757d; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; transition: 0.3s; }
+        .nav-btn.active { background: #007bff; box-shadow: 0 4px 8px rgba(0,123,255,0.3); }
 
         button.audio-btn { background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
         button.audio-btn:hover { background: #218838; transform: translateY(-2px); }
         
-        /* Highlight & Content Box Styling */
-        .section-box { margin-bottom: 20px; padding: 15px 20px; background: #f8f9fa; border-radius: 8px; border-left: 5px solid #007bff; }
+        .section-box { margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 10px; border-left: 6px solid #007bff; line-height: 1.8; font-size: 17px; }
         .highlight { background-color: #e8f0fe; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #007bff; }
         .example-box { border-left-color: #28a745; background-color: #f4faf5; }
-        
-        .container3d { width: 100%; height: 400px; background: transparent; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; margin-bottom: 25px; }
-        model-viewer { width: 100%; height: 100%; }
+        .diagram-box { border-left-color: #ffc107; background-color: #fffdf5; }
+        .video-box { border-left-color: #dc3545; background-color: #fff5f5; text-align: center; }
 
-        /* Q&A / MCQ Styling */
-        .qa-card { background: #fff; border: 1px solid #e1e4e8; padding: 15px; border-radius: 8px; margin-top: 10px; }
-        .ans-toggle { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-top: 8px; }
-        .hidden-ans { display: none; margin-top: 10px; padding: 10px; background: #e6ffed; border-radius: 5px; color: #155724; }
+        .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        @media(max-width: 768px) { .media-grid { grid-template-columns: 1fr; } }
         
-        .mcq-option { display: block; margin: 8px 0; padding: 8px; background: #f1f3f5; border-radius: 5px; cursor: pointer; width: 100%; text-align: left; border: 1px solid #ccc; }
+        .container3d, .diagram-container { width: 100%; height: 400px; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; position: relative; }
+        model-viewer { width: 100%; height: 100%; }
+        .diagram-container img { width: 100%; height: 100%; object-fit: cover; }
+
+        /* Q&A & MCQ Styling */
+        .qa-card { background: #fff; border: 1px solid #e1e4e8; padding: 20px; border-radius: 10px; margin-bottom: 15px; }
+        .ans-toggle { background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+        .hidden-ans { display: none; margin-top: 15px; padding: 15px; background: #e6ffed; border-left: 4px solid #28a745; border-radius: 6px; line-height: 1.7; color: #155724; }
+        
+        .mcq-option { display: block; margin: 8px 0; padding: 10px 15px; background: #f1f3f5; border-radius: 6px; cursor: pointer; width: 100%; text-align: left; border: 1px solid #ccc; font-size: 15px; transition: 0.2s; }
         .mcq-option:hover { background: #e2e6ea; }
         
-        /* Activity Box */
-        .activity-card { background: #fff8dc; border: 1px dashed #f0ad4e; padding: 15px; border-radius: 8px; }
+        .activity-card { background: #fff8dc; border: 1px dashed #f0ad4e; padding: 20px; border-radius: 10px; }
     </style>
 
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <div style="max-width: 850px; width: 100%;">
+    <div class="platform-container">
         
         <div class="card">
             <h2 id="topic-title">Topic: RAM Fundamentals (BCA Semester 1)</h2>
@@ -52,58 +57,94 @@
             <!-- Audio Button -->
             <button class="audio-btn" onclick="speakTopic()">🔊 Listen Explanation (English)</button>
 
-            <!-- 1. Simple Definition & Highlights -->
+            <!-- 1. Detailed Definition (Half Page Style) -->
             <div class="section-box">
-                <h3>1. Definition</h3>
+                <h3>1. Comprehensive Definition (BCA Standard)</h3>
                 <p id="theory-text">
-                    <span class="highlight">RAM (Random Access Memory)</span> is the main <span class="highlight">volatile memory</span> of a computer system. It temporarily holds data and running application instructions for quick CPU access. All data is lost when power turns off.
+                    <span class="highlight">RAM (Random Access Memory)</span> is a primary volatile semiconductor memory utilized in computer systems to temporarily store data, operating system files, and active software applications currently being executed by the CPU. Because RAM features <span class="highlight">matrix-based addressing</span>, the processor can read from or write to any storage location directly in equal time periods, irrespective of its physical location (hence "Random Access"). However, it is <span class="highlight">volatile</span>, meaning all stored electrons/data cells dissipate instantly when electrical power is cut off or a system reboot occurs. It acts as the high-speed bridge between the fast CPU and slower secondary storage devices like SSDs or HDDs.
                 </p>
             </div>
 
-            <!-- 2. Real Life Example -->
+            <!-- 2. Detailed Real-Life Example -->
             <div class="section-box example-box">
-                <h3>2. Real-Life Example 💡</h3>
+                <h3>2. Real-Life Analogy & Practical Context 💡</h3>
                 <p id="example-text">
-                    Think of RAM like your <b>study desk</b>. You keep books on it that you are currently reading for fast access. When you finish studying (power off), you clear the desk.
+                    Imagine you are an office worker sitting at a large <b>office desk</b>. The desk represents your <b>RAM</b>. Files and folders that you are working on right now are placed on top of the desk for instant reach and fast editing. If you need a file from the heavy storage cabinet (Hard Disk), you bring it to your desk. But at the end of the day, when you leave the office and clean the desk completely (Power Off), everything on the desk is cleared out. Your permanent records stay safely in the cabinet, just like a hard drive.
                 </p>
             </div>
 
-            <!-- 3. 3D Model Display -->
-            <h3>3. Interactive 3D Model</h3>
-            <div class="container3d">
-                <model-viewer id="modelViewer" src="random_access_memory.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" shadow-intensity="1">
-                </model-viewer>
+            <!-- 3 & 4. 3D Model & Labeled Diagram Grid -->
+            <h3>3 & 4. Interactive 3D Model & Architecture Diagram</h3>
+            <div class="media-grid">
+                <!-- 3D Model View -->
+                <div class="container3d">
+                    <model-viewer id="modelViewer" src="random_access_memory.glb" ar camera-controls tone-mapping="neutral" shadow-intensity="1">
+                    </model-viewer>
+                </div>
+                <!-- Diagram with Parts Name -->
+                <div class="diagram-container">
+                    <div id="diagram-content" style="text-align: center; padding: 20px;">
+                        <p><b>RAM Architecture & Pin Configuration</b></p>
+                        <small style="color: #666;">Parts: Memory Cell Matrix, Sense Amplifiers, Row/Column Decoders, Data Bus Buffers, Control Pins (RAS, CAS, WE)</small>
+                    </div>
+                </div>
             </div>
 
-            <!-- 4. Labeled Diagram Placeholder -->
-            <div class="section-box" style="border-left-color: #6f42c1;">
-                <h3>4. Diagram & Architecture</h3>
-                <p><b>Internal Block Layout:</b> Memory Cells Array, Address Bus, Data Bus, Read/Write Control Line.</p>
+            <!-- Fun Video / Cartoon Visualization Container -->
+            <div class="section-box video-box">
+                <h3>🎮 Fun Cartoon Animation & Visualization</h3>
+                <p id="video-desc" style="font-size: 15px; color: #555;">
+                    Visualize data packets rushing into memory slots like high-speed racing cars entering docking stations! 
+                </p>
+                <div style="background: #333; color: white; padding: 40px; border-radius: 8px; margin-top: 10px; font-weight: bold;">
+                    ▶️ [ Interactive Animation Player: Data Traffic inside RAM Bus ]
+                </div>
             </div>
 
-            <!-- 8. Interactive MCQ -->
-            <h3>8. Quick Check (MCQ)</h3>
+            <!-- 8. 10 MCQs Section -->
+            <h3 style="margin-top: 30px;">8. Multiple Choice Questions (10 MCQs)</h3>
+            <div id="mcq-container">
+                <!-- Dynamically populated via script -->
+            </div>
+
+            <!-- 9. Short & Long Questions (Detailed Answers) -->
+            <h3 style="margin-top: 30px;">9. Descriptive Exam Questions & Detailed Answers</h3>
+            
+            <!-- Short Question 1 -->
             <div class="qa-card">
-                <p><b>Q: What happens to data in RAM when power goes off?</b></p>
-                <button class="mcq-option" onclick="checkMCQ(this, false)">A) Saved permanently</button>
-                <button class="mcq-option" onclick="checkMCQ(this, true)">B) It gets erased completely</button>
-                <p id="mcq-result" style="font-weight: bold; margin-top: 5px;"></p>
-            </div>
-
-            <!-- 9. Short Question (Answer View On-Click) -->
-            <h3 style="margin-top: 25px;">9. Exam Questions</h3>
-            <div class="qa-card">
-                <p><b>Q1: Difference between Volatile and Non-Volatile Memory?</b></p>
-                <button class="ans-toggle" onclick="toggleAns('ans1')">👁️ Click to See Answer</button>
+                <p><b>Q1 (Short): What is the primary functional difference between SRAM and DRAM?</b></p>
+                <button class="ans-toggle" onclick="toggleAns('ans1')">👁️ View Detailed Answer</button>
                 <div id="ans1" class="hidden-ans">
-                    <b>Answer:</b> Volatile memory (like RAM) loses data without electricity. Non-volatile memory (like ROM) retains data permanently even without power.
+                    <b>Answer:</b> SRAM (Static RAM) uses flip-flops consisting of 4-6 transistors per memory cell and does not require periodic refreshing, making it extremely fast but expensive (used in CPU Cache). DRAM (Dynamic RAM) uses a combination of a transistor and a capacitor per cell. Because capacitors leak charge, DRAM cells must be refreshed thousands of times per second, making it slower and cheaper (used as main system memory).
+                </div>
+            </div>
+
+            <!-- Short Question 2 -->
+            <div class="qa-card">
+                <p><b>Q2 (Short): Why is RAM considered a "volatile" form of memory?</b></p>
+                <button class="ans-toggle" onclick="toggleAns('ans2')">👁️ View Detailed Answer</button>
+                <div id="ans2" class="hidden-ans">
+                    <b>Answer:</b> RAM is termed volatile because its storage mechanism relies on continuous electric current passing through microscopic capacitors and transistors. When the system power is interrupted or turned off, the electric charge vanishes completely, leading to the permanent loss of all temporary data residing inside those memory addresses.
+                </div>
+            </div>
+
+            <!-- Long Question 1 -->
+            <div class="qa-card" style="border-left: 5px solid #dc3545;">
+                <p><b>Q3 (Long - BCA Level): Explain the complete architectural working of memory hierarchy in a modern computer system, highlighting the role of RAM.</b></p>
+                <button class="ans-toggle" onclick="toggleAns('ans3')" style="background: #dc3545;">👁️ View Comprehensive Long Answer</button>
+                <div id="ans3" class="hidden-ans">
+                    <b>Comprehensive Answer:</b><br>
+                    1. <b>Introduction to Memory Hierarchy:</b> Computer memory is organized hierarchically to balance speed, capacity, and cost. At the top of the hierarchy are CPU registers and L1/L2/L3 Caches (extremely fast, low capacity, expensive), followed by Main Memory (RAM), and secondary storage at the base.<br>
+                    2. <b>Role of RAM in the Hierarchy:</b> RAM sits directly between the processor cache and secondary storage (SSD/HDD). When an application is launched, its executable code and required datasets are fetched from secondary storage and loaded into RAM. <br>
+                    3. <b>Execution Cycle:</b> The CPU cannot execute instructions directly from a hard drive due to speed bottlenecks. Instead, the CPU fetches instructions from RAM via the system bus (Address Bus and Data Bus). RAM provides rapid nanosecond-level access times.<br>
+                    4. <b>Conclusion:</b> Without sufficient RAM, the system experiences frequent page faults and swapping (Virtual Memory bottleneck), drastically degrading overall computational throughput.
                 </div>
             </div>
 
             <!-- 10. Practical Activity -->
-            <h3 style="margin-top: 25px;">10. Practical Task 🎯</h3>
+            <h3 style="margin-top: 30px;">10. BCA Practical Challenge 🎯</h3>
             <div class="activity-card">
-                <p><b>Hands-On Challenge:</b> Open Task Manager in Windows (Ctrl + Shift + Esc) and check your current RAM usage percentage!</p>
+                <p><b>Task:</b> Open your system command prompt or Task Manager, identify your installed RAM speed (e.g., 3200 MHz), and verify whether it operates in Dual-Channel or Single-Channel configuration!</p>
             </div>
 
         </div>
@@ -111,28 +152,91 @@
     </div>
 
     <script>
+        // Data sets for RAM and ROM with complete detailed info
         const ramData = {
             title: "Topic: RAM Fundamentals (BCA Semester 1)",
-            theory: "<span class='highlight'>RAM (Random Access Memory)</span> is the main <span class='highlight'>volatile memory</span> of a computer system. It temporarily holds data and running application instructions for quick CPU access. All data is lost when power turns off.",
-            example: "Think of RAM like your <b>study desk</b>. You keep books on it that you are currently reading for fast access. When you finish studying (power off), you clear the desk.",
-            model: "random_access_memory.glb"
+            theory: "<span class='highlight'>RAM (Random Access Memory)</span> is a primary volatile semiconductor memory utilized in computer systems to temporarily store data, operating system files, and active software applications currently being executed by the CPU. Because RAM features <span class='highlight'>matrix-based addressing</span>, the processor can read from or write to any storage location directly in equal time periods, irrespective of its physical location (hence 'Random Access'). However, it is <span class='highlight'>volatile</span>, meaning all stored electrons/data cells dissipate instantly when electrical power is cut off or a system reboot occurs. It acts as the high-speed bridge between the fast CPU and slower secondary storage devices like SSDs or HDDs.",
+            example: "Imagine you are an office worker sitting at a large <b>office desk</b>. The desk represents your <b>RAM</b>. Files and folders that you are working on right now are placed on top of the desk for instant reach and fast editing. If you need a file from the heavy storage cabinet (Hard Disk), you bring it to your desk. But at the end of the day, when you leave the office and clean the desk completely (Power Off), everything on the desk is cleared out. Your permanent records stay safely in the cabinet, just like a hard drive.",
+            model: "random_access_memory.glb",
+            videoDesc: "Visualize data packets rushing into memory slots like high-speed racing cars entering docking stations!",
+            mcqs: [
+                { q: "1. What does RAM stand for?", options: ["A) Read Access Memory", "B) Random Access Memory", "C) Rapid Active Memory", "D) Remote Access Module"], correct: 1 },
+                { q: "2. Is RAM volatile or non-volatile?", options: ["A) Volatile", "B) Non-Volatile", "C) Semi-Volatile", "D) Permanent"], correct: 0 },
+                { q: "3. Which type of RAM needs periodic refreshing?", options: ["A) SRAM", "B) DRAM", "C) CMOS", "D) Flash RAM"], correct: 1 },
+                { q: "4. Which RAM is faster and used in CPU Cache?", options: ["A) DRAM", "B) SRAM", "C) VRAM", "D) DDRAM"], correct: 1 },
+                { q: "5. What happens when computer power is turned off?", options: ["A) Data is saved", "B) Data is encrypted", "C) Data in RAM is lost", "D) Data moves to ROM"], correct: 2 },
+                { q: "6. RAM is classified as which type of memory?", options: ["A) Secondary Memory", "B) Primary/Main Memory", "C) Tertiary Memory", "D) Backup Memory"], correct: 1 },
+                { q: "7. Which bus transfers memory addresses to RAM?", options: ["A) Data Bus", "B) Control Bus", "C) Address Bus", "D) System Bus"], correct: 2 },
+                { q: "8. Modern computers commonly use which standard of RAM?", options: ["A) DDR4 / DDR5", "B) SDRAM v1", "C) EDO RAM", "D) SRAM-II"], correct: 0 },
+                { q: "9. Can the CPU write data into RAM?", options: ["A) No, never", "B) Yes, read and write both", "C) Only during bootup", "D) Only in safe mode"], correct: 1 },
+                { q: "10. What is the primary benefit of having more RAM?", options: ["A) Larger permanent storage", "B) Faster internet speed", "C) Better multitasking and app performance", "D) Better graphic card resolution"], correct: 2 }
+            ]
         };
 
         const romData = {
             title: "Topic: ROM Fundamentals (BCA Semester 1)",
-            theory: "<span class='highlight'>ROM (Read-Only Memory)</span> is a <span class='highlight'>non-volatile memory</span>. It permanently stores startup instructions (<span class='highlight'>BIOS</span>) needed to boot the computer. Data stays safe even when power is turned off.",
-            example: "Think of ROM like a <b>printed textbook</b>. You can read the information anytime, but you cannot change or erase the printed text easily.",
-            model: "rom_cartridge.glb"
+            theory: "<span class='highlight'>ROM (Read-Only Memory)</span> is a specialized form of <span class='highlight'>non-volatile semiconductor memory</span> embedded in electronic devices and computers. Data stored in ROM cannot be easily altered or overwritten during normal runtime operations and remains fully intact even when the system is completely powered down. It permanently stores fundamental low-level initialization code, hardware diagnostics, and boot firmware known as the <span class='highlight'>BIOS or UEFI</span>, which orchestrates the power-on self-test (POST) and loads the operating system kernel into RAM.",
+            example: "Think of ROM like an <b>audio music compact disc (CD) or a printed encyclopedia book</b>. Once the factory prints the text or burns the audio onto the disc, you can read and listen to the tracks anytime you want. However, you cannot take a pen and rewrite the printed text or record new songs over it without specialized factory equipment. Similarly, your computer's startup instructions are permanently etched into the ROM chip.",
+            model: "rom_cartridge.glb",
+            videoDesc: "Visualize an ancient stone tablet being permanently carved with master instructions that never fade away!",
+            mcqs: [
+                { q: "1. What does ROM stand for?", options: ["A) Rapid Online Memory", "B) Read-Only Memory", "C) Real Operating Module", "D) Random Output Memory"], correct: 1 },
+                { q: "2. Is ROM volatile or non-volatile?", options: ["A) Volatile", "B) Non-Volatile", "C) Temporary", "D) Dynamic"], correct: 1 },
+                { q: "3. What vital code does ROM typically store?", options: ["A) Video Games", "B) MS Word Documents", "C) BIOS / Firmware boot code", "D) Antivirus definitions"], correct: 2 },
+                { q: "4. Which ROM type can be erased using ultraviolet light?", options: ["A) PROM", "B) EPROM", "C) EEPROM", "D) Flash ROM"], correct: 1 },
+                { q: "5. What does EEPROM stand for?", options: ["A) Electronically Erasable Programmable ROM", "B) Extended Electric Primary ROM", "C) Easily Erasable Processor ROM", "D) Encrypted Electronic PROM"], correct: 0 },
+                { q: "6. Can data stored in standard ROM be modified easily?", options: ["A) Yes, anytime", "B) No, it is read-only", "C) Only during gaming", "D) Only by user input"], correct: 1 },
+                { q: "7. What process does ROM initiate when you press the power button?", options: ["A) Blue Screen", "B) BIOS POST (Power-On Self-Test)", "C) Disk Defragmentation", "D) Cloud Sync"], correct: 1 },
+                { q: "8. Which of these is a form of modern reprogrammable ROM?", options: ["A) Mask ROM", "B) Flash Memory (SSD/BIOS chips)", "C) DRAM cells", "D) Cache SRAM"], correct: 1 },
+                { q: "9. Why is ROM necessary alongside RAM?", options: ["A) To make games look better", "B) To store the initial startup instructions before OS loads", "C) To cool down the processor", "D) To expand internet bandwidth"], correct: 1 },
+                { q: "10. Does ROM require continuous power to retain its data?", options: ["A) Yes, battery required", "B) No, data stays permanently without power", "C) Only for 10 minutes", "D) Only when connected to Wi-Fi"], correct: 1 }
+            ]
         };
 
-        let currentTopic = 'ram';
+        function renderMCQs(mcqList) {
+            const container = document.getElementById('mcq-container');
+            container.innerHTML = "";
+            mcqList.forEach((item, index) => {
+                let optionsHtml = '';
+                item.options.forEach((opt, optIndex) => {
+                    optionsHtml += `<button class="mcq-option" onclick="checkAnswer(this, ${optIndex}, ${item.correct})">${opt}</button>`;
+                });
+                container.innerHTML += `
+                    <div class="qa-card">
+                        <p><b>${item.q}</b></p>
+                        ${optionsHtml}
+                        <p class="feedback-${index}" style="font-weight: bold; margin-top: 8px;"></p>
+                    </div>
+                `;
+            });
+        }
+
+        function checkAnswer(btn, selected, correct) {
+            const card = btn.parentElement;
+            const feedback = card.querySelector("[class^='feedback-']");
+            const allBtns = card.querySelectorAll('.mcq-option');
+            
+            allBtns.forEach((b, idx) => {
+                if(idx === correct) b.style.background = '#d4edda';
+                else if(idx === selected && selected !== correct) b.style.background = '#f8d7da';
+            });
+
+            if(selected === correct) {
+                feedback.style.color = "green";
+                feedback.innerText = "✅ Sahi jawab! (Correct Answer)";
+            } else {
+                feedback.style.color = "red";
+                feedback.innerText = "❌ Galat jawab. Sahi option green color mein highlight hai.";
+            }
+        }
 
         function showRAM() {
-            currentTopic = 'ram';
             document.getElementById('topic-title').innerText = ramData.title;
             document.getElementById('theory-text').innerHTML = ramData.theory;
             document.getElementById('example-text').innerHTML = ramData.example;
             document.getElementById('modelViewer').setAttribute('src', ramData.model);
+            document.getElementById('video-desc').innerText = ramData.videoDesc;
+            renderMCQs(ramData.mcqs);
             
             document.getElementById('btn-ram').classList.add('active');
             document.getElementById('btn-rom').classList.remove('active');
@@ -140,11 +244,12 @@
         }
 
         function showROM() {
-            currentTopic = 'rom';
             document.getElementById('topic-title').innerText = romData.title;
             document.getElementById('theory-text').innerHTML = romData.theory;
             document.getElementById('example-text').innerHTML = romData.example;
             document.getElementById('modelViewer').setAttribute('src', romData.model);
+            document.getElementById('video-desc').innerText = romData.videoDesc;
+            renderMCQs(romData.mcqs);
             
             document.getElementById('btn-rom').classList.add('active');
             document.getElementById('btn-ram').classList.remove('active');
@@ -165,16 +270,10 @@
             el.style.display = (el.style.display === 'block') ? 'none' : 'block';
         }
 
-        function checkMCQ(btn, isCorrect) {
-            const res = document.getElementById('mcq-result');
-            if(isCorrect) {
-                res.style.color = "green";
-                res.innerText = "✅ Correct Answer!";
-            } else {
-                res.style.color = "red";
-                res.innerText = "❌ Incorrect. Try again!";
-            }
-        }
+        // Initialize with RAM on load
+        window.onload = function() {
+            renderMCQs(ramData.mcqs);
+        };
     </script>
 </body>
 </html>
