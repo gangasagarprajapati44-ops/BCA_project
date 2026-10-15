@@ -31,6 +31,10 @@
         .ans-toggle { background: #007bff; color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: bold; margin-top: 10px; }
         .hidden-ans { display: none; margin-top: 15px; padding: 15px; background: #e6ffed; border-left: 4px solid #28a745; border-radius: 6px; line-height: 1.7; color: #155724; }
         
+        .mcq-header-flex { display: flex; justify-content: space-between; align-items: center; }
+        .speak-icon-btn { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 50%; cursor: pointer; font-size: 16px; transition: 0.2s; }
+        .speak-icon-btn:hover { background: #0056b3; }
+
         .mcq-option { display: block; margin: 8px 0; padding: 10px 15px; background: #f1f3f5; border-radius: 6px; cursor: pointer; width: 100%; text-align: left; border: 1px solid #ccc; font-size: 15px; transition: 0.2s; }
         .mcq-option:hover { background: #e2e6ea; }
         
@@ -65,7 +69,7 @@
             <div class="section-box">
                 <h3>1. Comprehensive Definition (BCA Standard)</h3>
                 <p id="theory-text">
-                    <span class="highlight">RAM (Random Access Memory)</span> is a primary volatile semiconductor memory utilized in computer systems to temporarily store data, operating system files, and active software applications currently being executed by the CPU. Because RAM features <span class="highlight">matrix-based addressing</span>, the processor can read from or write to any storage location directly in equal time periods, irrespective of its physical location. However, it is <span class="highlight">volatile</span>, meaning all stored data cells dissipate instantly when electrical power is cut off or a system reboot occurs.
+                    <span class="highlight">RAM (Random Access Memory)</span> is a primary volatile semiconductor memory utilized in computer systems to temporarily store data, operating system files, and active software applications currently being executed by the CPU. Because RAM features <span class="highlight">matrix-based addressing</span>, the processor can read from or write to any storage location directly in equal time periods. However, it is <span class="highlight">volatile</span>, meaning all stored data cells dissipate instantly when electrical power is cut off or a system reboot occurs.
                 </p>
             </div>
 
@@ -159,7 +163,6 @@
     </div>
 
     <script>
-        // RAM specific strict questions
         const ramData = {
             title: "Topic: RAM Fundamentals (BCA Semester 1)",
             theory: "<span class='highlight'>RAM (Random Access Memory)</span> is a primary volatile semiconductor memory utilized in computer systems to temporarily store data, operating system files, and active software applications currently being executed by the CPU. Because RAM features <span class='highlight'>matrix-based addressing</span>, the processor can read from or write to any storage location directly in equal time periods. However, it is <span class='highlight'>volatile</span>, meaning all stored data cells dissipate instantly when electrical power is cut off or a system reboot occurs.",
@@ -167,20 +170,19 @@
             model: "random_access_memory.glb",
             videoDesc: "Visualize data packets rushing into temporary workspace slots like high-speed active desks!",
             mcqs: [
-                { q: "1. What does RAM stand for?", options: ["A) Read Access Memory", "B) Random Access Memory", "C) Rapid Active Module", "D) Remote Array Memory"], correct: 1 },
-                { q: "2. Is RAM volatile or non-volatile?", options: ["A) Volatile", "B) Non-Volatile", "C) Semi-Permanent", "D) Static"], correct: 0 },
-                { q: "3. What happens to RAM contents when power is switched off?", options: ["A) Saved to disk", "B) Encrypted automatically", "C) Erased completely", "D) Moved to ROM"], correct: 2 },
-                { q: "4. RAM is categorized under which memory tier?", options: ["A) Secondary Memory", "B) Primary / Main Memory", "C) Tertiary Backup", "D) Offsite Cloud"], correct: 1 },
-                { q: "5. Why is it called 'Random Access'?", options: ["A) Because data is random", "B) Because any memory cell can be accessed directly in equal time", "C) Because it selects files randomly", "D) Because power fluctuates"], correct: 1 },
-                { q: "6. Can the CPU perform write operations on RAM?", options: ["A) No, never", "B) Yes, read and write both", "C) Only during shutdown", "D) Only in safe mode"], correct: 1 },
-                { q: "7. Which hardware component communicates directly with RAM via system bus?", options: ["A) Monitor", "B) Keyboard", "C) Central Processing Unit (CPU)", "D) Printer"], correct: 2 },
-                { q: "8. What is the primary role of RAM in a computer system?", options: ["A) Permanent file storage", "B) Holding currently active programs and instructions for the CPU", "C) Cooling down processor heat", "D) Boosting Wi-Fi speed"], correct: 1 },
-                { q: "9. Does RAM retain data without electrical current?", options: ["A) Yes, indefinitely", "B) No, it loses data instantly", "C) Yes, for 24 hours", "D) Yes, if plugged into USB"], correct: 1 },
-                { q: "10. How does insufficient RAM affect system performance?", options: ["A) Screen becomes black", "B) Causes frequent slowdowns and multitasking lag", "C) Increases internet speed", "D) Expands hard drive capacity"], correct: 1 }
+                { q: "What does RAM stand for?", options: ["Read Access Memory", "Random Access Memory", "Rapid Active Module", "Remote Array Memory"], correct: 1 },
+                { q: "Is RAM volatile or non-volatile?", options: ["Volatile", "Non-Volatile", "Semi-Permanent", "Static"], correct: 0 },
+                { q: "What happens to RAM contents when power is switched off?", options: ["Saved to disk", "Encrypted automatically", "Erased completely", "Moved to ROM"], correct: 2 },
+                { q: "RAM is categorized under which memory tier?", options: ["Secondary Memory", "Primary / Main Memory", "Tertiary Backup", "Offsite Cloud"], correct: 1 },
+                { q: "Why is it called 'Random Access'?", options: ["Because data is random", "Because any memory cell can be accessed directly in equal time", "Because it selects files randomly", "Because power fluctuates"], correct: 1 },
+                { q: "Can the CPU perform write operations on RAM?", options: ["No, never", "Yes, read and write both", "Only during shutdown", "Only in safe mode"], correct: 1 },
+                { q: "Which hardware component communicates directly with RAM via system bus?", options: ["Monitor", "Keyboard", "Central Processing Unit (CPU)", "Printer"], correct: 2 },
+                { q: "What is the primary role of RAM in a computer system?", options: ["Permanent file storage", "Holding currently active programs and instructions for the CPU", "Cooling down processor heat", "Boosting Wi-Fi speed"], correct: 1 },
+                { q: "Does RAM retain data without electrical current?", options: ["Yes, indefinitely", "No, it loses data instantly", "Yes, for 24 hours", "Yes, if plugged into USB"], correct: 1 },
+                { q: "How does insufficient RAM affect system performance?", options: ["Screen becomes black", "Causes frequent slowdowns and multitasking lag", "Increases internet speed", "Expands hard drive capacity"], correct: 1 }
             ]
         };
 
-        // ROM specific strict questions
         const romData = {
             title: "Topic: ROM Fundamentals (BCA Semester 1)",
             theory: "<span class='highlight'>ROM (Read-Only Memory)</span> is a specialized form of <span class='highlight'>non-volatile semiconductor memory</span> embedded in computers. Data stored in ROM cannot be easily altered or overwritten during normal runtime operations and remains fully intact even when the system is powered down. It permanently stores fundamental low-level initialization code and boot firmware known as the <span class='highlight'>BIOS</span>.",
@@ -188,16 +190,16 @@
             model: "rom_cartridge.glb",
             videoDesc: "Visualize master instructions being permanently etched onto a solid silicon chip that never forgets!",
             mcqs: [
-                { q: "1. What does ROM stand for?", options: ["A) Rapid Online Module", "B) Read-Only Memory", "C) Real Operating Memory", "D) Random Output Model"], correct: 1 },
-                { q: "2. Is ROM volatile or non-volatile?", options: ["A) Volatile", "B) Non-Volatile", "C) Temporary", "D) Dynamic"], correct: 1 },
-                { q: "3. What happens to ROM data when power is turned off?", options: ["A) Data is lost completely", "B) Data remains permanently safe and intact", "C) Data transfers to RAM", "D) Data gets corrupted"], correct: 1 },
-                { q: "4. What critical startup code does ROM contain?", options: ["A) MS Office Setup", "B) BIOS / UEFI firmware", "C) Web Browser drivers", "D) Video Game assets"], correct: 1 },
-                { q: "5. Can normal users easily modify or overwrite standard ROM contents?", options: ["A) Yes, anytime during work", "B) No, it is read-only memory", "C) Only with a mouse click", "D) Only when connected to Bluetooth"], correct: 1 },
-                { q: "6. Why is ROM considered non-volatile?", options: ["A) Because it requires a battery", "B) Because it retains data without requiring electrical power", "C) Because it runs very fast", "D) Because it is made of plastic"], correct: 1 },
-                { q: "7. What process does ROM initiate when the computer starts?", options: ["A) Disk formatting", "B) BIOS Power-On Self-Test (POST)", "C) Antivirus scan", "D) Cloud backup"], correct: 1 },
-                { q: "8. Where is ROM physically located in a computer system?", options: ["A) Inside the monitor screen", "B) Embedded on the motherboard", "C) Inside the mouse", "D) Inside the power supply unit"], correct: 1 },
-                { q: "9. Does ROM allow random read access to stored instructions?", options: ["A) No, it allows sequential access only", "B) Yes, processor can read any location directly", "C) Only during weekends", "D) Never"], correct: 1 },
-                { q: "10. What is the main purpose of ROM during system bootup?", options: ["A) To store heavy games", "B) To provide initial instructions needed to initialize hardware and load OS", "C) To increase internet speed", "D) To save user documents"], correct: 1 }
+                { q: "What does ROM stand for?", options: ["Rapid Online Module", "Read-Only Memory", "Real Operating Memory", "Random Output Model"], correct: 1 },
+                { q: "Is ROM volatile or non-volatile?", options: ["Volatile", "Non-Volatile", "Temporary", "Dynamic"], correct: 1 },
+                { q: "What happens to ROM data when power is turned off?", options: ["Data is lost completely", "Data remains permanently safe and intact", "Data transfers to RAM", "Data gets corrupted"], correct: 1 },
+                { q: "What critical startup code does ROM contain?", options: ["MS Office Setup", "BIOS / UEFI firmware", "Web Browser drivers", "Video Game assets"], correct: 1 },
+                { q: "Can normal users easily modify or overwrite standard ROM contents?", options: ["Yes, anytime during work", "No, it is read-only memory", "Only with a mouse click", "Only when connected to Bluetooth"], correct: 1 },
+                { q: "Why is ROM considered non-volatile?", options: ["Because it requires a battery", "Because it retains data without requiring electrical power", "Because it runs very fast", "Because it is made of plastic"], correct: 1 },
+                { q: "What process does ROM initiate when the computer starts?", options: ["Disk formatting", "BIOS Power-On Self-Test (POST)", "Antivirus scan", "Cloud backup"], correct: 1 },
+                { q: "Where is ROM physically located in a computer system?", options: ["Inside the monitor screen", "Embedded on the motherboard", "Inside the mouse", "Inside the power supply unit"], correct: 1 },
+                { q: "Does ROM allow random read access to stored instructions?", options: ["No, it allows sequential access only", "Yes, processor can read any location directly", "Only during weekends", "Never"], correct: 1 },
+                { q: "What is the main purpose of ROM during system bootup?", options: ["To store heavy games", "To provide initial instructions needed to initialize hardware and load OS", "To increase internet speed", "To save user documents"], correct: 1 }
             ]
         };
 
@@ -212,11 +214,19 @@
             data.mcqs.forEach((item, index) => {
                 let optionsHtml = '';
                 item.options.forEach((opt, optIndex) => {
-                    optionsHtml += `<button class="mcq-option" id="q-${index}-opt-${optIndex}" onclick="checkAnswer(${index}, ${optIndex}, ${item.correct}, '${opt.replace(/'/g, "\\'")}')">${opt}</button>`;
+                    optionsHtml += `<button class="mcq-option" id="q-${index}-opt-${optIndex}" onclick="checkAnswer(${index}, ${optIndex}, ${item.correct})">${String.fromCharCode(65 + optIndex)}) ${opt}</button>`;
                 });
+                
+                // Question text escape for speech
+                const safeQText = item.q.replace(/'/g, "");
+                const safeOptsText = item.options.map(o => o.replace(/'/g, "")).join(". ");
+
                 container.innerHTML += `
                     <div class="qa-card" id="question-card-${index}">
-                        <p><b>${item.q}</b></p>
+                        <div class="mcq-header-flex">
+                            <p><b>Q${index + 1}: ${item.q}</b></p>
+                            <button class="speak-icon-btn" onclick="speakQuestionAndOptions('${safeQText}', '${safeOptsText}', ${index}, ${item.correct})" title="Listen Question">🔊</button>
+                        </div>
                         ${optionsHtml}
                         <p class="feedback-${index}" style="font-weight: bold; margin-top: 8px;"></p>
                     </div>
@@ -225,23 +235,40 @@
             updateScoreboard();
         }
 
-        function checkAnswer(qIndex, selected, correct, optText) {
-            if (answeredQuestions.has(qIndex)) return; // Already answered
+        function speakQuestionAndOptions(questionText, optionsText, qIndex, correctOptIndex) {
+            window.speechSynthesis.cancel();
+            
+            const speechText = "Question: " + questionText + ". Options are: " + optionsText;
+            const speech = new SpeechSynthesisUtterance(speechText);
+            speech.lang = 'en-US';
+            speech.rate = 0.95;
+
+            // When speech ends, auto-tick the correct answer
+            speech.onend = function() {
+                if (!answeredQuestions.has(qIndex)) {
+                    checkAnswer(qIndex, correctOptIndex, correctOptIndex);
+                }
+            };
+
+            window.speechSynthesis.speak(speech);
+        }
+
+        function checkAnswer(qIndex, selected, correct) {
+            if (answeredQuestions.has(qIndex)) return; 
             answeredQuestions.add(qIndex);
 
             const card = document.getElementById(`question-card-${qIndex}`);
             const feedback = card.querySelector(`[class^='feedback-']`);
             
-            // Speak the option and result
-            window.speechSynthesis.cancel();
-            let speechText = "";
-
             for(let i=0; i<4; i++) {
-                document.getElementById(`q-${qIndex}-opt-${i}`).style.pointerEvents = 'none';
+                const btn = document.getElementById(`q-${qIndex}-opt-${i}`);
+                btn.style.pointerEvents = 'none';
                 if(i === correct) {
-                    document.getElementById(`q-${qIndex}-opt-${i}`).style.background = '#d4edda';
+                    btn.style.background = '#d4edda';
+                    btn.style.borderColor = '#28a745';
                 } else if(i === selected && selected !== correct) {
-                    document.getElementById(`q-${qIndex}-opt-${i}`).style.background = '#f8d7da';
+                    btn.style.background = '#f8d7da';
+                    btn.style.borderColor = '#dc3545';
                 }
             }
 
@@ -249,17 +276,11 @@
                 correctCount++;
                 feedback.style.color = "green";
                 feedback.innerText = "✅ Sahi jawab! (Correct Answer)";
-                speechText = "Aapne chuna: " + optText + ". Yeh bilkul sahi jawab hai!";
             } else {
                 incorrectCount++;
                 feedback.style.color = "red";
-                feedback.innerText = "❌ Galat jawab. Sahi option green color mein highlight hai.";
-                speechText = "Aapne chuna: " + optText + ". Yeh galat jawab hai.";
+                feedback.innerText = "❌ Galat jawab. Sahi option green highlight kiya gaya hai.";
             }
-
-            const speech = new SpeechSynthesisUtterance(speechText);
-            speech.lang = 'hi-IN';
-            window.speechSynthesis.speak(speech);
 
             updateScoreboard();
         }
