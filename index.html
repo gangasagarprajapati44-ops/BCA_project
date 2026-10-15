@@ -23,8 +23,9 @@
         .media-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
         @media(max-width: 768px) { .media-grid { grid-template-columns: 1fr; } }
         
-        .container3d, .diagram-container { width: 100%; height: 400px; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; display: flex; align-items: center; justify-content: center; position: relative; }
+        .container3d, .diagram-container { width: 100%; height: 400px; background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; display: flex; flex-direction: column; justify-content: space-between; position: relative; }
         model-viewer { width: 100%; height: 100%; }
+        .diagram-container img { width: 100%; height: 75%; object-fit: contain; background: #fafafa; }
 
         /* Q&A & MCQ Styling */
         .qa-card { background: #fff; border: 1px solid #e1e4e8; padding: 20px; border-radius: 10px; margin-bottom: 15px; }
@@ -86,17 +87,18 @@
                 </p>
             </div>
 
-            <!-- 3 & 4. 3D Model & Diagram Grid -->
+            <!-- 3 & 4. 3D Model & Diagram Grid with User Images -->
             <h3>3 & 4. Interactive 3D Model & Architecture Diagram</h3>
             <div class="media-grid">
                 <div class="container3d">
                     <model-viewer id="modelViewer" src="random_access_memory.glb" ar camera-controls tone-mapping="neutral" shadow-intensity="1">
                     </model-viewer>
                 </div>
+                <!-- Diagram Box with User Image -->
                 <div class="diagram-container">
-                    <div id="diagram-content" style="text-align: center; padding: 20px;">
-                        <p><b>RAM Architecture & Pin Configuration</b></p>
-                        <small style="color: #666;">Parts: Memory Cell Matrix, Row/Column Decoders, Data Bus Buffers, Control Pins</small>
+                    <img id="topic-diagram-img" src="ram_chip_jpeg.jpg" alt="RAM Architecture Diagram">
+                    <div id="diagram-parts-text" style="text-align: center; padding: 8px; font-size: 13px; background: #f8f9fa; border-top: 1px solid #ddd;">
+                        <b>Parts:</b> 1. Memory Matrix | 2. Decoders | 3. Data Buffers | 4. Control Pins
                     </div>
                 </div>
             </div>
@@ -173,6 +175,8 @@
             theory: "<span class='highlight'>RAM (Random Access Memory)</span> is a primary volatile semiconductor memory utilized in computer systems to temporarily store data, operating system files, and active software applications currently being executed by the CPU. Because RAM features <span class='highlight'>matrix-based addressing</span>, the processor can read from or write to any storage location directly in equal time periods. However, it is <span class='highlight'>volatile</span>, meaning all stored data cells dissipate instantly when electrical power is cut off or a system reboot occurs.",
             example: "Imagine you are an office worker sitting at a large <b>office desk</b>. The desk represents your <b>RAM</b>. Files and folders that you are working on right now are placed on top of the desk for instant reach. If you need a file from the heavy storage cabinet, you bring it to your desk. But at the end of the day, when you leave the office and clean the desk completely (Power Off), everything on the desk is cleared out.",
             model: "random_access_memory.glb",
+            diagramImg: "ram_chip_jpeg.jpg",
+            diagramParts: "Parts: 1. Memory Cell Matrix | 2. Row/Column Decoders | 3. Data Buffers | 4. Control Pins",
             videoDesc: "Visualize data packets rushing into temporary workspace slots like high-speed active desks!",
             mcqs: [
                 { q: "What does RAM stand for?", options: ["Read Access Memory", "Random Access Memory", "Rapid Active Module", "Remote Array Memory"], correct: 1 },
@@ -193,6 +197,8 @@
             theory: "<span class='highlight'>ROM (Read-Only Memory)</span> is a specialized form of <span class='highlight'>non-volatile semiconductor memory</span> embedded in computers. Data stored in ROM cannot be easily altered or overwritten during normal runtime operations and remains fully intact even when the system is powered down. It permanently stores fundamental low-level initialization code and boot firmware known as the <span class='highlight'>BIOS</span>.",
             example: "Think of ROM like an <b>audio music compact disc (CD) or a printed encyclopedia book</b>. Once the factory prints the text or burns the audio onto the disc, you can read and listen to the tracks anytime you want. However, you cannot take a pen and rewrite the printed text or record new songs over it without specialized factory equipment.",
             model: "rom_cartridge.glb",
+            diagramImg: "rom_chip_jpeg.jpg",
+            diagramParts: "Parts: 1. Silicon Storage Matrix | 2. Address Decoders | 3. Output Buffers | 4. Control Circuit",
             videoDesc: "Visualize master instructions being permanently etched onto a solid silicon chip that never forgets!",
             mcqs: [
                 { q: "What does ROM stand for?", options: ["Rapid Online Module", "Read-Only Memory", "Real Operating Memory", "Random Output Model"], correct: 1 },
@@ -255,7 +261,6 @@
                 if (!answeredQuestions.has(qIndex)) {
                     checkAnswer(qIndex, correctOptIndex, correctOptIndex);
                 }
-                // Speak out the correct answer explicitly
                 const answerSpeech = new SpeechSynthesisUtterance("Sahi jawab hai: " + correctText);
                 answerSpeech.lang = 'hi-IN';
                 window.speechSynthesis.speak(answerSpeech);
@@ -266,7 +271,6 @@
 
         function revealSingleAnswer(qIndex, correctOptIndex) {
             if (!answeredQuestions.has(qIndex)) {
-                // Count it as correct reveal or just show it
                 checkAnswer(qIndex, correctOptIndex, correctOptIndex);
             }
         }
@@ -326,6 +330,8 @@
             document.getElementById('theory-text').innerHTML = ramData.theory;
             document.getElementById('example-text').innerHTML = ramData.example;
             document.getElementById('modelViewer').setAttribute('src', ramData.model);
+            document.getElementById('topic-diagram-img').src = ramData.diagramImg;
+            document.getElementById('diagram-parts-text').innerHTML = "<b>Parts:</b> " + ramData.diagramParts;
             document.getElementById('video-desc').innerText = ramData.videoDesc;
             
             document.getElementById('btn-ram').classList.add('active');
@@ -339,6 +345,8 @@
             document.getElementById('theory-text').innerHTML = romData.theory;
             document.getElementById('example-text').innerHTML = romData.example;
             document.getElementById('modelViewer').setAttribute('src', romData.model);
+            document.getElementById('topic-diagram-img').src = romData.diagramImg;
+            document.getElementById('diagram-parts-text').innerHTML = "<b>Parts:</b> " + romData.diagramParts;
             document.getElementById('video-desc').innerText = romData.videoDesc;
             
             document.getElementById('btn-rom').classList.add('active');
