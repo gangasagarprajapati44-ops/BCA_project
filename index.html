@@ -5,68 +5,134 @@
     <title>BCA 3D Learning Platform - RAM vs ROM</title>
     <style>
         body { font-family: Arial, sans-serif; padding: 20px; background: #f4f4f9; display: flex; justify-content: center; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 850px; width: 100%; }
+        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 16px rgba(0,0,0,0.1); max-width: 850px; width: 100%; margin-bottom: 20px; }
         
         .nav-buttons { display: flex; gap: 10px; margin-bottom: 20px; }
         .nav-btn { background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 20px; cursor: pointer; font-size: 15px; font-weight: bold; transition: 0.3s; }
         .nav-btn.active { background: #007bff; }
-        .nav-btn:hover { opacity: 0.9; }
 
         button.audio-btn { background: #28a745; color: white; border: none; padding: 12px 25px; border-radius: 25px; cursor: pointer; font-size: 16px; font-weight: bold; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: 0.3s; }
         button.audio-btn:hover { background: #218838; transform: translateY(-2px); }
         
-        .theory { font-size: 17px; line-height: 1.7; color: #333; margin-bottom: 20px; background: #f8f9fa; padding: 15px; border-left: 5px solid #007bff; border-radius: 5px; }
-        .container3d { width: 100%; height: 450px; background: transparent; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; }
-        model-viewer { width: 100%; height: 100%; background-color: transparent; }
+        /* Highlight & Content Box Styling */
+        .section-box { margin-bottom: 20px; padding: 15px 20px; background: #f8f9fa; border-radius: 8px; border-left: 5px solid #007bff; }
+        .highlight { background-color: #e8f0fe; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #007bff; }
+        .example-box { border-left-color: #28a745; background-color: #f4faf5; }
+        
+        .container3d { width: 100%; height: 400px; background: transparent; border-radius: 12px; overflow: hidden; border: 1px solid #ddd; margin-bottom: 25px; }
+        model-viewer { width: 100%; height: 100%; }
+
+        /* Q&A / MCQ Styling */
+        .qa-card { background: #fff; border: 1px solid #e1e4e8; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        .ans-toggle { background: #007bff; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; margin-top: 8px; }
+        .hidden-ans { display: none; margin-top: 10px; padding: 10px; background: #e6ffed; border-radius: 5px; color: #155724; }
+        
+        .mcq-option { display: block; margin: 8px 0; padding: 8px; background: #f1f3f5; border-radius: 5px; cursor: pointer; width: 100%; text-align: left; border: 1px solid #ccc; }
+        .mcq-option:hover { background: #e2e6ea; }
+        
+        /* Activity Box */
+        .activity-card { background: #fff8dc; border: 1px dashed #f0ad4e; padding: 15px; border-radius: 8px; }
     </style>
-    
-    <!-- Model Viewer Script -->
+
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 </head>
 <body>
 
-    <div class="card">
-        <h2 id="topic-title">Topic: RAM Fundamentals (BCA Semester 1)</h2>
+    <div style="max-width: 850px; width: 100%;">
         
-        <!-- 🔄 Switch Buttons -->
-        <div class="nav-buttons">
-            <button class="nav-btn active" id="btn-ram" onclick="showRAM()">RAM Model</button>
-            <button class="nav-btn" id="btn-rom" onclick="showROM()">ROM Model</button>
+        <div class="card">
+            <h2 id="topic-title">Topic: RAM Fundamentals (BCA Semester 1)</h2>
+            
+            <!-- Navigation Buttons -->
+            <div class="nav-buttons">
+                <button class="nav-btn active" id="btn-ram" onclick="showRAM()">RAM Model</button>
+                <button class="nav-btn" id="btn-rom" onclick="showROM()">ROM Model</button>
+            </div>
+
+            <!-- Audio Button -->
+            <button class="audio-btn" onclick="speakTopic()">🔊 Listen Explanation (English)</button>
+
+            <!-- 1. Simple Definition & Highlights -->
+            <div class="section-box">
+                <h3>1. Definition</h3>
+                <p id="theory-text">
+                    <span class="highlight">RAM (Random Access Memory)</span> is the main <span class="highlight">volatile memory</span> of a computer system. It temporarily holds data and running application instructions for quick CPU access. All data is lost when power turns off.
+                </p>
+            </div>
+
+            <!-- 2. Real Life Example -->
+            <div class="section-box example-box">
+                <h3>2. Real-Life Example 💡</h3>
+                <p id="example-text">
+                    Think of RAM like your <b>study desk</b>. You keep books on it that you are currently reading for fast access. When you finish studying (power off), you clear the desk.
+                </p>
+            </div>
+
+            <!-- 3. 3D Model Display -->
+            <h3>3. Interactive 3D Model</h3>
+            <div class="container3d">
+                <model-viewer id="modelViewer" src="random_access_memory.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" shadow-intensity="1">
+                </model-viewer>
+            </div>
+
+            <!-- 4. Labeled Diagram Placeholder -->
+            <div class="section-box" style="border-left-color: #6f42c1;">
+                <h3>4. Diagram & Architecture</h3>
+                <p><b>Internal Block Layout:</b> Memory Cells Array, Address Bus, Data Bus, Read/Write Control Line.</p>
+            </div>
+
+            <!-- 8. Interactive MCQ -->
+            <h3>8. Quick Check (MCQ)</h3>
+            <div class="qa-card">
+                <p><b>Q: What happens to data in RAM when power goes off?</b></p>
+                <button class="mcq-option" onclick="checkMCQ(this, false)">A) Saved permanently</button>
+                <button class="mcq-option" onclick="checkMCQ(this, true)">B) It gets erased completely</button>
+                <p id="mcq-result" style="font-weight: bold; margin-top: 5px;"></p>
+            </div>
+
+            <!-- 9. Short Question (Answer View On-Click) -->
+            <h3 style="margin-top: 25px;">9. Exam Questions</h3>
+            <div class="qa-card">
+                <p><b>Q1: Difference between Volatile and Non-Volatile Memory?</b></p>
+                <button class="ans-toggle" onclick="toggleAns('ans1')">👁️ Click to See Answer</button>
+                <div id="ans1" class="hidden-ans">
+                    <b>Answer:</b> Volatile memory (like RAM) loses data without electricity. Non-volatile memory (like ROM) retains data permanently even without power.
+                </div>
+            </div>
+
+            <!-- 10. Practical Activity -->
+            <h3 style="margin-top: 25px;">10. Practical Task 🎯</h3>
+            <div class="activity-card">
+                <p><b>Hands-On Challenge:</b> Open Task Manager in Windows (Ctrl + Shift + Esc) and check your current RAM usage percentage!</p>
+            </div>
+
         </div>
 
-        <!-- 🔊 Sound System Button -->
-        <button class="audio-btn" onclick="speakTopic()">🔊 Listen Explanation (English)</button>
-        
-        <!-- 📖 Detailed English Theory Text -->
-        <p class="theory" id="theory-text">
-            <b>RAM (Random Access Memory)</b> is the primary volatile memory of a computer system. It temporarily stores data and machine code currently in use by the CPU for fast read and write access. Because it is volatile, all data stored in RAM is permanently lost when the power is turned off or the system restarts. RAM allows the computer to multitask efficiently and run multiple applications simultaneously.
-        </p>
-
-        <!-- 📐 3D Model Display Area -->
-        <div class="container3d">
-            <model-viewer id="modelViewer" src="random_access_memory.glb" ar ar-modes="webxr scene-viewer quick-look" camera-controls tone-mapping="neutral" shadow-intensity="1">
-                <div class="progress-bar hide" slot="progress-bar">
-                    <div class="update-bar"></div>
-                </div>
-                <button slot="ar-button" id="ar-button">
-                    View in your space
-                </button>
-                <div id="ar-prompt">
-                    <img src="https://modelviewer.dev/shared-assets/icons/hand.png">
-                </div>
-            </model-viewer>
-        </div>
     </div>
 
     <script>
-        const ramText = "RAM (Random Access Memory) is the primary volatile memory of a computer system. It temporarily stores data and machine code currently in use by the CPU for fast read and write access. Because it is volatile, all data stored in RAM is permanently lost when the power is turned off or the system restarts. RAM allows the computer to multitask efficiently and run multiple applications simultaneously.";
-        
-        const romText = "ROM (Read-Only Memory) is a type of non-volatile memory used in computers and other electronic devices. Data stored in ROM cannot be easily modified or altered and is retained even when the computer is powered off. It permanently stores vital startup instructions, known as the BIOS or firmware, which are essential for booting up the computer system and initializing hardware components.";
+        const ramData = {
+            title: "Topic: RAM Fundamentals (BCA Semester 1)",
+            theory: "<span class='highlight'>RAM (Random Access Memory)</span> is the main <span class='highlight'>volatile memory</span> of a computer system. It temporarily holds data and running application instructions for quick CPU access. All data is lost when power turns off.",
+            example: "Think of RAM like your <b>study desk</b>. You keep books on it that you are currently reading for fast access. When you finish studying (power off), you clear the desk.",
+            model: "random_access_memory.glb"
+        };
+
+        const romData = {
+            title: "Topic: ROM Fundamentals (BCA Semester 1)",
+            theory: "<span class='highlight'>ROM (Read-Only Memory)</span> is a <span class='highlight'>non-volatile memory</span>. It permanently stores startup instructions (<span class='highlight'>BIOS</span>) needed to boot the computer. Data stays safe even when power is turned off.",
+            example: "Think of ROM like a <b>printed textbook</b>. You can read the information anytime, but you cannot change or erase the printed text easily.",
+            model: "rom_cartridge.glb"
+        };
+
+        let currentTopic = 'ram';
 
         function showRAM() {
-            document.getElementById('topic-title').innerText = "Topic: RAM Fundamentals (BCA Semester 1)";
-            document.getElementById('theory-text').innerHTML = "<b>RAM (Random Access Memory)</b> is the primary volatile memory of a computer system. It temporarily stores data and machine code currently in use by the CPU for fast read and write access. Because it is volatile, all data stored in RAM is permanently lost when the power is turned off or the system restarts. RAM allows the computer to multitask efficiently and run multiple applications simultaneously.";
-            document.getElementById('modelViewer').setAttribute('src', 'random_access_memory.glb');
+            currentTopic = 'ram';
+            document.getElementById('topic-title').innerText = ramData.title;
+            document.getElementById('theory-text').innerHTML = ramData.theory;
+            document.getElementById('example-text').innerHTML = ramData.example;
+            document.getElementById('modelViewer').setAttribute('src', ramData.model);
             
             document.getElementById('btn-ram').classList.add('active');
             document.getElementById('btn-rom').classList.remove('active');
@@ -74,9 +140,11 @@
         }
 
         function showROM() {
-            document.getElementById('topic-title').innerText = "Topic: ROM Fundamentals (BCA Semester 1)";
-            document.getElementById('theory-text').innerHTML = "<b>ROM (Read-Only Memory)</b> is a type of non-volatile memory used in computers and other electronic devices. Data stored in ROM cannot be easily modified or altered and is retained even when the computer is powered off. It permanently stores vital startup instructions, known as the BIOS or firmware, which are essential for booting up the computer system and initializing hardware components.";
-            document.getElementById('modelViewer').setAttribute('src', 'rom_cartridge.glb');
+            currentTopic = 'rom';
+            document.getElementById('topic-title').innerText = romData.title;
+            document.getElementById('theory-text').innerHTML = romData.theory;
+            document.getElementById('example-text').innerHTML = romData.example;
+            document.getElementById('modelViewer').setAttribute('src', romData.model);
             
             document.getElementById('btn-rom').classList.add('active');
             document.getElementById('btn-ram').classList.remove('active');
@@ -85,11 +153,27 @@
 
         function speakTopic() {
             window.speechSynthesis.cancel();
-            const text = document.getElementById('theory-text').innerText;
+            const text = document.getElementById('theory-text').innerText + ". " + document.getElementById('example-text').innerText;
             const speech = new SpeechSynthesisUtterance(text);
-            speech.lang = 'en-US'; // English Speech Pronunciation
-            speech.rate = 0.95;    
+            speech.lang = 'en-US';
+            speech.rate = 0.95;
             window.speechSynthesis.speak(speech);
+        }
+
+        function toggleAns(id) {
+            const el = document.getElementById(id);
+            el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+        }
+
+        function checkMCQ(btn, isCorrect) {
+            const res = document.getElementById('mcq-result');
+            if(isCorrect) {
+                res.style.color = "green";
+                res.innerText = "✅ Correct Answer!";
+            } else {
+                res.style.color = "red";
+                res.innerText = "❌ Incorrect. Try again!";
+            }
         }
     </script>
 </body>
