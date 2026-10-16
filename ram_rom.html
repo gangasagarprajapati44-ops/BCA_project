@@ -3,38 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RAM vs ROM | BCA 3D Learning Platform</title>
+    <title>Topic Detailed View | BCA Learning Platform</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f8f9fa; color: #333; line-height: 1.6; }
-        
-        /* Navbar */
+        body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
+
+        /* Top Navigation Bar */
         nav { background: #1e3c72; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        nav .breadcrumb { font-size: 0.9rem; opacity: 0.8; }
         nav a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; transition: 0.3s; }
         nav a:hover { background: rgba(255,255,255,0.4); }
 
-        /* Container */
         .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+
+        /* Topic Title Banner */
+        .banner { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 6px solid #2a5298; }
+        .banner h1 { color: #1e3c72; font-size: 2rem; margin-bottom: 5px; }
+        .banner p { color: #666; font-size: 1rem; }
+
+        /* 3D Model Upload / View Container */
+        .section-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .section-box h2 { color: #2a5298; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; font-size: 1.4rem; }
         
-        /* Header Section */
-        .topic-header { text-align: center; margin-bottom: 30px; }
-        .topic-header h1 { font-size: 2.2rem; color: #1e3c72; margin-bottom: 10px; }
-        .topic-header p { color: #666; font-size: 1.1rem; }
+        .model-container { background: #000; border-radius: 8px; height: 350px; display: flex; justify-content: center; align-items: center; color: white; position: relative; }
+        .model-container p { background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 6px; font-size: 1.1rem; }
 
-        /* 3D Model Display Box */
-        .model-viewer-box { background: #000; border-radius: 12px; height: 400px; display: flex; justify-content: center; align-items: center; color: white; position: relative; margin-bottom: 35px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); }
-        .model-viewer-box p { font-size: 1.2rem; background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 8px; }
+        /* Content & Notes */
+        .notes-content p, .notes-content ul { margin-bottom: 12px; color: #444; font-size: 1.05rem; }
+        .notes-content ul { padding-left: 20px; }
 
-        /* Content Section */
-        .content-section { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        .content-section h2 { color: #2a5298; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; }
-        .content-section p, .content-section ul { margin-bottom: 15px; color: #444; font-size: 1.05rem; }
-        .content-section ul { padding-left: 20px; }
+        /* Questions Section (Short & Long) */
+        .question-item { background: #fdfdfd; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 12px; }
+        .question-item h4 { color: #333; margin-bottom: 6px; }
+        .question-item p { color: #555; font-size: 0.95rem; }
 
-        /* Quiz Section */
-        .quiz-box { background: #eef2f7; padding: 25px; border-radius: 12px; border-left: 5px solid #2a5298; margin-top: 30px; }
-        .quiz-box h3 { color: #1e3c72; margin-bottom: 15px; }
-        .quiz-option { display: block; background: white; padding: 12px 15px; margin: 8px 0; border-radius: 6px; cursor: pointer; border: 1px solid #ccc; transition: 0.2s; }
+        /* MCQ Quiz Section */
+        .quiz-option { display: block; background: #f8f9fa; padding: 12px 15px; margin: 8px 0; border-radius: 6px; cursor: pointer; border: 1px solid #ccc; transition: 0.2s; }
         .quiz-option:hover { background: #e2e8f0; border-color: #2a5298; }
 
         footer { text-align: center; padding: 25px; color: #777; margin-top: 40px; border-top: 1px solid #ddd; }
@@ -42,52 +46,69 @@
 </head>
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- Breadcrumb & Back Navigation -->
     <nav>
-        <h2>BCA Platform</h2>
-        <a href="index.html">← Back to Home</a>
+        <div>
+            <span class="breadcrumb">Semester 1 > Computer Organization > RAM vs ROM</span>
+        </div>
+        <a href="index.html">← Home</a>
     </nav>
 
     <div class="container">
 
-        <!-- Topic Title Header -->
-        <div class="topic-header">
-            <h1>Semester 1: RAM vs ROM Architecture</h1>
-            <p>Computer Organization & Hardware Fundamentals Module</p>
+        <!-- 1. Topic Title Banner -->
+        <div class="banner">
+            <h1>RAM vs ROM Architecture</h1>
+            <p>Detailed study of Primary Memory components, types, and internal characteristics.</p>
         </div>
 
-        <!-- 3D Interactive Visualizer Area -->
-        <div class="model-viewer-box">
-            <!-- Yahan aapka 3D model embed hoga (.glb file ya viewer) -->
-            <p>🧊 [ 3D Interactive RAM & ROM Model Loading Area ]</p>
+        <!-- 2. 3D Model Display Section (Aap yahan apni .glb file ya viewer lagaenge) -->
+        <div class="section-box">
+            <h2>Interactive 3D Visualizer</h2>
+            <div class="model-container">
+                <p>🧊 [ 3D Model Viewport - Drop your .glb file here ]</p>
+            </div>
         </div>
 
-        <!-- Detailed Notes Section (Uniform Format) -->
-        <div class="content-section">
-            <h2>1. Concept Overview</h2>
-            <p>RAM (Random Access Memory) aur ROM (Read-Only Memory) computer ki mukhya primary memory hain. Is module mein hum inke internal structure, speed, aur usage ko 3D visuals ke madhyam se samjhenge.</p>
-            
-            <h2>2. Key Differences</h2>
+        <!-- 3. Detailed Topic Notes -->
+        <div class="section-box notes-content">
+            <h2>Detailed Topic Explanation & Notes</h2>
+            <p><strong>Introduction:</strong> Primary memory is essential for computer operations. It allows the processor to access data directly from the main memory modules.</p>
+            <p><strong>Key Concepts:</strong></p>
             <ul>
-                <li><strong>Volatility:</strong> RAM volatile hai (light jaane par data mit jata hai), jabki ROM non-volatile hai (data permanent rehta hai).</li>
-                <li><strong>Speed:</strong> RAM bohot tezi se kaam karti hai (CPU ke direct contact mein), ROM comparison mein slow hoti hai.</li>
-                <li><strong>Usage:</strong> RAM current running programs ko hold karti hai, ROM system boot-up instructions (BIOS) store karti hai.</li>
+                <li><strong>RAM (Random Access Memory):</strong> Volatile memory used for temporary execution data.</li>
+                <li><strong>ROM (Read-Only Memory):</strong> Non-volatile memory containing permanent firmware instructions (BIOS).</li>
             </ul>
         </div>
 
-        <!-- Self Assessment Quiz Section -->
-        <div id="quiz-section" class="quiz-box">
-            <h3>Quick Self-Test: RAM vs ROM</h3>
-            <p><strong>Q: Which memory is non-volatile in nature?</strong></p>
-            <div class="quiz-option" onclick="alert('Sahi jawab! ROM non-volatile hoti hai.')">A) RAM (Random Access Memory)</div>
-            <div class="quiz-option" onclick="alert('Sahi jawab! ROM non-volatile hoti hai.')">B) ROM (Read-Only Memory)</div>
-            <div class="quiz-option" onclick="alert('Galat jawab. Phir se koshish karein.')">C) Cache Memory</div>
+        <!-- 4. Short & Long Questions Section -->
+        <div class="section-box">
+            <h2>Important Exam Questions (Short & Long)</h2>
+            
+            <div class="question-item">
+                <h4>Q1. (Short) Define Volatile Memory with an example.</h4>
+                <p><strong>Answer:</strong> Volatile memory requires power to maintain the stored information. Example: RAM loses all data when the device is powered off.</p>
+            </div>
+
+            <div class="question-item">
+                <h4>Q2. (Long) Explain the architectural differences between RAM and ROM in detail.</h4>
+                <p><strong>Answer:</strong> RAM is read-write memory that interfaces directly with the CPU cache and registers for fast processing cycles. In contrast, ROM is primarily read-only storage utilizing mask ROM, PROM, EPROM, or EEPROM technologies designed to hold boot-up routines securely.</p>
+            </div>
+        </div>
+
+        <!-- 5. MCQ Practice Test Section -->
+        <div class="section-box">
+            <h2>Topic Assessment (MCQs)</h2>
+            <p><strong>Q: Which component stores the basic input/output system (BIOS) startup code?</strong></p>
+            <div class="quiz-option" onclick="alert('Correct!')">A) RAM</div>
+            <div class="quiz-option" onclick="alert('Correct! ROM holds the BIOS firmware.')">B) ROM</div>
+            <div class="quiz-option" onclick="alert('Incorrect.')">C) Cache Memory</div>
         </div>
 
     </div>
 
     <footer>
-        <p>© 2026 BCA Interactive Learning Platform | Standard Topic Template</p>
+        <p>© 2026 BCA Interactive Learning Platform | Standard Structured Template</p>
     </footer>
 
 </body>
