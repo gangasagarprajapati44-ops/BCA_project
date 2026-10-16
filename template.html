@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Topic Detail | BCA Learning Platform</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
+
+        /* Top Navigation Bar */
+        nav { background: #1e3c72; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
+        nav .breadcrumb { font-size: 0.9rem; opacity: 0.85; }
+        nav a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; transition: 0.3s; }
+        nav a:hover { background: rgba(255,255,255,0.4); }
+
+        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+
+        /* Topic Title Banner */
+        .banner { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 6px solid #2a5298; }
+        .banner h1 { color: #1e3c72; font-size: 2rem; margin-bottom: 5px; }
+        .banner p { color: #666; font-size: 1rem; }
+
+        /* Section Box Style */
+        .section-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
+        .section-box h2 { color: #2a5298; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; font-size: 1.4rem; }
+        
+        /* 3D Viewport Box */
+        .model-container { background: #000; border-radius: 8px; height: 350px; display: flex; justify-content: center; align-items: center; color: white; }
+        .model-container p { background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 6px; font-size: 1.1rem; }
+
+        /* Notes & Content */
+        .notes-content p, .notes-content ul { margin-bottom: 12px; color: #444; font-size: 1.05rem; }
+        .notes-content ul { padding-left: 20px; }
+
+        /* Questions Section */
+        .question-item { background: #fdfdfd; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 12px; }
+        .question-item h4 { color: #333; margin-bottom: 6px; }
+        .question-item p { color: #555; font-size: 0.95rem; }
+
+        /* MCQ Options */
+        .quiz-option { display: block; background: #f8f9fa; padding: 12px 15px; margin: 8px 0; border-radius: 6px; cursor: pointer; border: 1px solid #ccc; transition: 0.2s; }
+        .quiz-option:hover { background: #e2e8f0; border-color: #2a5298; }
+
+        footer { text-align: center; padding: 25px; color: #777; margin-top: 40px; border-top: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+
+    <!-- Breadcrumb & Back Navigation -->
+    <nav>
+        <div>
+            <span class="breadcrumb">Semester 1 > Computer Organization > RAM vs ROM</span>
+        </div>
+        <a href="index.html">← Home</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- 1. Topic Title Banner -->
+        <div class="banner">
+            <h1>RAM vs ROM Architecture</h1>
+            <p>Detailed study of Primary Memory components, types, and internal characteristics.</p>
+        </div>
+
+        <!-- 2. 3D Model Display Section -->
+        <div class="section-box">
+            <h2>Interactive 3D Visualizer</h2>
+            <div class="model-container">
+                <p>🧊 [ 3D Model Viewport - Drop your .glb file here ]</p>
+            </div>
+        </div>
+
+        <!-- 3. Detailed Topic Notes -->
+        <div class="section-box notes-content">
+            <h2>Detailed Topic Explanation & Notes</h2>
+            <p><strong>Introduction:</strong> Primary memory is essential for computer operations. It allows the processor to access data directly from the main memory modules.</p>
+            <p><strong>Key Concepts:</strong></p>
+            <ul>
+                <li><strong>RAM (Random Access Memory):</strong> Volatile memory used for temporary execution data.</li>
+                <li><strong>ROM (Read-Only Memory):</strong> Non-volatile memory containing permanent firmware instructions (BIOS).</li>
+            </ul>
+        </div>
+
+        <!-- 4. Short & Long Questions Section -->
+        <div class="section-box">
+            <h2>Important Exam Questions (Short & Long)</h2>
+            
+            <div class="question-item">
+                <h4>Q1. (Short) Define Volatile Memory with an example.</h4>
+                <p><strong>Answer:</strong> Volatile memory requires power to maintain stored information. Example: RAM loses all data when the device is powered off.</p>
+            </div>
+
+            <div class="question-item">
+                <h4>Q2. (Long) Explain the architectural differences between RAM and ROM in detail.</h4>
+                <p><strong>Answer:</strong> RAM is read-write memory interfacing directly with CPU caches for fast processing cycles. In contrast, ROM is read-only storage utilizing mask ROM, PROM, or EPROM technologies designed to securely hold boot-up routines.</p>
+            </div>
+        </div>
+
+        <!-- 5. MCQ Assessment Section -->
+        <div class="section-box">
+            <h2>Topic Assessment (MCQs)</h2>
+            <p><strong>Q: Which component stores the basic input/output system (BIOS) startup code?</strong></p>
+            <div class="quiz-option" onclick="alert('Incorrect.')">A) RAM</div>
+            <div class="quiz-option" onclick="alert('Correct! ROM holds the BIOS firmware.')">B) ROM</div>
+            <div class="quiz-option" onclick="alert('Incorrect.')">C) Cache Memory</div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 BCA Interactive Learning Platform | Standard Structured Template</p>
+    </footer>
+
+</body>
+</html>
