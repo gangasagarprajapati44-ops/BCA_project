@@ -1,91 +1,517 @@
 <!DOCTYPE html>
-<html lang="hi">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Learning Hub - Learn with 3D Technology</title>
+    <title>BCA Learning Hub - Learn. Explore. Innovate</title>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts (Inter & Fira Code) -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Inter:wght@300;400;500;600;700;800;900&family=Reenie+Beanie&display=swap" rel="stylesheet">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            dark: '#050a18',
+                            card: '#08122c',
+                            blue: '#3a86ff',
+                            cyan: '#00f0ff',
+                            neon: '#00d2ff',
+                            purple: '#7000ff'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                        hand: ['Reenie Beanie', 'cursive']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0b132b; color: #ffffff; overflow-x: hidden; }
+        /* Custom Neon Glow Styles & Keyframes */
+        body {
+            background-color: #030712;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            overflow-x: hidden;
+        }
 
-        /* Top Navbar */
-        nav { background: rgba(11, 19, 43, 0.95); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .logo-area { display: flex; align-items: center; gap: 10px; }
-        .logo-area h2 { font-size: 1.3rem; color: #fff; letter-spacing: 0.5px; }
-        .logo-area span { font-size: 0.75rem; color: #3a86ff; display: block; }
-        
-        .nav-links { display: flex; align-items: center; gap: 25px; }
-        .nav-links a { color: #cfd9df; text-decoration: none; font-size: 0.95rem; font-weight: 500; transition: 0.3s; padding: 6px 12px; border-radius: 20px; }
-        .nav-links a:hover, .nav-links a.active { color: #fff; background: rgba(58, 134, 255, 0.2); }
-        
-        .auth-btn { background: linear-gradient(135deg, #3a86ff, #4361ee); color: white !important; padding: 8px 20px !important; border-radius: 20px !important; font-weight: bold; box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4); }
+        /* Glassmorphism Effect */
+        .glass-panel {
+            background: rgba(8, 18, 44, 0.65);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 240, 255, 0.25);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
 
-        /* Hero Section */
-        .hero { display: flex; align-items: center; justify-content: space-between; padding: 140px 50px 80px 50px; min-height: 100vh; background: radial-gradient(circle at center, #1c2541 0%, #0b132b 100%); }
-        .hero-content { max-width: 600px; }
-        .hero-content h3 { color: #4cc9f0; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; }
-        .hero-content h1 { font-size: 3.2rem; font-weight: 800; line-height: 1.2; margin-bottom: 20px; background: linear-gradient(to right, #ffffff, #4cc9f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero-content p { font-size: 1.05rem; color: #adb5bd; margin-bottom: 30px; line-height: 1.6; }
-        
-        .hero-btns { display: flex; gap: 15px; align-items: center; }
-        .btn-primary { background: linear-gradient(135deg, #3a86ff, #4361ee); color: white; padding: 12px 30px; border-radius: 8px; text-decoration: none; font-weight: bold; box-shadow: 0 4px 20px rgba(58, 134, 255, 0.5); transition: 0.3s; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 6px 25px rgba(58, 134, 255, 0.8); }
+        .glass-nav {
+            background: rgba(5, 10, 24, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0, 240, 255, 0.15);
+        }
 
-        /* Right Side Visual Graphic Box */
-        .hero-graphic { width: 450px; height: 320px; background: rgba(26, 37, 64, 0.7); border: 2px solid rgba(76, 201, 240, 0.3); border-radius: 15px; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 0 30px rgba(76, 201, 240, 0.2); position: relative; text-align: center; padding: 20px; }
-        .hero-graphic h4 { color: #4cc9f0; margin-bottom: 10px; font-size: 1.2rem; }
-        .hero-graphic p { color: #8d99ae; font-size: 0.9rem; }
+        /* Glowing Effects */
+        .neon-glow-cyan {
+            box-shadow: 0 0 15px rgba(0, 240, 255, 0.4), inset 0 0 15px rgba(0, 240, 255, 0.2);
+        }
 
-        /* Responsive */
-        @media(max-width: 900px) {
-            .hero { flex-direction: column; text-align: center; padding-top: 120px; }
-            .hero-content { margin-bottom: 40px; }
-            .hero-graphic { width: 100%; max-width: 400px; }
-            .nav-links { display: none; } /* Mobile responsive ke liye menu hide (future mein toggle laga sakte hain) */
+        .neon-glow-blue {
+            box-shadow: 0 0 25px rgba(58, 134, 255, 0.5);
+        }
+
+        .neon-text-glow {
+            text-shadow: 0 0 12px rgba(0, 240, 255, 0.7);
+        }
+
+        /* Continuous Animations */
+        @keyframes floatSlow {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(1deg); }
+        }
+
+        @keyframes floatReverse {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(10px) rotate(-1deg); }
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        @keyframes rotateRing {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .animate-float {
+            animation: floatSlow 5s ease-in-out infinite;
+        }
+
+        .animate-float-reverse {
+            animation: floatReverse 6s ease-in-out infinite;
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 4s infinite ease-in-out;
+        }
+
+        .animate-spin-ring {
+            animation: rotateRing 20s linear infinite;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #030712;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+            border: 1px solid #00f0ff;
         }
     </style>
 </head>
-<body>
+<body class="relative min-h-screen selection:bg-cyan-500 selection:text-black">
 
-    <!-- Professional Navbar (Jaise aapne image mein dikhaya hai) -->
-    <nav>
-        <div class="logo-area">
-            <div>
-                <h2>🎓 BCA Learning Hub</h2>
-                <span>Learn · Explore · Innovate</span>
-            </div>
-        </div>
-        <div class="nav-links">
-            <a href="index.html" class="active">Home</a>
-            <a href="template.html">BCA Course</a>
-            <a href="template.html">3D Devices</a>
-            <a href="template.html">Study Resources</a>
-            <a href="#about">About Us</a>
-            <a href="#contact">Contact</a>
-            <a href="template.html" class="auth-btn">Login / Sign Up</a>
-        </div>
-    </nav>
+    <!-- Futuristic Cyber Background Gradients & Grid Light Effect -->
+    <div class="fixed inset-0 pointer-events-none z-0">
+        <div class="absolute top-0 left-1/4 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl animate-pulse-glow"></div>
+        <div class="absolute bottom-10 right-10 w-[500px] h-[500px] bg-blue-600/15 rounded-full blur-3xl animate-pulse-glow" style="animation-delay: 2s;"></div>
+        <div class="absolute top-1/3 right-1/4 w-80 h-80 bg-purple-600/10 rounded-full blur-3xl"></div>
+        <!-- Grid overlay -->
+        <div class="w-full h-full opacity-10" style="background-image: linear-gradient(rgba(0, 240, 255, 0.2) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.2) 1px, transparent 1px); background-size: 40px 40px;"></div>
+    </div>
 
-    <!-- Hero Section -->
-    <section class="hero">
-        <div class="hero-content">
-            <h3>Your Complete BCA Learning Platform</h3>
-            <h1>Explore BCA Course with 3D Technology</h1>
-            <p>Learn. Visualize. Understand. Dive into the world of Computer Applications with our interactive 3D learning experience, structured notes, and customized modules.</p>
+    <!-- Navigation Bar -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-nav transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
             
-            <div class="hero-btns">
-                <a href="template.html" class="btn-primary">Start Learning Now →</a>
+            <!-- Logo Section -->
+            <a href="index.html" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-400 p-0.5 neon-glow-cyan flex items-center justify-center transition-transform group-hover:scale-105">
+                    <div class="w-full h-full bg-brand-dark rounded-[10px] flex items-center justify-center">
+                        <i class="fa-solid fa-graduation-cap text-cyan-400 text-xl"></i>
+                    </div>
+                </div>
+                <div>
+                    <h1 class="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1.5">
+                        BCA Learning Hub
+                    </h1>
+                    <p class="text-[10px] text-cyan-400 font-semibold tracking-wider uppercase">Learn · Explore · Innovate</p>
+                </div>
+            </a>
+
+            <!-- Navigation Links (Centered Highlighted Navbar) -->
+            <nav class="hidden lg:flex items-center gap-1 xl:gap-2 px-3 py-1.5 rounded-full bg-slate-900/80 border border-cyan-500/20 shadow-lg shadow-cyan-950/40">
+                <a href="index.html" class="px-4 py-1.5 rounded-full bg-blue-600 text-white font-semibold text-sm shadow-md shadow-blue-500/50 transition-all">Home</a>
+                
+                <!-- Dropdown: BCA Course -->
+                <div class="relative group">
+                    <button class="px-3.5 py-1.5 rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/60 font-medium text-sm flex items-center gap-1 transition-all">
+                        BCA Course <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute top-full left-0 mt-2 w-56 rounded-xl glass-panel p-2 hidden group-hover:block transition-all shadow-xl">
+                        <a href="template.html" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-book-open text-cyan-400 mr-2"></i>Semester 1 (Fundamentals)</a>
+                        <a href="template.html" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-code text-cyan-400 mr-2"></i>Semester 2 (C++ & Data Struct.)</a>
+                        <a href="template.html" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-database text-cyan-400 mr-2"></i>Semester 3 (DBMS & Java)</a>
+                    </div>
+                </div>
+
+                <!-- Dropdown: 3D Devices -->
+                <div class="relative group">
+                    <button class="px-3.5 py-1.5 rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/60 font-medium text-sm flex items-center gap-1 transition-all">
+                        3D Devices <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute top-full left-0 mt-2 w-52 rounded-xl glass-panel p-2 hidden group-hover:block transition-all shadow-xl">
+                        <button onclick="openDeviceModal('computer')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-desktop text-cyan-400 mr-2"></i>Computer Desktop</button>
+                        <button onclick="openDeviceModal('laptop')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-laptop text-cyan-400 mr-2"></i>Laptop System</button>
+                        <button onclick="openDeviceModal('printer')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-print text-cyan-400 mr-2"></i>Laser Printer</button>
+                        <button onclick="openDeviceModal('projector')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-video text-cyan-400 mr-2"></i>Digital Projector</button>
+                        <button onclick="openDeviceModal('scanner')" class="w-full text-left px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-expand text-cyan-400 mr-2"></i>Flatbed Scanner</button>
+                    </div>
+                </div>
+
+                <!-- Dropdown: Study Resources -->
+                <div class="relative group">
+                    <button class="px-3.5 py-1.5 rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/60 font-medium text-sm flex items-center gap-1 transition-all">
+                        Study Resources <i class="fa-solid fa-chevron-down text-[10px] opacity-70 group-hover:rotate-180 transition-transform"></i>
+                    </button>
+                    <div class="absolute top-full left-0 mt-2 w-48 rounded-xl glass-panel p-2 hidden group-hover:block transition-all shadow-xl">
+                        <a href="template.html" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-file-lines text-cyan-400 mr-2"></i>Lecture Notes</a>
+                        <a href="template.html" class="block px-3 py-2 rounded-lg text-xs font-medium text-slate-300 hover:bg-cyan-500/20 hover:text-cyan-300"><i class="fa-solid fa-circle-question text-cyan-400 mr-2"></i>Practice MCQs</a>
+                    </div>
+                </div>
+
+                <a href="#about" class="px-3.5 py-1.5 rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/60 font-medium text-sm transition-all">About Us</a>
+                <a href="#contact" class="px-3.5 py-1.5 rounded-full text-slate-300 hover:text-cyan-400 hover:bg-slate-800/60 font-medium text-sm transition-all">Contact</a>
+            </nav>
+
+            <!-- Search Icon & Login/Sign Up Action -->
+            <div class="flex items-center gap-3">
+                <button onclick="toggleSearchModal()" class="w-10 h-10 rounded-full border border-slate-700 bg-slate-900/60 hover:border-cyan-400 text-slate-300 hover:text-cyan-400 flex items-center justify-center transition-all">
+                    <i class="fa-solid fa-magnifying-glass text-sm"></i>
+                </button>
+
+                <button onclick="toggleLoginModal()" class="flex items-center gap-2 px-5 py-2 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-semibold text-sm neon-glow-cyan transition-all transform hover:scale-105">
+                    <i class="fa-solid fa-user text-xs"></i>
+                    <span>Login / Sign Up</span>
+                </button>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Hero Section -->
+    <main class="relative pt-28 sm:pt-36 pb-20 z-10 min-h-screen flex flex-col justify-center">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                
+                <!-- Left Hero Content -->
+                <div class="lg:col-span-5 space-y-6 text-left">
+                    
+                    <!-- Subtitle Badge -->
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-cyan-500/30 text-cyan-400 text-xs font-semibold tracking-wider uppercase shadow-inner">
+                        <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                        Your Complete BCA Learning Platform
+                    </div>
+
+                    <!-- Main Headline -->
+                    <h1 class="text-4xl sm:text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight">
+                        Explore <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-400 neon-text-glow">BCA Course</span> with <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-300">3D Technology</span>
+                    </h1>
+
+                    <!-- Catchy Glow Tagline -->
+                    <div class="text-xl sm:text-2xl font-bold italic tracking-wide text-cyan-300/90 flex items-center gap-2">
+                        <span>Learn.</span>
+                        <span class="text-blue-400">Visualize.</span>
+                        <span class="text-cyan-400 underline decoration-cyan-500/50 decoration-2">Understand.</span>
+                    </div>
+
+                    <!-- Description -->
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        Dive into the world of Computer Applications with our interactive 3D learning experience. Explore every device, understand their working, and build a strong foundation for your IT career.
+                    </p>
+
+                    <!-- CTA Actions Section -->
+                    <div class="pt-4 flex flex-col sm:flex-row items-start sm:items-center gap-5">
+                        <a href="template.html" class="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 bg-[length:200%_auto] hover:bg-right text-white font-extrabold text-base shadow-xl shadow-cyan-500/30 border border-cyan-300/40 hover:scale-105 transition-all duration-300">
+                            <span class="w-8 h-8 rounded-full bg-white text-blue-600 flex items-center justify-center text-xs shadow-md">
+                                <i class="fa-solid fa-play"></i>
+                            </span>
+                            Start Learning Now →
+                        </a>
+
+                        <!-- Handwritten Futuristic Graphic Accent -->
+                        <div class="font-hand text-2xl text-cyan-300 tracking-wide rotate-[-3deg] flex items-center gap-2">
+                            <i class="fa-solid fa-arrow-left-long text-cyan-400 text-lg hidden sm:inline-block"></i>
+                            Build a Smarter Future with BCA!
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Right Side Interactive Visual Cyber Showcase Workspace -->
+                <div class="lg:col-span-7 relative flex justify-center items-center">
+                    
+                    <!-- Main Holographic Center Cyber Stage Container -->
+                    <div class="relative w-full max-w-[620px] h-[520px] rounded-3xl glass-panel p-6 border border-cyan-500/30 neon-glow-cyan overflow-hidden flex items-center justify-center">
+                        
+                        <!-- Ambient Grid Stage Floor -->
+                        <div class="absolute bottom-0 w-full h-48 bg-gradient-to-t from-cyan-950/60 to-transparent border-t border-cyan-500/20 transform perspective-500 rotate-x-60"></div>
+                        
+                        <!-- Floating Central Holographic Globe & BCA Ring -->
+                        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 flex items-center justify-center pointer-events-none">
+                            
+                            <!-- Rotating Hologram Ring -->
+                            <div class="absolute w-72 h-72 rounded-full border-2 border-dashed border-cyan-400/40 animate-spin-ring"></div>
+                            <div class="absolute w-60 h-60 rounded-full border border-blue-500/30 animate-pulse-glow"></div>
+                            
+                            <!-- Graduation Cap Floating Icon -->
+                            <div class="absolute -top-6 text-yellow-400 text-3xl animate-bounce drop-shadow-[0_0_10px_rgba(250,204,21,0.8)]">
+                                <i class="fa-solid fa-graduation-cap"></i>
+                            </div>
+
+                            <!-- Central Glowing Text 'BCA' -->
+                            <div class="text-center z-10">
+                                <span class="text-5xl font-black tracking-widest text-transparent bg-clip-text bg-gradient-to-b from-white via-cyan-300 to-blue-500 neon-text-glow">BCA</span>
+                                <p class="text-[10px] tracking-widest text-cyan-300 uppercase font-mono mt-1">Dream · Learn · Grow</p>
+                            </div>
+                        </div>
+
+                        <!-- 5 Interactive Floating Device Cards Surround Grid -->
+                        
+                        <!-- 1. Top Left: Computer -->
+                        <div onclick="openDeviceModal('computer')" class="absolute top-6 left-6 w-32 sm:w-36 p-3 rounded-2xl glass-panel border border-cyan-400/40 hover:border-cyan-300 hover:scale-110 cursor-pointer transition-all duration-300 animate-float shadow-lg shadow-cyan-950/50 group">
+                            <div class="w-full h-16 rounded-lg bg-slate-900/80 flex items-center justify-center text-cyan-400 group-hover:text-white transition-colors">
+                                <i class="fa-solid fa-desktop text-2xl group-hover:scale-125 transition-transform"></i>
+                            </div>
+                            <p class="text-center text-xs font-bold text-white mt-2">Computer</p>
+                            <p class="text-[9px] text-center text-cyan-400 font-mono">3D View & Details</p>
+                        </div>
+
+                        <!-- 2. Bottom Left: Laptop -->
+                        <div onclick="openDeviceModal('laptop')" class="absolute bottom-16 left-8 w-32 sm:w-36 p-3 rounded-2xl glass-panel border border-cyan-400/40 hover:border-cyan-300 hover:scale-110 cursor-pointer transition-all duration-300 animate-float-reverse shadow-lg shadow-cyan-950/50 group">
+                            <div class="w-full h-16 rounded-lg bg-slate-900/80 flex items-center justify-center text-blue-400 group-hover:text-white transition-colors">
+                                <i class="fa-solid fa-laptop text-2xl group-hover:scale-125 transition-transform"></i>
+                            </div>
+                            <p class="text-center text-xs font-bold text-white mt-2">Laptop</p>
+                            <p class="text-[9px] text-center text-cyan-400 font-mono">System Architecture</p>
+                        </div>
+
+                        <!-- 3. Top Right: Printer -->
+                        <div onclick="openDeviceModal('printer')" class="absolute top-6 right-6 w-32 sm:w-36 p-3 rounded-2xl glass-panel border border-cyan-400/40 hover:border-cyan-300 hover:scale-110 cursor-pointer transition-all duration-300 animate-float-reverse shadow-lg shadow-cyan-950/50 group">
+                            <div class="w-full h-16 rounded-lg bg-slate-900/80 flex items-center justify-center text-purple-400 group-hover:text-white transition-colors">
+                                <i class="fa-solid fa-print text-2xl group-hover:scale-125 transition-transform"></i>
+                            </div>
+                            <p class="text-center text-xs font-bold text-white mt-2">Printer</p>
+                            <p class="text-[9px] text-center text-cyan-400 font-mono">Hardware Specs</p>
+                        </div>
+
+                        <!-- 4. Middle Right: Projector -->
+                        <div onclick="openDeviceModal('projector')" class="absolute top-1/2 -translate-y-1/2 right-4 w-32 sm:w-36 p-3 rounded-2xl glass-panel border border-cyan-400/40 hover:border-cyan-300 hover:scale-110 cursor-pointer transition-all duration-300 animate-float shadow-lg shadow-cyan-950/50 group">
+                            <div class="w-full h-16 rounded-lg bg-slate-900/80 flex items-center justify-center text-cyan-300 group-hover:text-white transition-colors">
+                                <i class="fa-solid fa-video text-2xl group-hover:scale-125 transition-transform"></i>
+                            </div>
+                            <p class="text-center text-xs font-bold text-white mt-2">Projector</p>
+                            <p class="text-[9px] text-center text-cyan-400 font-mono">Display Tech</p>
+                        </div>
+
+                        <!-- 5. Bottom Right: Scanner -->
+                        <div onclick="openDeviceModal('scanner')" class="absolute bottom-12 right-10 w-32 sm:w-36 p-3 rounded-2xl glass-panel border border-cyan-400/40 hover:border-cyan-300 hover:scale-110 cursor-pointer transition-all duration-300 animate-float-reverse shadow-lg shadow-cyan-950/50 group">
+                            <div class="w-full h-16 rounded-lg bg-slate-900/80 flex items-center justify-center text-blue-300 group-hover:text-white transition-colors">
+                                <i class="fa-solid fa-expand text-2xl group-hover:scale-125 transition-transform"></i>
+                            </div>
+                            <p class="text-center text-xs font-bold text-white mt-2">Scanner</p>
+                            <p class="text-[9px] text-center text-cyan-400 font-mono">Optical Sensors</p>
+                        </div>
+
+                        <!-- Center Student Holographic Desk Setup Graphic -->
+                        <div class="absolute bottom-2 z-20 flex flex-col items-center pointer-events-none">
+                            <div class="flex items-center gap-2 bg-slate-950/90 px-4 py-1.5 rounded-full border border-cyan-500/40 text-[11px] font-mono text-cyan-300 shadow-md">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                                &lt;/&gt; Interactive Desk Active
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- Bottom Stacked Interactive BCA Study Books -->
+                    <div class="absolute -bottom-8 right-4 z-30 flex flex-col items-end space-y-[-10px]">
+                        <div onclick="window.location.href='template.html'" class="w-48 py-1.5 px-3 rounded-md bg-gradient-to-r from-blue-700 to-indigo-800 border border-cyan-400/50 text-white font-bold text-[11px] shadow-lg cursor-pointer hover:translate-x-[-8px] transition-transform flex justify-between items-center">
+                            <span>Programming</span>
+                            <i class="fa-solid fa-book text-[10px]"></i>
+                        </div>
+                        <div onclick="window.location.href='template.html'" class="w-52 py-1.5 px-3 rounded-md bg-gradient-to-r from-indigo-800 to-cyan-800 border border-cyan-400/50 text-white font-bold text-[11px] shadow-lg cursor-pointer hover:translate-x-[-8px] transition-transform flex justify-between items-center">
+                            <span>Database Management</span>
+                            <i class="fa-solid fa-database text-[10px]"></i>
+                        </div>
+                        <div onclick="window.location.href='template.html'" class="w-56 py-1.5 px-3 rounded-md bg-gradient-to-r from-cyan-800 to-blue-900 border border-cyan-400/50 text-white font-bold text-[11px] shadow-lg cursor-pointer hover:translate-x-[-8px] transition-transform flex justify-between items-center">
+                            <span>Computer Networks</span>
+                            <i class="fa-solid fa-network-wired text-[10px]"></i>
+                        </div>
+                        <div onclick="window.location.href='template.html'" class="w-60 py-1.5 px-3 rounded-md bg-gradient-to-r from-blue-900 to-slate-900 border border-cyan-400/50 text-white font-bold text-[11px] shadow-lg cursor-pointer hover:translate-x-[-8px] transition-transform flex justify-between items-center">
+                            <span>Web Technologies</span>
+                            <i class="fa-solid fa-globe text-[10px]"></i>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
         </div>
+    </main>
 
-        <!-- 3D Graphic / Custom Content Preview Box -->
-        <div class="hero-graphic">
-            <h4>🧊 3D Interactive Hub</h4>
-            <p>Explore Computer Hardware, Laptops, Processors, and Architecture in 3D models.</p>
-            <br>
-            <a href="template.html" style="color: #4cc9f0; text-decoration: none; font-weight: bold; font-size: 0.9rem;">Open Topic Editor & Viewer →</a>
+    <!-- Modal 1: 3D Device Breakdown & Preview Modal -->
+    <div id="deviceModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="relative w-full max-w-2xl rounded-3xl glass-panel border border-cyan-400/50 p-6 sm:p-8 neon-glow-cyan">
+            
+            <button onclick="closeDeviceModal()" class="absolute top-4 right-4 w-10 h-10 rounded-full bg-slate-900 border border-slate-700 hover:border-cyan-400 text-white flex items-center justify-center transition-all">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="flex items-center gap-3 mb-4">
+                <div id="modalIconBox" class="w-12 h-12 rounded-xl bg-cyan-500/20 border border-cyan-400 flex items-center justify-center text-cyan-400 text-2xl">
+                    <i class="fa-solid fa-desktop"></i>
+                </div>
+                <div>
+                    <h3 id="modalTitle" class="text-2xl font-bold text-white">Device Preview</h3>
+                    <p id="modalCategory" class="text-xs text-cyan-400 font-mono">Interactive Hardware Module</p>
+                </div>
+            </div>
+
+            <!-- Simulated 3D Interactive Viewport -->
+            <div class="w-full h-56 rounded-2xl bg-slate-950 border border-cyan-500/30 flex flex-col items-center justify-center relative overflow-hidden mb-6 group">
+                <div class="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent animate-pulse"></div>
+                <div id="modal3DGraphic" class="text-6xl text-cyan-400 mb-2 group-hover:scale-125 transition-transform duration-500">
+                    <i class="fa-solid fa-desktop"></i>
+                </div>
+                <p class="text-xs font-mono text-slate-400">🧊 Interactive 3D Canvas Active</p>
+                <span class="mt-2 text-[10px] px-3 py-1 rounded-full bg-cyan-950 border border-cyan-500/40 text-cyan-300">Rotate & Zoom Supported in Full Module</span>
+            </div>
+
+            <p id="modalDescription" class="text-slate-300 text-sm leading-relaxed mb-6">
+                Detailed architecture, circuit breakdown, and hardware specification of the device.
+            </p>
+
+            <div class="flex items-center justify-end gap-4">
+                <button onclick="closeDeviceModal()" class="px-5 py-2.5 rounded-full border border-slate-700 text-slate-300 hover:text-white text-sm font-semibold">Close</button>
+                <a href="template.html" class="px-6 py-2.5 rounded-full bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/40 hover:scale-105 transition-all">
+                    Open Full Topic Lesson →
+                </a>
+            </div>
         </div>
-    </section>
+    </div>
+
+    <!-- Modal 2: Search Overlay Modal -->
+    <div id="searchModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-md hidden flex items-start justify-center pt-24 p-4">
+        <div class="relative w-full max-w-xl rounded-2xl glass-panel border border-cyan-400/40 p-4">
+            <div class="flex items-center gap-3 bg-slate-900/90 rounded-xl px-4 py-3 border border-slate-700">
+                <i class="fa-solid fa-magnifying-glass text-cyan-400"></i>
+                <input type="text" placeholder="Search BCA Semesters, 3D Devices, Topics..." class="w-full bg-transparent text-white text-sm focus:outline-none placeholder-slate-500">
+                <button onclick="toggleSearchModal()" class="text-slate-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="mt-3 text-xs text-slate-400 px-2 flex justify-between">
+                <span>Quick links: <a href="template.html" class="text-cyan-400 hover:underline">RAM vs ROM</a>, <a href="template.html" class="text-cyan-400 hover:underline">CPU Architecture</a></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal 3: Login / Sign Up Modal -->
+    <div id="loginModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="relative w-full max-w-md rounded-3xl glass-panel border border-cyan-400/50 p-8 neon-glow-cyan">
+            <button onclick="toggleLoginModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white"><i class="fa-solid fa-xmark text-lg"></i></button>
+            <h3 class="text-2xl font-bold text-white mb-1">Student Portal</h3>
+            <p class="text-xs text-cyan-400 mb-6 font-mono">Sign in to access interactive 3D modules</p>
+            
+            <form onsubmit="event.preventDefault(); alert('Login successful!'); toggleLoginModal();" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Email Address</label>
+                    <input type="email" required placeholder="student@bca.edu" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:border-cyan-400 focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Password</label>
+                    <input type="password" required placeholder="••••••••" class="w-full px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:border-cyan-400 focus:outline-none">
+                </div>
+                <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 text-white font-bold text-sm shadow-lg shadow-cyan-500/40 hover:scale-[1.02] transition-all">
+                    Login to Account
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // Device Modal Data Mapping
+        const deviceData = {
+            computer: {
+                title: "Computer Desktop System",
+                category: "Input/Output & Processing Unit",
+                icon: "fa-desktop",
+                desc: "Explore motherboard components, CPU sockets, RAM slots, expansion bus architectures, and power distribution units in dynamic 3D."
+            },
+            laptop: {
+                title: "Laptop System Architecture",
+                category: "Portable Computing Device",
+                icon: "fa-laptop",
+                desc: "Study integrated SOCs, lithium battery power management, compact cooling systems, and display panel controllers."
+            },
+            printer: {
+                title: "Laser & Inkjet Printers",
+                category: "Hardcopy Output Peripheral",
+                icon: "fa-print",
+                desc: "Understand drum rotation, toner transfer mechanics, fuser rollers, and CMYK raster color processing."
+            },
+            projector: {
+                title: "Digital DLP/LCD Projector",
+                category: "Visual Output Projection Unit",
+                icon: "fa-video",
+                desc: "Visualize light refraction optics, color wheel synchronization, DMD chip micromirror reflection, and lens magnification."
+            },
+            scanner: {
+                title: "Flatbed Image Scanner",
+                category: "Optical Image Input Device",
+                icon: "fa-expand",
+                desc: "Learn about Charge-Coupled Devices (CCD), stepper motor movements, glass bed calibration, and optical resolution conversion."
+            }
+        };
+
+        function openDeviceModal(deviceKey) {
+            const data = deviceData[deviceKey];
+            if (!data) return;
+
+            document.getElementById('modalTitle').innerText = data.title;
+            document.getElementById('modalCategory').innerText = data.category;
+            document.getElementById('modalDescription').innerText = data.desc;
+            
+            // Set Icon
+            document.getElementById('modalIconBox').innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+            document.getElementById('modal3DGraphic').innerHTML = `<i class="fa-solid ${data.icon}"></i>`;
+
+            document.getElementById('deviceModal').classList.remove('hidden');
+        }
+
+        function closeDeviceModal() {
+            document.getElementById('deviceModal').classList.add('hidden');
+        }
+
+        function toggleSearchModal() {
+            document.getElementById('searchModal').classList.toggle('hidden');
+        }
+
+        function toggleLoginModal() {
+            document.getElementById('loginModal').classList.toggle('hidden');
+        }
+    </script>
 
 </body>
 </html>
