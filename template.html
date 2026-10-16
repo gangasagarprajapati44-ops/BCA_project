@@ -3,113 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topic Detail | BCA Learning Platform</title>
+    <title>Topic Creator & Detail View | BCA Platform</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
 
-        /* Top Navigation Bar */
         nav { background: #1e3c72; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        nav .breadcrumb { font-size: 0.9rem; opacity: 0.85; }
         nav a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; transition: 0.3s; }
         nav a:hover { background: rgba(255,255,255,0.4); }
 
-        .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
 
-        /* Topic Title Banner */
-        .banner { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 6px solid #2a5298; }
-        .banner h1 { color: #1e3c72; font-size: 2rem; margin-bottom: 5px; }
-        .banner p { color: #666; font-size: 1rem; }
-
-        /* Section Box Style */
-        .section-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; }
-        .section-box h2 { color: #2a5298; margin-bottom: 15px; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; font-size: 1.4rem; }
+        /* Editable Form Sections */
+        .edit-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 6px solid #2a5298; }
+        .edit-box h2 { color: #1e3c72; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; }
         
-        /* 3D Viewport Box */
-        .model-container { background: #000; border-radius: 8px; height: 350px; display: flex; justify-content: center; align-items: center; color: white; }
-        .model-container p { background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 6px; font-size: 1.1rem; }
+        label { display: block; font-weight: bold; margin-bottom: 6px; color: #444; font-size: 0.95rem; }
+        input[type="text"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; margin-bottom: 15px; }
+        textarea { resize: vertical; height: 100px; }
 
-        /* Notes & Content */
-        .notes-content p, .notes-content ul { margin-bottom: 12px; color: #444; font-size: 1.05rem; }
-        .notes-content ul { padding-left: 20px; }
-
-        /* Questions Section */
-        .question-item { background: #fdfdfd; border: 1px solid #e0e0e0; padding: 15px; border-radius: 8px; margin-bottom: 12px; }
-        .question-item h4 { color: #333; margin-bottom: 6px; }
-        .question-item p { color: #555; font-size: 0.95rem; }
-
-        /* MCQ Options */
-        .quiz-option { display: block; background: #f8f9fa; padding: 12px 15px; margin: 8px 0; border-radius: 6px; cursor: pointer; border: 1px solid #ccc; transition: 0.2s; }
-        .quiz-option:hover { background: #e2e8f0; border-color: #2a5298; }
+        .model-upload-box { background: #000; color: white; padding: 30px; text-align: center; border-radius: 8px; margin-bottom: 15px; }
+        
+        .save-btn { background: #28a745; color: white; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; display: block; width: 100%; transition: 0.3s; }
+        .save-btn:hover { background: #218838; }
 
         footer { text-align: center; padding: 25px; color: #777; margin-top: 40px; border-top: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
-    <!-- Breadcrumb & Back Navigation -->
     <nav>
-        <div>
-            <span class="breadcrumb">Semester 1 > Computer Organization > RAM vs ROM</span>
-        </div>
-        <a href="index.html">← Home</a>
+        <h2>✍️ Blank Topic Structure</h2>
+        <a href="index.html">← Back to Home</a>
     </nav>
 
     <div class="container">
-
-        <!-- 1. Topic Title Banner -->
-        <div class="banner">
-            <h1>RAM vs ROM Architecture</h1>
-            <p>Detailed study of Primary Memory components, types, and internal characteristics.</p>
+        
+        <div style="background: #eef2f7; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #ff9800;">
+            <p><strong>Note:</strong> Yeh ek blank template hai. Yahan aap apna koi bhi naya chapter, topic, notes, questions aur MCQs bilkul naye sire se likh sakte hain.</p>
         </div>
 
-        <!-- 2. 3D Model Display Section -->
-        <div class="section-box">
-            <h2>Interactive 3D Visualizer</h2>
-            <div class="model-container">
-                <p>🧊 [ 3D Model Viewport - Drop your .glb file here ]</p>
-            </div>
-        </div>
-
-        <!-- 3. Detailed Topic Notes -->
-        <div class="section-box notes-content">
-            <h2>Detailed Topic Explanation & Notes</h2>
-            <p><strong>Introduction:</strong> Primary memory is essential for computer operations. It allows the processor to access data directly from the main memory modules.</p>
-            <p><strong>Key Concepts:</strong></p>
-            <ul>
-                <li><strong>RAM (Random Access Memory):</strong> Volatile memory used for temporary execution data.</li>
-                <li><strong>ROM (Read-Only Memory):</strong> Non-volatile memory containing permanent firmware instructions (BIOS).</li>
-            </ul>
-        </div>
-
-        <!-- 4. Short & Long Questions Section -->
-        <div class="section-box">
-            <h2>Important Exam Questions (Short & Long)</h2>
+        <form onsubmit="event.preventDefault(); alert('Aapka content save ho gaya!');">
             
-            <div class="question-item">
-                <h4>Q1. (Short) Define Volatile Memory with an example.</h4>
-                <p><strong>Answer:</strong> Volatile memory requires power to maintain stored information. Example: RAM loses all data when the device is powered off.</p>
+            <!-- 1. Topic Title & Hierarchy -->
+            <div class="edit-box">
+                <h2>1. Semester & Topic Details</h2>
+                <label>Semester / Subject Name:</label>
+                <input type="text" placeholder="Jaise: Semester 2 - Data Structures">
+
+                <label>Topic Title:</label>
+                <input type="text" placeholder="Jaise: Binary Search Trees">
             </div>
 
-            <div class="question-item">
-                <h4>Q2. (Long) Explain the architectural differences between RAM and ROM in detail.</h4>
-                <p><strong>Answer:</strong> RAM is read-write memory interfacing directly with CPU caches for fast processing cycles. In contrast, ROM is read-only storage utilizing mask ROM, PROM, or EPROM technologies designed to securely hold boot-up routines.</p>
+            <!-- 2. 3D Model Placeholder -->
+            <div class="edit-box">
+                <h2>2. 3D Visualizer Model</h2>
+                <div class="model-upload-box">
+                    <p>🧊 [ Yahan apna 3D (.glb) model ya viewer lagayein ]</p>
+                </div>
+                <label>3D Model File Path:</label>
+                <input type="text" placeholder="models/your_file.glb">
             </div>
-        </div>
 
-        <!-- 5. MCQ Assessment Section -->
-        <div class="section-box">
-            <h2>Topic Assessment (MCQs)</h2>
-            <p><strong>Q: Which component stores the basic input/output system (BIOS) startup code?</strong></p>
-            <div class="quiz-option" onclick="alert('Incorrect.')">A) RAM</div>
-            <div class="quiz-option" onclick="alert('Correct! ROM holds the BIOS firmware.')">B) ROM</div>
-            <div class="quiz-option" onclick="alert('Incorrect.')">C) Cache Memory</div>
-        </div>
+            <!-- 3. Detailed Notes -->
+            <div class="edit-box">
+                <h2>3. Detailed Topic Notes</h2>
+                <label>Write Notes / Explanation here:</label>
+                <textarea placeholder="Apne topic ke notes yahan type karein..."></textarea>
+            </div>
+
+            <!-- 4. Short & Long Questions -->
+            <div class="edit-box">
+                <h2>4. Exam Questions (Short & Long)</h2>
+                <label>Short Question & Answer:</label>
+                <textarea style="height: 70px;" placeholder="Q: ... &#10;Ans: ..."></textarea>
+
+                <label>Long Question & Answer:</label>
+                <textarea style="height: 90px;" placeholder="Q: ... &#10;Ans: ..."></textarea>
+            </div>
+
+            <!-- 5. MCQs Setup -->
+            <div class="edit-box">
+                <h2>5. Multiple Choice Questions (MCQs)</h2>
+                <label>Enter MCQ Question:</label>
+                <input type="text" placeholder="Question text yahan likhein...">
+                
+                <label>Options:</label>
+                <input type="text" placeholder="A) Option 1">
+                <input type="text" placeholder="B) Option 2">
+                <input type="text" placeholder="C) Option 3">
+            </div>
+
+            <button type="submit" class="save-btn">Save Topic Content</button>
+
+        </form>
 
     </div>
 
     <footer>
-        <p>© 2026 BCA Interactive Learning Platform | Standard Structured Template</p>
+        <p>© 2026 BCA Interactive Learning Platform | Custom Content Manager</p>
     </footer>
 
 </body>
