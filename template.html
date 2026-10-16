@@ -3,105 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topic Creator & Detail View | BCA Platform</title>
+    <title>Topic Creator & Dual-Language Video Player | BCA Platform</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #f4f7f6; color: #333; line-height: 1.6; }
+        body { background-color: #0b132b; color: #ffffff; line-height: 1.6; }
 
-        nav { background: #1e3c72; color: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; }
-        nav a { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 5px; transition: 0.3s; }
-        nav a:hover { background: rgba(255,255,255,0.4); }
+        nav { background: rgba(11, 19, 43, 0.95); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        nav a { color: #fff; text-decoration: none; font-weight: bold; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
+        nav a:hover { background: rgba(58, 134, 255, 0.4); }
 
-        .container { max-width: 900px; margin: 30px auto; padding: 0 20px; }
+        .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
 
-        /* Editable Form Sections */
-        .edit-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); margin-bottom: 25px; border-left: 6px solid #2a5298; }
-        .edit-box h2 { color: #1e3c72; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 2px solid #f0f0f0; padding-bottom: 8px; }
+        /* Section Styling */
+        .card-box { background: #1c2541; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin-bottom: 25px; border-left: 5px solid #3a86ff; }
+        .card-box h2 { color: #4cc9f0; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+
+        label { display: block; font-weight: bold; margin-bottom: 6px; color: #ced4da; font-size: 0.95rem; }
+        input[type="text"], textarea { width: 100%; padding: 10px 12px; background: #0b132b; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-size: 1rem; margin-bottom: 15px; }
+        textarea { resize: vertical; height: 90px; }
+
+        /* Video Player & Language Toggle Area */
+        .video-container { background: #000; border-radius: 8px; padding: 20px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.3); margin-bottom: 15px; }
+        .lang-switch-btns { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
+        .lang-btn { background: #1c2541; color: #fff; border: 1px solid #3a86ff; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .lang-btn.active, .lang-btn:hover { background: #3a86ff; }
         
-        label { display: block; font-weight: bold; margin-bottom: 6px; color: #444; font-size: 0.95rem; }
-        input[type="text"], textarea { width: 100%; padding: 10px 12px; border: 1px solid #ccc; border-radius: 6px; font-size: 1rem; margin-bottom: 15px; }
-        textarea { resize: vertical; height: 100px; }
+        .video-player-frame { width: 100%; height: 350px; background: #111; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #8d99ae; font-size: 1.1rem; }
 
-        .model-upload-box { background: #000; color: white; padding: 30px; text-align: center; border-radius: 8px; margin-bottom: 15px; }
-        
-        .save-btn { background: #28a745; color: white; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 6px; cursor: pointer; display: block; width: 100%; transition: 0.3s; }
-        .save-btn:hover { background: #218838; }
+        .save-btn { background: linear-gradient(135deg, #3a86ff, #4361ee); color: white; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; display: block; width: 100%; box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4); transition: 0.3s; }
+        .save-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(58, 134, 255, 0.7); }
 
-        footer { text-align: center; padding: 25px; color: #777; margin-top: 40px; border-top: 1px solid #ddd; }
+        footer { text-align: center; padding: 25px; color: #adb5bd; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
     </style>
+    <script>
+        // Simple script to switch video language view message
+        function switchLanguage(lang) {
+            const videoText = document.getElementById('video-status-text');
+            const btnEn = document.getElementById('btn-en');
+            const btnHi = document.getElementById('btn-hi');
+
+            if(lang === 'hi') {
+                videoText.innerHTML = "🎥 [ Hindi Video / Audio Loaded ]<br><small>Yahan aapka Hindi explanation video play hoga</small>";
+                btnHi.classList.add('active');
+                btnEn.classList.remove('active');
+            } else {
+                videoText.innerHTML = "🎥 [ English Video / Audio Loaded ]<br><small>Your English explanation video will play here</small>";
+                btnEn.classList.add('active');
+                btnHi.classList.remove('active');
+            }
+        }
+    </script>
 </head>
 <body>
 
     <nav>
-        <h2>✍️ Blank Topic Structure</h2>
+        <h2>🌐 Dual-Language Topic & Video Manager</h2>
         <a href="index.html">← Back to Home</a>
     </nav>
 
     <div class="container">
         
-        <div style="background: #eef2f7; padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #ff9800;">
-            <p><strong>Note:</strong> Yeh ek blank template hai. Yahan aap apna koi bhi naya chapter, topic, notes, questions aur MCQs bilkul naye sire se likh sakte hain.</p>
+        <div style="background: rgba(58, 134, 255, 0.1); padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #4cc9f0;">
+            <p><strong>Future-Ready Feature:</strong> Is template mein aap 3D models ke sath-sath Hindi aur English dono languages ke videos ke liye language toggle bhi manage kar sakte hain!</p>
         </div>
 
-        <form onsubmit="event.preventDefault(); alert('Aapka content save ho gaya!');">
+        <form onsubmit="event.preventDefault(); alert('Aapka content aur video settings save ho gayi hain!');">
             
-            <!-- 1. Topic Title & Hierarchy -->
-            <div class="edit-box">
+            <!-- 1. Topic Details -->
+            <div class="card-box">
                 <h2>1. Semester & Topic Details</h2>
                 <label>Semester / Subject Name:</label>
-                <input type="text" placeholder="Jaise: Semester 2 - Data Structures">
+                <input type="text" placeholder="Jaise: Semester 1 - Computer Organization">
 
                 <label>Topic Title:</label>
-                <input type="text" placeholder="Jaise: Binary Search Trees">
+                <input type="text" placeholder="Jaise: CPU Architecture & Working">
             </div>
 
-            <!-- 2. 3D Model Placeholder -->
-            <div class="edit-box">
-                <h2>2. 3D Visualizer Model</h2>
-                <div class="model-upload-box">
-                    <p>🧊 [ Yahan apna 3D (.glb) model ya viewer lagayein ]</p>
+            <!-- 2. Dual-Language Video Section -->
+            <div class="card-box">
+                <h2>2. Bilingual Video Player (Hindi / English)</h2>
+                <div class="video-container">
+                    <!-- Language Switcher Buttons for Video -->
+                    <div class="lang-switch-btns">
+                        <button type="button" id="btn-en" class="lang-btn active" onclick="switchLanguage('en')">English Video</button>
+                        <button type="button" id="btn-hi" class="lang-btn" onclick="switchLanguage('hi')">हिंदी Video (Hindi)</button>
+                    </div>
+                    
+                    <div class="video-player-frame" id="video-status-text">
+                        🎥 [ English Video / Audio Loaded ]<br><small>Your English explanation video will play here</small>
+                    </div>
                 </div>
-                <label>3D Model File Path:</label>
-                <input type="text" placeholder="models/your_file.glb">
+
+                <label>English Video Link / File Path:</label>
+                <input type="text" placeholder="videos/topic_en.mp4 ya YouTube URL">
+
+                <label>Hindi Video Link / File Path:</label>
+                <input type="text" placeholder="videos/topic_hi.mp4 ya YouTube URL">
             </div>
 
-            <!-- 3. Detailed Notes -->
-            <div class="edit-box">
-                <h2>3. Detailed Topic Notes</h2>
-                <label>Write Notes / Explanation here:</label>
-                <textarea placeholder="Apne topic ke notes yahan type karein..."></textarea>
+            <!-- 3. 3D Model Section -->
+            <div class="card-box">
+                <h2>3. 3D Visualizer Model</h2>
+                <input type="text" placeholder="models/device.glb">
             </div>
 
-            <!-- 4. Short & Long Questions -->
-            <div class="edit-box">
-                <h2>4. Exam Questions (Short & Long)</h2>
-                <label>Short Question & Answer:</label>
-                <textarea style="height: 70px;" placeholder="Q: ... &#10;Ans: ..."></textarea>
+            <!-- 4. Notes & Questions -->
+            <div class="card-box">
+                <h2>4. Bilingual Notes & Exam Questions</h2>
+                <label>Topic Notes (English / Hindi):</label>
+                <textarea placeholder="Apne notes yahan likhein..."></textarea>
 
-                <label>Long Question & Answer:</label>
-                <textarea style="height: 90px;" placeholder="Q: ... &#10;Ans: ..."></textarea>
+                <label>Important Questions & Answers:</label>
+                <textarea placeholder="Q & A details..."></textarea>
             </div>
 
-            <!-- 5. MCQs Setup -->
-            <div class="edit-box">
-                <h2>5. Multiple Choice Questions (MCQs)</h2>
-                <label>Enter MCQ Question:</label>
-                <input type="text" placeholder="Question text yahan likhein...">
-                
-                <label>Options:</label>
-                <input type="text" placeholder="A) Option 1">
-                <input type="text" placeholder="B) Option 2">
-                <input type="text" placeholder="C) Option 3">
-            </div>
-
-            <button type="submit" class="save-btn">Save Topic Content</button>
+            <button type="submit" class="save-btn">Save Content & Video Settings</button>
 
         </form>
 
     </div>
 
     <footer>
-        <p>© 2026 BCA Interactive Learning Platform | Custom Content Manager</p>
+        <p>© 2026 BCA Interactive Learning Platform | Dual-Language Enabled</p>
     </footer>
 
 </body>
