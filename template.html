@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topic Viewer, Q&A & Multi-tier Quiz Hub | BCA Learning Hub</title>
+    <title>Topic Viewer & Study Hub | BCA Learning Hub</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0b132b; color: #ffffff; line-height: 1.6; }
@@ -12,8 +12,9 @@
         nav { background: rgba(11, 19, 43, 0.98); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .logo-area h2 { font-size: 1.2rem; color: #fff; }
         .logo-area span { font-size: 0.75rem; color: #3a86ff; display: block; }
-        .nav-back { color: #cfd9df; text-decoration: none; font-size: 0.9rem; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
-        .nav-back:hover { background: rgba(58, 134, 255, 0.4); color: #fff; }
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .nav-links a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
+        .nav-links a:hover { background: rgba(58, 134, 255, 0.4); color: #fff; }
 
         /* Main Container */
         .container { max-width: 900px; margin: 100px auto 40px auto; padding: 0 20px; }
@@ -31,51 +32,37 @@
         .voice-btn { background: #3a86ff; color: white; border: none; padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
         .voice-btn:hover { background: #2563eb; }
 
-        /* Block 1: Definition & Example */
+        /* Definition & Example */
         .definition-box p { font-size: 1.05rem; margin-bottom: 12px; color: #e2e8f0; }
         .example-box { background: rgba(58, 134, 255, 0.1); border-left: 4px solid #3a86ff; padding: 15px; border-radius: 6px; margin-top: 10px; }
         .example-box strong { color: #4cc9f0; }
 
-        /* Block 2: 3D Model Viewer Box */
-        .viewer-container { background: #000; border-radius: 8px; height: 300px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 2px dashed rgba(76, 201, 240, 0.4); text-align: center; padding: 20px; }
+        /* 3D Model Viewer Box */
+        .viewer-container { background: #000; border-radius: 8px; height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 2px dashed rgba(76, 201, 240, 0.4); text-align: center; padding: 20px; }
         .rotate-icon { font-size: 2.5rem; animation: spin 6s linear infinite; margin-bottom: 10px; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .fs-btn { position: absolute; top: 15px; right: 15px; background: #3a86ff; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
 
-        /* Block 3: Short & Long Q&A Box */
+        /* Short & Long Q&A Box */
         .qa-box { background: #162032; border-left: 6px solid #f77f00; }
         .qa-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .qa-question { font-weight: bold; color: #ffb703; margin-bottom: 8px; }
         .answer-container { display: none; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 8px; color: #cbd5e1; }
         .show-ans-btn { background: #f77f00; color: #000; border: none; padding: 5px 12px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 5px; }
 
-        /* Block 4: Practical Lab Activity Box */
+        /* Practical Lab Activity Box */
         .lab-box { background: #111827; border-left: 6px solid #28a745; }
         .code-snippet { background: #000; color: #4cc9f0; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 0.95rem; margin-top: 10px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.1); }
-
-        /* Quiz Hub Section */
-        .quiz-hub { background: #1c2541; border: 2px solid #3a86ff; padding: 25px; border-radius: 12px; margin-top: 40px; }
-        .quiz-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
-        .quiz-tab { background: #0b132b; color: #fff; border: 1px solid #3a86ff; padding: 8px 15px; border-radius: 20px; cursor: pointer; font-size: 0.85rem; font-weight: bold; }
-        .quiz-tab.active { background: #3a86ff; }
-        
-        .quiz-card { background: #0b132b; padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
-        .options-list { list-style: none; margin-top: 15px; }
-        .options-list li { background: #162032; padding: 10px 15px; border-radius: 6px; margin-bottom: 8px; cursor: pointer; border: 1px solid rgba(255,255,255,0.05); transition: 0.2s; }
-        .options-list li:hover { background: #3a86ff; color: #fff; }
 
         footer { text-align: center; padding: 30px; color: #8d99ae; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; }
     </style>
     <script>
-        // Voice Reader Function (Text to Speech)
         function speakText(elementId) {
             let text = document.getElementById(elementId).innerText;
             let speech = new SpeechSynthesisUtterance(text);
-            speech.lang = 'hi-IN'; // Hindi/English support
+            speech.lang = 'hi-IN';
             window.speechSynthesis.speak(speech);
         }
 
-        // Show/Hide Answer Function for Q&A Box
         function toggleAnswer(ansId, btn) {
             let ansBox = document.getElementById(ansId);
             if(ansBox.style.display === "block") {
@@ -86,37 +73,28 @@
                 btn.innerText = "Hide Answer";
             }
         }
-
-        // Quiz Option Checker
-        function checkQuizOption(selectedOption, correctOpt) {
-            if(selectedOption === correctOpt) {
-                alert("🎉 Sahi Jawaab! Correct Answer.");
-            } else {
-                alert("❌ Galat Jawaab! Try Again.");
-            }
-        }
     </script>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
     <nav>
         <div class="logo-area">
             <h2>🎓 BCA Learning Hub</h2>
-            <span>Interactive Viewer & Quiz Suite</span>
+            <span>Topic Study Template</span>
         </div>
-        <a href="index.html" class="nav-back">← Back to Home</a>
+        <div class="nav-links">
+            <a href="quiz.html">⚡ Take Topic Quiz</a>
+            <a href="index.html">← Home</a>
+        </div>
     </nav>
 
     <div class="container">
-
-        <!-- Topic Header -->
         <div class="topic-header">
             <span id="semTag">Semester 1 • Computer Fundamentals</span>
             <h1>Central Processing Unit (CPU Architecture)</h1>
         </div>
 
-        <!-- BLOCK 1: Definition & Real-World Example with Voice Reader -->
+        <!-- BLOCK 1: Definition & Analogy -->
         <div class="content-block definition-box">
             <h3>
                 <span>📖 1. Definition & Analogy</span>
@@ -130,7 +108,7 @@
             </div>
         </div>
 
-        <!-- BLOCK 2: 3D Model Viewer Box -->
+        <!-- BLOCK 2: 3D Model Viewer -->
         <div class="content-block">
             <h3>🧊 2. Interactive 3D Model (360° View)</h3>
             <div class="viewer-container">
@@ -139,7 +117,7 @@
             </div>
         </div>
 
-        <!-- BLOCK 3: Short & Long Q&A Box with Show Answer Button -->
+        <!-- BLOCK 3: Short & Long Q&A -->
         <div class="content-block qa-box">
             <h3>
                 <span>❓ 3. Short & Long Q&A</span>
@@ -153,18 +131,10 @@
                         <strong>Answer:</strong> The main components are the Arithmetic Logic Unit (ALU), Control Unit (CU), and Registers cache memory.
                     </div>
                 </div>
-
-                <div class="qa-item">
-                    <div class="qa-question">Q2: Explain the working cycle of a processor in brief.</div>
-                    <button class="show-ans-btn" onclick="toggleAnswer('ans2', this)">Show Answer</button>
-                    <div class="answer-container" id="ans2">
-                        <strong>Answer:</strong> Processor follows the Instruction Cycle: Fetch, Decode, Execute, and Writeback.
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- BLOCK 4: Practical Lab Activity Box -->
+        <!-- BLOCK 4: Practical Lab Activity -->
         <div class="content-block lab-box">
             <h3>💻 4. Practical Lab Activity & Task</h3>
             <p><strong>Objective:</strong> Monitor real-time CPU core utilization using simulation script.</p>
@@ -173,36 +143,10 @@ import os<br>
 print("Active Cores:", os.cpu_count())
             </div>
         </div>
-
-        <!-- MULTI-TIER QUIZ SECTION (Topic Quiz, Chapter Quiz & Boss Level) -->
-        <div class="quiz-hub" id="quizSection">
-            <h2 style="color: #4cc9f0; margin-bottom: 15px;">⚡ Multi-Tier Quiz Arena</h2>
-            <div class="quiz-tabs">
-                <button class="quiz-tab active">Topic Quiz</button>
-                <button class="quiz-tab">Chapter Quiz</button>
-                <button class="quiz-tab" style="background: #ff9800; color: #000;">🔥 Semester Boss Level Quiz</button>
-            </div>
-
-            <div class="quiz-card">
-                <h4 style="color: #fff; margin-bottom: 10px;">Q: Which unit performs arithmetic calculations inside the CPU?</h4>
-                <button class="voice-btn" style="margin-bottom: 10px;" onclick="speakText('quizQ1')">🔊 Read Question & Options</button>
-                <div id="quizQ1" style="display:none;">Which unit performs arithmetic calculations inside the CPU? Option A: Control Unit. Option B: ALU. Option C: Register. Option D: Hard Drive.</div>
-                
-                <ul class="options-list">
-                    <li onclick="checkQuizOption('A', 'B')">A) Control Unit</li>
-                    <li onclick="checkQuizOption('B', 'B')">B) Arithmetic Logic Unit (ALU) [Correct]</li>
-                    <li onclick="checkQuizOption('C', 'B')">C) Cache Memory</li>
-                    <li onclick="checkQuizOption('D', 'B')">D) Hard Disk Drive</li>
-                </ul>
-                <button class="show-ans-btn" onclick="alert('Correct Answer is: B) Arithmetic Logic Unit (ALU)')">Show Correct Answer</button>
-            </div>
-        </div>
-
     </div>
 
     <footer>
-        <p>© 2026 BCA Learning Hub | Complete Interactive Study & Quiz System</p>
+        <p>© 2026 BCA Learning Hub | Topic Study Page</p>
     </footer>
-
 </body>
 </html>
