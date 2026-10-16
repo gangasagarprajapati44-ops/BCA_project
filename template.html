@@ -3,128 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topic Creator & Dual-Language Video Player | BCA Platform</title>
+    <title>Topic Viewer & 3D Interactive Lab | BCA Learning Hub</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0b132b; color: #ffffff; line-height: 1.6; }
 
-        nav { background: rgba(11, 19, 43, 0.95); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        nav a { color: #fff; text-decoration: none; font-weight: bold; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
-        nav a:hover { background: rgba(58, 134, 255, 0.4); }
+        /* Navigation Bar */
+        nav { background: rgba(11, 19, 43, 0.98); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .logo-area h2 { font-size: 1.2rem; color: #fff; }
+        .logo-area span { font-size: 0.75rem; color: #3a86ff; display: block; }
+        .nav-back { color: #cfd9df; text-decoration: none; font-size: 0.9rem; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
+        .nav-back:hover { background: rgba(58, 134, 255, 0.4); color: #fff; }
 
-        .container { max-width: 950px; margin: 30px auto; padding: 0 20px; }
+        /* Main Container */
+        .container { max-width: 900px; margin: 100px auto 40px auto; padding: 0 20px; }
 
-        /* Section Styling */
-        .card-box { background: #1c2541; padding: 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); margin-bottom: 25px; border-left: 5px solid #3a86ff; }
-        .card-box h2 { color: #4cc9f0; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        /* Breadcrumb / Topic Header */
+        .topic-header { background: #1c2541; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 6px solid #4cc9f0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .topic-header span { color: #4cc9f0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
+        .topic-header h1 { font-size: 1.8rem; margin-top: 5px; color: #ffffff; }
 
-        label { display: block; font-weight: bold; margin-bottom: 6px; color: #ced4da; font-size: 0.95rem; }
-        input[type="text"], textarea { width: 100%; padding: 10px 12px; background: #0b132b; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-size: 1rem; margin-bottom: 15px; }
-        textarea { resize: vertical; height: 90px; }
+        /* Content Blocks */
+        .content-block { background: #1c2541; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
+        .content-block h3 { color: #4cc9f0; margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
 
-        /* Video Player & Language Toggle Area */
-        .video-container { background: #000; border-radius: 8px; padding: 20px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.3); margin-bottom: 15px; }
-        .lang-switch-btns { display: flex; justify-content: center; gap: 10px; margin-bottom: 15px; }
-        .lang-btn { background: #1c2541; color: #fff; border: 1px solid #3a86ff; padding: 8px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .lang-btn.active, .lang-btn:hover { background: #3a86ff; }
+        /* Block 1: Definition & Example */
+        .definition-box p { font-size: 1.05rem; margin-bottom: 12px; color: #e2e8f0; }
+        .example-box { background: rgba(58, 134, 255, 0.1); border-left: 4px solid #3a86ff; padding: 15px; border-radius: 6px; margin-top: 10px; }
+        .example-box strong { color: #4cc9f0; }
+
+        /* Block 2: 3D Model Viewer Box */
+        .viewer-container { background: #000; border-radius: 8px; height: 350px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 2px dashed rgba(76, 201, 240, 0.4); text-align: center; padding: 20px; }
+        .viewer-container.fullscreen { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; }
+        .rotate-icon { font-size: 3rem; animation: spin 6s linear infinite; margin-bottom: 10px; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         
-        .video-player-frame { width: 100%; height: 350px; background: #111; display: flex; align-items: center; justify-content: center; border-radius: 6px; color: #8d99ae; font-size: 1.1rem; }
+        .fs-btn { position: absolute; top: 15px; right: 15px; background: #3a86ff; color: #fff; border: none; padding: 6px 12px; border-radius: 5px; cursor: pointer; font-weight: bold; font-size: 0.8rem; }
+        .fs-btn:hover { background: #2a6bc1; }
 
-        .save-btn { background: linear-gradient(135deg, #3a86ff, #4361ee); color: white; border: none; padding: 12px 25px; font-size: 1rem; font-weight: bold; border-radius: 8px; cursor: pointer; display: block; width: 100%; box-shadow: 0 4px 15px rgba(58, 134, 255, 0.4); transition: 0.3s; }
-        .save-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(58, 134, 255, 0.7); }
+        /* Block 3: Diagram Box */
+        .diagram-box { text-align: center; background: #0b132b; padding: 20px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); }
+        .diagram-placeholder { font-size: 1.1rem; color: #8d99ae; padding: 40px; border: 1px dashed rgba(255,255,255,0.2); border-radius: 6px; }
 
-        footer { text-align: center; padding: 25px; color: #adb5bd; margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.9rem; }
+        /* Block 4: Lab Activity Box */
+        .lab-box { background: #111827; border-left: 6px solid #28a745; }
+        .lab-box h3 { color: #28a745; }
+        .code-snippet { background: #000; color: #4cc9f0; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 0.95rem; margin-top: 10px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.1); }
+
+        footer { text-align: center; padding: 30px; color: #8d99ae; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; }
     </style>
     <script>
-        // Simple script to switch video language view message
-        function switchLanguage(lang) {
-            const videoText = document.getElementById('video-status-text');
-            const btnEn = document.getElementById('btn-en');
-            const btnHi = document.getElementById('btn-hi');
-
-            if(lang === 'hi') {
-                videoText.innerHTML = "🎥 [ Hindi Video / Audio Loaded ]<br><small>Yahan aapka Hindi explanation video play hoga</small>";
-                btnHi.classList.add('active');
-                btnEn.classList.remove('active');
+        // Fullscreen Toggle for 3D Viewer Box
+        function toggleFullscreen() {
+            let viewer = document.getElementById("viewerBox");
+            let btn = document.getElementById("fsBtn");
+            if (!document.fullscreenElement) {
+                viewer.requestFullscreen().catch(err => {
+                    // Fallback CSS Fullscreen if browser blocks API
+                    viewer.classList.toggle("fullscreen");
+                });
+                btn.innerText = "❌ Exit Fullscreen";
             } else {
-                videoText.innerHTML = "🎥 [ English Video / Audio Loaded ]<br><small>Your English explanation video will play here</small>";
-                btnEn.classList.add('active');
-                btnHi.classList.remove('active');
+                document.exitFullscreen();
+                btn.innerText = "🔍 Fullscreen View";
             }
         }
     </script>
 </head>
 <body>
 
+    <!-- Navigation Bar -->
     <nav>
-        <h2>🌐 Dual-Language Topic & Video Manager</h2>
-        <a href="index.html">← Back to Home</a>
+        <div class="logo-area">
+            <h2>🎓 BCA Learning Hub</h2>
+            <span>Interactive Topic Viewer</span>
+        </div>
+        <a href="index.html" class="nav-back">← Back to Home</a>
     </nav>
 
     <div class="container">
-        
-        <div style="background: rgba(58, 134, 255, 0.1); padding: 15px 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #4cc9f0;">
-            <p><strong>Future-Ready Feature:</strong> Is template mein aap 3D models ke sath-sath Hindi aur English dono languages ke videos ke liye language toggle bhi manage kar sakte hain!</p>
+
+        <!-- Topic Header -->
+        <div class="topic-header">
+            <span id="semTag">Semester 1 • Computer Fundamentals</span>
+            <h1 id="topicTitleText">Central Processing Unit (CPU Architecture)</h1>
         </div>
 
-        <form onsubmit="event.preventDefault(); alert('Aapka content aur video settings save ho gayi hain!');">
-            
-            <!-- 1. Topic Details -->
-            <div class="card-box">
-                <h2>1. Semester & Topic Details</h2>
-                <label>Semester / Subject Name:</label>
-                <input type="text" placeholder="Jaise: Semester 1 - Computer Organization">
-
-                <label>Topic Title:</label>
-                <input type="text" placeholder="Jaise: CPU Architecture & Working">
+        <!-- BLOCK 1: Definition & Real-World Example Box -->
+        <div class="content-block definition-box">
+            <h3>📖 1. Definition & Real-World Analogy</h3>
+            <p><strong>Definition:</strong> The Central Processing Unit (CPU) is the primary component of a computer that interprets instructions and processes data contained within computer programs.</p>
+            <div class="example-box">
+                <p><strong>Real-World Analogy:</strong> Think of the CPU like the <em>Human Brain</em> in a human body. Just as the brain receives signals from eyes/ears, processes thoughts, and commands hands/legs what to do, the CPU processes inputs from mouse/keyboard and executes tasks on screen.</p>
             </div>
+        </div>
 
-            <!-- 2. Dual-Language Video Section -->
-            <div class="card-box">
-                <h2>2. Bilingual Video Player (Hindi / English)</h2>
-                <div class="video-container">
-                    <!-- Language Switcher Buttons for Video -->
-                    <div class="lang-switch-btns">
-                        <button type="button" id="btn-en" class="lang-btn active" onclick="switchLanguage('en')">English Video</button>
-                        <button type="button" id="btn-hi" class="lang-btn" onclick="switchLanguage('hi')">हिंदी Video (Hindi)</button>
-                    </div>
-                    
-                    <div class="video-player-frame" id="video-status-text">
-                        🎥 [ English Video / Audio Loaded ]<br><small>Your English explanation video will play here</small>
-                    </div>
+        <!-- BLOCK 2: Interactive 3D Model Viewer Box (360° & Fullscreen) -->
+        <div class="content-block">
+            <h3>🧊 2. Interactive 3D Model (360° View)</h3>
+            <div class="viewer-container" id="viewerBox">
+                <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">🔍 Fullscreen View</button>
+                <div class="rotate-icon">🌐</div>
+                <p><strong>[ 3D Interactive Model Space ]</strong><br>Rotate mouse to examine component from all 360 degrees.</p>
+            </div>
+        </div>
+
+        <!-- BLOCK 3: Architecture Diagram & Flowchart Box -->
+        <div class="content-block">
+            <h3>📊 3. Architecture Diagram & Flowchart</h3>
+            <div class="diagram-box">
+                <div class="diagram-placeholder">
+                    [ ALU ⇄ Control Unit ⇄ Registers Flowchart Diagram ]
                 </div>
-
-                <label>English Video Link / File Path:</label>
-                <input type="text" placeholder="videos/topic_en.mp4 ya YouTube URL">
-
-                <label>Hindi Video Link / File Path:</label>
-                <input type="text" placeholder="videos/topic_hi.mp4 ya YouTube URL">
+                <p style="margin-top: 15px; color: #adb5bd; font-size: 0.9rem;">The diagram illustrates data transfer pathways between the Arithmetic Logic Unit, Control Unit, and Primary Memory cache.</p>
             </div>
+        </div>
 
-            <!-- 3. 3D Model Section -->
-            <div class="card-box">
-                <h2>3. 3D Visualizer Model</h2>
-                <input type="text" placeholder="models/device.glb">
+        <!-- BLOCK 4: Practical Lab Activity & Code Box -->
+        <div class="content-block lab-box">
+            <h3>💻 4. Practical Lab Activity & Task</h3>
+            <p><strong>Objective:</strong> Verify processor specifications and monitor real-time core utilization rates using a system simulation script.</p>
+            <div class="code-snippet">
+# Python System Info Simulation Task<br>
+import platform, os<br>
+print("Processor:", platform.processor())<br>
+print("Architecture:", platform.architecture())<br>
+print("CPU Cores:", os.cpu_count())
             </div>
-
-            <!-- 4. Notes & Questions -->
-            <div class="card-box">
-                <h2>4. Bilingual Notes & Exam Questions</h2>
-                <label>Topic Notes (English / Hindi):</label>
-                <textarea placeholder="Apne notes yahan likhein..."></textarea>
-
-                <label>Important Questions & Answers:</label>
-                <textarea placeholder="Q & A details..."></textarea>
-            </div>
-
-            <button type="submit" class="save-btn">Save Content & Video Settings</button>
-
-        </form>
+        </div>
 
     </div>
 
     <footer>
-        <p>© 2026 BCA Interactive Learning Platform | Dual-Language Enabled</p>
+        <p>© 2026 BCA Learning Hub | 3D Visual Education System</p>
     </footer>
 
 </body>
