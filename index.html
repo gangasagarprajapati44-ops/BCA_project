@@ -3,48 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Learning Hub - Admin Manager & Quiz Suite</title>
+    <title>BCA Learning Hub - Mobile & Laptop Friendly</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0b132b; color: #ffffff; line-height: 1.6; }
+        body { background-color: #0b132b; color: #ffffff; line-height: 1.6; overflow-x: hidden; }
 
-        /* Navigation Bar */
-        nav { background: rgba(11, 19, 43, 0.98); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .logo-area h2 { font-size: 1.2rem; color: #fff; }
-        .logo-area span { font-size: 0.75rem; color: #3a86ff; display: block; }
+        /* Responsive Navigation Bar */
+        nav { background: rgba(11, 19, 43, 0.98); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); flex-wrap: wrap; }
+        .logo-area h2 { font-size: 1.1rem; color: #fff; }
+        .logo-area span { font-size: 0.7rem; color: #3a86ff; display: block; }
 
-        .nav-menu { display: flex; align-items: center; gap: 15px; list-style: none; }
-        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; padding: 8px 12px; border-radius: 6px; transition: 0.3s; }
+        .nav-menu { display: flex; align-items: center; gap: 10px; list-style: none; flex-wrap: wrap; }
+        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 6px; transition: 0.3s; }
         .nav-menu a:hover { background: rgba(58, 134, 255, 0.2); color: #fff; }
 
         /* Dropdown Styling */
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; background-color: #1c2541; min-width: 200px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5); border-radius: 8px; z-index: 1; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+        .dropdown-content { display: none; position: absolute; background-color: #1c2541; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5); border-radius: 8px; z-index: 1; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; left: 0; }
         .dropdown-content a { color: #fff; padding: 10px 15px; text-decoration: none; display: block; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .dropdown-content a:hover { background-color: #3a86ff; }
         .dropdown:hover .dropdown-content { display: block; }
 
-        .admin-btn { background: #ff9800; color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 15px !important; border: none; cursor: pointer; }
+        .admin-btn { background: #ff9800; color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 12px !important; border: none; cursor: pointer; font-size: 0.85rem; }
 
-        .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+        .main-container { padding-top: 90px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
 
         /* Admin Panels Container */
-        .admin-panel { display: none; background: #1c2541; padding: 25px; border-radius: 12px; border: 2px solid #ff9800; margin-bottom: 30px; }
-        .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; color: #4cc9f0; font-size: 0.9rem; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #0b132b; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-size: 0.95rem; }
-        .form-group textarea { height: 80px; resize: vertical; }
+        .admin-panel { display: none; background: #1c2541; padding: 20px; border-radius: 12px; border: 2px solid #ff9800; margin-bottom: 25px; }
+        .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        .form-group { margin-bottom: 12px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #4cc9f0; font-size: 0.85rem; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #0b132b; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-size: 0.9rem; }
+        .form-group textarea { height: 70px; resize: vertical; }
         
-        .btn-publish { background: #28a745; color: white; border: none; padding: 12px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; }
+        .btn-publish { background: #28a745; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.95rem; }
         .btn-publish:hover { background: #218838; }
 
         /* Hero Section */
-        .hero { text-align: center; padding: 60px 20px; background: radial-gradient(circle at center, #1c2541 0%, #0b132b 100%); border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .hero h1 { font-size: 2.5rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { color: #8d99ae; max-width: 700px; margin: 0 auto 20px auto; }
+        .hero { text-align: center; padding: 40px 15px; background: radial-gradient(circle at center, #1c2541 0%, #0b132b 100%); border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .hero h1 { font-size: 2rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { color: #8d99ae; max-width: 700px; margin: 0 auto 20px auto; font-size: 0.95rem; }
+        .hero-btns { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
 
-        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; color: #8d99ae; font-size: 0.85rem; }
+        footer { text-align: center; padding: 25px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; color: #8d99ae; font-size: 0.8rem; }
+
+        /* Mobile Responsive Media Queries */
+        @media(max-width: 768px) {
+            nav { padding: 10px 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .nav-menu { width: 100%; justify-content: space-between; gap: 5px; }
+            .main-container { padding-top: 130px; }
+            .hero h1 { font-size: 1.6rem; }
+            .hero { padding: 30px 10px; }
+            .admin-panel { padding: 15px; }
+        }
     </style>
     <script>
         function toggleAdminLogin() {
@@ -53,7 +64,7 @@
                 alert("Welcome Admin! Both Content & Quiz Managers Unlocked.");
                 document.getElementById("adminTopicPanel").style.display = "block";
                 document.getElementById("adminQuizPanel").style.display = "block";
-                window.scrollTo({ top: document.getElementById("adminTopicPanel").offsetTop - 80, behavior: 'smooth' });
+                window.scrollTo({ top: document.getElementById("adminTopicPanel").offsetTop - 120, behavior: 'smooth' });
             } else if(pass !== null) {
                 alert("Wrong Password! Access Denied.");
             }
@@ -62,7 +73,7 @@
 </head>
 <body>
 
-    <!-- Navigation Bar -->
+    <!-- Responsive Navigation Bar -->
     <nav>
         <div class="logo-area">
             <h2>🎓 BCA Learning Hub</h2>
@@ -87,13 +98,13 @@
 
             <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
             <li><a href="template.html">Topic Viewer</a></li>
-            <li><button class="admin-btn" onclick="toggleAdminLogin()">🔐 Admin Panel</button></li>
+            <li><button class="admin-btn" onclick="toggleAdminLogin()">🔐 Admin</button></li>
         </ul>
     </nav>
 
     <div class="main-container">
 
-        <!-- 1. ADMIN TEXT CONTENT CREATOR FORM (Topic Pages, Definitions, Q&A) -->
+        <!-- 1. ADMIN TEXT CONTENT CREATOR FORM -->
         <div class="admin-panel" id="adminTopicPanel">
             <h2>✍️ 1. Admin Text & Topic Content Creator</h2>
             <form onsubmit="event.preventDefault(); alert('Topic Content Successfully Published!');">
@@ -138,7 +149,7 @@
             </form>
         </div>
 
-        <!-- 2. ADMIN QUIZ CREATOR FORM (Topic, Chapter & Boss Level Quizzes) -->
+        <!-- 2. ADMIN QUIZ CREATOR FORM -->
         <div class="admin-panel" id="adminQuizPanel">
             <h2>🎯 2. Admin Custom Quiz Designer</h2>
             <form onsubmit="event.preventDefault(); alert('Quiz Question Successfully Published!');">
@@ -195,14 +206,16 @@
             <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
             <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
             <br>
-            <a href="template.html" style="background: #3a86ff; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold;">Start Learning →</a>
-            <a href="quiz.html" style="background: #28a745; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; margin-left: 10px;">Take Quiz →</a>
+            <div class="hero-btns">
+                <a href="template.html" style="background: #3a86ff; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">Start Learning →</a>
+                <a href="quiz.html" style="background: #28a745; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">Take Quiz →</a>
+            </div>
         </div>
 
     </div>
 
     <footer>
-        <p>© 2026 BCA Learning Hub | Custom Admin-Managed Platform</p>
+        <p>© 2026 BCA Learning Hub | Fully Responsive Mobile & Laptop Platform</p>
     </footer>
 
 </body>
