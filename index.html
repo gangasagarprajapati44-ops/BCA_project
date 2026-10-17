@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Learning Hub - Mobile & Laptop Friendly</title>
+    <title>BCA Learning Hub - Search, Notes & Quiz</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0b132b; color: #ffffff; line-height: 1.6; overflow-x: hidden; }
@@ -27,6 +27,11 @@
         .admin-btn { background: #ff9800; color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 12px !important; border: none; cursor: pointer; font-size: 0.85rem; }
 
         .main-container { padding-top: 90px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
+
+        /* Search Bar Container */
+        .search-container { background: #1c2541; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
+        .search-box { width: 100%; max-width: 600px; padding: 12px 20px; background: #0b132b; border: 2px solid #3a86ff; color: #fff; border-radius: 25px; font-size: 1rem; outline: none; transition: 0.3s; }
+        .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 10px rgba(76, 201, 240, 0.3); }
 
         /* Admin Panels Container */
         .admin-panel { display: none; background: #1c2541; padding: 20px; border-radius: 12px; border: 2px solid #ff9800; margin-bottom: 25px; }
@@ -69,6 +74,15 @@
                 alert("Wrong Password! Access Denied.");
             }
         }
+
+        // Search Bar Functionality
+        function searchTopics(event) {
+            let query = event.target.value.toLowerCase();
+            if(query.length > 2) {
+                // Future dynamic search routing can be handled here
+                console.log("Searching for: " + query);
+            }
+        }
     </script>
 </head>
 <body>
@@ -103,6 +117,11 @@
     </nav>
 
     <div class="main-container">
+
+        <!-- Live Search Bar Section -->
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="🔍 Search any BCA topic, chapter, or question..." onkeyup="searchTopics(event)">
+        </div>
 
         <!-- 1. ADMIN TEXT CONTENT CREATOR FORM -->
         <div class="admin-panel" id="adminTopicPanel">
@@ -215,7 +234,7 @@
     </div>
 
     <footer>
-        <p>© 2026 BCA Learning Hub | Fully Responsive Mobile & Laptop Platform</p>
+        <p>© 2026 BCA Learning Hub | Search, Mobile & Laptop Ready Platform</p>
     </footer>
 
 </body>
