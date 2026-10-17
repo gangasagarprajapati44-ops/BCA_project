@@ -3,54 +3,109 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Learning Hub - Search, Notes & Quiz</title>
+    <title>BCA Learning Hub - 3D Futuristic Edition</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        body { background-color: #0b132b; color: #ffffff; line-height: 1.6; overflow-x: hidden; }
+        
+        /* 3D Futuristic Animated Background Wallpaper */
+        body { 
+            background: linear-gradient(135deg, #03071e 0%, #0b132b 50%, #1c2541 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: #ffffff; 
+            line-height: 1.6; 
+            overflow-x: hidden; 
+            min-height: 100vh;
+        }
 
-        /* Responsive Navigation Bar */
-        nav { background: rgba(11, 19, 43, 0.98); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); flex-wrap: wrap; }
-        .logo-area h2 { font-size: 1.1rem; color: #fff; }
-        .logo-area span { font-size: 0.7rem; color: #3a86ff; display: block; }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        .nav-menu { display: flex; align-items: center; gap: 10px; list-style: none; flex-wrap: wrap; }
-        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.85rem; padding: 6px 10px; border-radius: 6px; transition: 0.3s; }
-        .nav-menu a:hover { background: rgba(58, 134, 255, 0.2); color: #fff; }
+        /* Glassmorphism Navigation Bar */
+        nav { 
+            background: rgba(11, 19, 43, 0.75); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 25px; 
+            z-index: 1000; 
+            border-bottom: 1px solid rgba(76, 201, 240, 0.2); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            flex-wrap: wrap; 
+        }
+        .logo-area h2 { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(76,201,240,0.5); }
+        .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; letter-spacing: 1px; }
+
+        .nav-menu { display: flex; align-items: center; gap: 12px; list-style: none; flex-wrap: wrap; }
+        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.85rem; padding: 6px 12px; border-radius: 8px; transition: 0.3s; }
+        .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; box-shadow: 0 0 10px rgba(58,134,255,0.4); }
 
         /* Dropdown Styling */
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; background-color: #1c2541; min-width: 180px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5); border-radius: 8px; z-index: 1; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; left: 0; }
+        .dropdown-content { display: none; position: absolute; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(10px); min-width: 180px; box-shadow: 0px 15px 25px rgba(0,0,0,0.6); border-radius: 10px; z-index: 1; border: 1px solid rgba(76,201,240,0.3); overflow: hidden; left: 0; }
         .dropdown-content a { color: #fff; padding: 10px 15px; text-decoration: none; display: block; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .dropdown-content a:hover { background-color: #3a86ff; }
         .dropdown:hover .dropdown-content { display: block; }
 
-        .admin-btn { background: #ff9800; color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 12px !important; border: none; cursor: pointer; font-size: 0.85rem; }
+        .admin-btn { background: linear-gradient(135deg, #ff9800, #f77f00); color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 14px !important; border: none; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 15px rgba(255,152,0,0.4); }
 
-        .main-container { padding-top: 90px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
+        .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
 
-        /* Search Bar Container */
-        .search-container { background: #1c2541; padding: 20px; border-radius: 12px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(255,255,255,0.1); }
-        .search-box { width: 100%; max-width: 600px; padding: 12px 20px; background: #0b132b; border: 2px solid #3a86ff; color: #fff; border-radius: 25px; font-size: 1rem; outline: none; transition: 0.3s; }
-        .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 10px rgba(76, 201, 240, 0.3); }
+        /* Search Bar Container (Glass 3D Style) */
+        .search-container { background: rgba(28, 37, 65, 0.6); backdrop-filter: blur(10px); padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.2); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .search-box { width: 100%; max-width: 600px; padding: 12px 20px; background: rgba(11, 19, 43, 0.8); border: 2px solid #3a86ff; color: #fff; border-radius: 25px; font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 20px rgba(76, 201, 240, 0.5), inset 0 0 10px rgba(0,0,0,0.5); }
 
-        /* Admin Panels Container */
-        .admin-panel { display: none; background: #1c2541; padding: 20px; border-radius: 12px; border: 2px solid #ff9800; margin-bottom: 25px; }
-        .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
-        .form-group { margin-bottom: 12px; }
+        /* Admin Panels Container (Glassmorphism) */
+        .admin-panel { display: none; background: rgba(28, 37, 65, 0.85); backdrop-filter: blur(12px); padding: 25px; border-radius: 15px; border: 2px solid #ff9800; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; text-shadow: 0 0 10px rgba(255,152,0,0.3); }
+        .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 5px; color: #4cc9f0; font-size: 0.85rem; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #0b132b; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-size: 0.9rem; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: rgba(11, 19, 43, 0.9); border: 1px solid rgba(76, 201, 240, 0.3); color: #fff; border-radius: 8px; font-size: 0.9rem; }
         .form-group textarea { height: 70px; resize: vertical; }
         
-        .btn-publish { background: #28a745; color: white; border: none; padding: 12px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 0.95rem; }
-        .btn-publish:hover { background: #218838; }
+        .btn-publish { background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.95rem; box-shadow: 0 0 15px rgba(40,167,69,0.4); transition: 0.3s; }
+        .btn-publish:hover { transform: translateY(-2px); box-shadow: 0 0 20px rgba(40,167,69,0.7); }
 
-        /* Hero Section */
-        .hero { text-align: center; padding: 40px 15px; background: radial-gradient(circle at center, #1c2541 0%, #0b132b 100%); border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
-        .hero h1 { font-size: 2rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { color: #8d99ae; max-width: 700px; margin: 0 auto 20px auto; font-size: 0.95rem; }
-        .hero-btns { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        /* 3D Holographic Hero Section */
+        .hero { 
+            text-align: center; 
+            padding: 50px 20px; 
+            background: rgba(28, 37, 65, 0.4); 
+            backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
+            border-radius: 20px; 
+            border: 1px solid rgba(76, 201, 240, 0.3); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), inset 0 0 20px rgba(76, 201, 240, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(76,201,240,0.05) 0%, transparent 70%);
+            pointer-events: none;
+        }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0, #3a86ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(76,201,240,0.3); }
+        .hero p { color: #a5b4fc; max-width: 700px; margin: 0 auto 25px auto; font-size: 1rem; }
+        .hero-btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+        
+        .btn-primary { background: linear-gradient(135deg, #3a86ff, #2563eb); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 0 20px rgba(58,134,255,0.5); transition: 0.3s; display: inline-block; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(58,134,255,0.8); }
 
-        footer { text-align: center; padding: 25px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 40px; color: #8d99ae; font-size: 0.8rem; }
+        .btn-success { background: linear-gradient(135deg, #28a745, #218838); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 0 20px rgba(40,167,69,0.5); transition: 0.3s; display: inline-block; }
+        .btn-success:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(40,167,69,0.8); }
+
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(76, 201, 240, 0.2); margin-top: 50px; color: #8d99ae; font-size: 0.8rem; background: rgba(11, 19, 43, 0.8); backdrop-filter: blur(10px); }
 
         /* Mobile Responsive Media Queries */
         @media(max-width: 768px) {
@@ -58,7 +113,7 @@
             .nav-menu { width: 100%; justify-content: space-between; gap: 5px; }
             .main-container { padding-top: 130px; }
             .hero h1 { font-size: 1.6rem; }
-            .hero { padding: 30px 10px; }
+            .hero { padding: 35px 15px; }
             .admin-panel { padding: 15px; }
         }
     </style>
@@ -75,11 +130,9 @@
             }
         }
 
-        // Search Bar Functionality
         function searchTopics(event) {
             let query = event.target.value.toLowerCase();
             if(query.length > 2) {
-                // Future dynamic search routing can be handled here
                 console.log("Searching for: " + query);
             }
         }
@@ -87,11 +140,11 @@
 </head>
 <body>
 
-    <!-- Responsive Navigation Bar -->
+    <!-- Responsive 3D Glass Navigation Bar -->
     <nav>
         <div class="logo-area">
             <h2>🎓 BCA Learning Hub</h2>
-            <span>Learn · Visualize · Quiz</span>
+            <span>3D Immersive Education</span>
         </div>
 
         <ul class="nav-menu">
@@ -220,21 +273,21 @@
             </form>
         </div>
 
-        <!-- Hero Section -->
+        <!-- Hero Section with 3D Holographic Glow -->
         <div class="hero">
             <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
             <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
             <br>
             <div class="hero-btns">
-                <a href="template.html" style="background: #3a86ff; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">Start Learning →</a>
-                <a href="quiz.html" style="background: #28a745; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; font-size: 0.9rem;">Take Quiz →</a>
+                <a href="template.html" class="btn-primary">Start Learning →</a>
+                <a href="quiz.html" class="btn-success">Take Quiz →</a>
             </div>
         </div>
 
     </div>
 
     <footer>
-        <p>© 2026 BCA Learning Hub | Search, Mobile & Laptop Ready Platform</p>
+        <p>© 2026 BCA Learning Hub | 3D Immersive Education Platform</p>
     </footer>
 
 </body>
