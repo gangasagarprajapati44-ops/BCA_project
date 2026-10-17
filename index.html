@@ -1,52 +1,162 @@
-<!-- Dedicated Quiz Creator Form inside Admin Panel -->
-<div class="admin-panel" id="adminQuizPanel">
-    <h2>🎯 Admin Custom Quiz Designer</h2>
-    <form onsubmit="event.preventDefault(); alert('Quiz question published successfully!');">
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Learning Hub - 3D Visuals, Notes & Quiz Platform</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #0b132b; color: #ffffff; line-height: 1.6; }
+
+        /* Navigation Bar */
+        nav { background: rgba(11, 19, 43, 0.98); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
+        .logo-area h2 { font-size: 1.2rem; color: #fff; }
+        .logo-area span { font-size: 0.75rem; color: #3a86ff; display: block; }
+
+        .nav-menu { display: flex; align-items: center; gap: 15px; list-style: none; }
+        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; padding: 8px 12px; border-radius: 6px; transition: 0.3s; }
+        .nav-menu a:hover { background: rgba(58, 134, 255, 0.2); color: #fff; }
+
+        /* Dropdown Styling */
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; background-color: #1c2541; min-width: 200px; box-shadow: 0px 8px 16px rgba(0,0,0,0.5); border-radius: 8px; z-index: 1; border: 1px solid rgba(255,255,255,0.1); overflow: hidden; }
+        .dropdown-content a { color: #fff; padding: 10px 15px; text-decoration: none; display: block; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .dropdown-content a:hover { background-color: #3a86ff; }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        .admin-btn { background: #ff9800; color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 15px !important; border: none; cursor: pointer; }
+
+        .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
+
+        /* Admin Creator Panel */
+        .admin-panel { display: none; background: #1c2541; padding: 25px; border-radius: 12px; border: 2px solid #ff9800; margin-bottom: 30px; }
+        .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; color: #4cc9f0; font-size: 0.9rem; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #0b132b; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-size: 0.95rem; }
         
-        <div class="form-group">
-            <label>Select Quiz Level Type:</label>
-            <select required>
-                <option value="topic">Topic-Wise Quiz</option>
-                <option value="chapter">Chapter-Wise Quiz</option>
-                <option value="boss">🔥 Semester Boss Level Quiz</option>
-            </select>
+        .btn-publish { background: #28a745; color: white; border: none; padding: 12px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; }
+        .btn-publish:hover { background: #218838; }
+
+        /* Hero Section */
+        .hero { text-align: center; padding: 60px 20px; background: radial-gradient(circle at center, #1c2541 0%, #0b132b 100%); border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .hero h1 { font-size: 2.5rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { color: #8d99ae; max-width: 700px; margin: 0 auto 20px auto; }
+
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; color: #8d99ae; font-size: 0.85rem; }
+    </style>
+    <script>
+        function toggleAdminLogin() {
+            let pass = prompt("🔑 Enter Admin Secret Password:");
+            if (pass === "bca123") {
+                alert("Welcome Admin! Content & Quiz Designer Unlocked.");
+                document.getElementById("adminPanel").style.display = "block";
+                window.scrollTo({ top: document.getElementById("adminPanel").offsetTop - 80, behavior: 'smooth' });
+            } else if(pass !== null) {
+                alert("Wrong Password! Access Denied.");
+            }
+        }
+    </script>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav>
+        <div class="logo-area">
+            <h2>🎓 BCA Learning Hub</h2>
+            <span>Learn · Visualize · Quiz</span>
         </div>
 
-        <div class="form-group">
-            <label>Select Semester & Chapter:</label>
-            <select required>
-                <option>Semester 1 - Computer Fundamentals</option>
-                <option>Semester 2 - Data Structures</option>
-                <option>Semester 3 - DBMS & Java</option>
-                <option>Semester 4 - Web Tech</option>
-                <option>Semester 5 - Cyber Security</option>
-                <option>Semester 6 - AI & Android</option>
-            </select>
+        <ul class="nav-menu">
+            <li><a href="index.html">Home</a></li>
+
+            <!-- Semesters Dropdown -->
+            <li class="dropdown">
+                <a href="#">Semesters ▾</a>
+                <div class="dropdown-content">
+                    <a href="template.html?sem=1">Semester 1</a>
+                    <a href="template.html?sem=2">Semester 2</a>
+                    <a href="template.html?sem=3">Semester 3</a>
+                    <a href="template.html?sem=4">Semester 4</a>
+                    <a href="template.html?sem=5">Semester 5</a>
+                    <a href="template.html?sem=6">Semester 6</a>
+                </div>
+            </li>
+
+            <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Hub</a></li>
+            <li><a href="template.html">Topic Viewer</a></li>
+            <li><button class="admin-btn" onclick="toggleAdminLogin()">🔐 Admin Panel</button></li>
+        </ul>
+    </nav>
+
+    <div class="main-container">
+
+        <!-- Admin Custom Quiz & Content Designer -->
+        <div class="admin-panel" id="adminPanel">
+            <h2>🎯 Admin Custom Quiz & Content Designer</h2>
+            <form onsubmit="event.preventDefault(); alert('Quiz Question Successfully Published!');">
+                <div class="form-group">
+                    <label>Select Quiz Level Type:</label>
+                    <select required>
+                        <option value="topic">Topic-Wise Quiz</option>
+                        <option value="chapter">Chapter-Wise Quiz</option>
+                        <option value="boss">🔥 Semester Boss Level Quiz</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Select Semester & Chapter:</label>
+                    <select required>
+                        <option>Semester 1 - Computer Fundamentals</option>
+                        <option>Semester 2 - Data Structures</option>
+                        <option>Semester 3 - DBMS & Java</option>
+                        <option>Semester 4 - Web Tech</option>
+                        <option>Semester 5 - Cyber Security</option>
+                        <option>Semester 6 - AI & Android</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Question Text:</label>
+                    <input type="text" placeholder="Apna Quiz Question likhein..." required>
+                </div>
+
+                <div class="form-group">
+                    <label>Option Details (A, B, C, D):</label>
+                    <input type="text" placeholder="Option A" required style="margin-bottom: 5px;">
+                    <input type="text" placeholder="Option B" required style="margin-bottom: 5px;">
+                    <input type="text" placeholder="Option C" required style="margin-bottom: 5px;">
+                    <input type="text" placeholder="Option D" required style="margin-bottom: 5px;">
+                </div>
+
+                <div class="form-group">
+                    <label>Select Correct Answer Key:</label>
+                    <select required>
+                        <option value="A">Option A</option>
+                        <option value="B">Option B</option>
+                        <option value="C">Option C</option>
+                        <option value="D">Option D</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-publish">🚀 Publish Quiz Question</button>
+            </form>
         </div>
 
-        <div class="form-group">
-            <label>Question Text:</label>
-            <input type="text" placeholder="Apna Quiz Question likhein..." required>
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
+            <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
+            <br>
+            <a href="template.html" style="background: #3a86ff; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold;">Start Learning →</a>
+            <a href="quiz.html" style="background: #28a745; color: white; text-decoration: none; padding: 12px 25px; border-radius: 20px; font-weight: bold; margin-left: 10px;">Take Quiz →</a>
         </div>
 
-        <div class="form-group">
-            <label>Option Details (A, B, C, D):</label>
-            <input type="text" placeholder="Option A" required style="margin-bottom: 5px;">
-            <input type="text" placeholder="Option B" required style="margin-bottom: 5px;">
-            <input type="text" placeholder="Option C" required style="margin-bottom: 5px;">
-            <input type="text" placeholder="Option D" required style="margin-bottom: 5px;">
-        </div>
+    </div>
 
-        <div class="form-group">
-            <label>Select Correct Answer Key:</label>
-            <select required>
-                <option value="A">Option A</option>
-                <option value="B">Option B</option>
-                <option value="C">Option C</option>
-                <option value="D">Option D</option>
-            </select>
-        </div>
+    <footer>
+        <p>© 2026 BCA Learning Hub | Custom Admin-Managed Platform</p>
+    </footer>
 
-        <button type="submit" class="btn-publish">🚀 Publish Quiz Question</button>
-    </form>
-</div>
+</body>
+</html>
