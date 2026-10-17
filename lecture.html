@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCA Video Lecture Hub - Topic Wise</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body { 
+            background: linear-gradient(rgba(11, 19, 43, 0.85), rgba(3, 7, 30, 0.95)), 
+                        url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff; 
+            line-height: 1.6; 
+            min-height: 100vh;
+        }
+
+        nav { 
+            background: rgba(11, 19, 43, 0.8); 
+            backdrop-filter: blur(15px); 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 12px 25px; 
+            z-index: 1000; 
+            border-bottom: 1px solid rgba(76, 201, 240, 0.2); 
+        }
+        .logo-area h2 { font-size: 1.2rem; color: #fff; }
+        .logo-area span { font-size: 0.7rem; color: #ff4757; display: block; font-weight: bold; }
+        .nav-back { color: #cfd9df; text-decoration: none; font-size: 0.9rem; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
+
+        .container { max-width: 1000px; margin: 100px auto 40px auto; padding: 0 20px; }
+
+        /* Filter Selector Bar */
+        .filter-card { background: rgba(28, 37, 65, 0.8); backdrop-filter: blur(12px); padding: 20px; border-radius: 12px; border: 1px solid rgba(76, 201, 240, 0.3); margin-bottom: 25px; display: flex; gap: 15px; flex-wrap: wrap; }
+        .filter-group { flex: 1; min-width: 200px; }
+        .filter-group label { display: block; color: #4cc9f0; font-weight: bold; font-size: 0.85rem; margin-bottom: 6px; }
+        .filter-group select { width: 100%; padding: 10px; background: rgba(11, 19, 43, 0.9); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; border-radius: 8px; outline: none; }
+
+        /* Video Player Card */
+        .video-card { background: rgba(28, 37, 65, 0.85); backdrop-filter: blur(15px); border-radius: 15px; border: 2px solid #ff4757; padding: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .video-card h2 { color: #ffffff; margin-bottom: 5px; font-size: 1.5rem; }
+        .video-card span { color: #ff4757; font-weight: bold; font-size: 0.9rem; display: block; margin-bottom: 15px; }
+
+        .video-container { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 12px; border: 1px solid rgba(255,255,255,0.1); background: #000; }
+        .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; }
+
+        .video-desc { margin-top: 20px; background: rgba(11, 19, 43, 0.7); padding: 15px; border-radius: 8px; border-left: 4px solid #3a86ff; }
+        .video-desc h4 { color: #4cc9f0; margin-bottom: 5px; }
+
+        footer { text-align: center; padding: 30px; color: #8d99ae; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="logo-area">
+            <h2>🎓 BCA Learning Hub</h2>
+            <span>Video Lecture Arena</span>
+        </div>
+        <a href="index.html" class="nav-back">← Back to Home</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- Semester, Chapter, Topic Hierarchy Selectors -->
+        <div class="filter-card">
+            <div class="filter-group">
+                <label>1. Select Semester:</label>
+                <select id="semSelect">
+                    <option value="1">Semester 1</option>
+                    <option value="2">Semester 2</option>
+                    <option value="3">Semester 3</option>
+                    <option value="4">Semester 4</option>
+                    <option value="5">Semester 5</option>
+                    <option value="6">Semester 6</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>2. Select Chapter:</label>
+                <select id="chSelect">
+                    <option>Chapter 1 - CPU Architecture & Registers</option>
+                    <option>Chapter 2 - Memory Management</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>3. Select Topic Video:</label>
+                <select id="topicSelect">
+                    <option>Topic: ALU & Control Unit Working</option>
+                    <option>Topic: Cache Memory Hierarchy</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Dedicated Responsive Video Player -->
+        <div class="video-card">
+            <h2>🎥 ALU & Control Unit Working</h2>
+            <span>Semester 1 • Computer Fundamentals • Chapter 1</span>
+
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="BCA Video Lecture" allowfullscreen></iframe>
+            </div>
+
+            <div class="video-desc">
+                <h4>📌 Lecture Overview & Summary:</h4>
+                <p>Is video lecture mein CPU ke internal components jaise ALU (Arithmetic Logic Unit) aur CU (Control Unit) ke working principle ko step-by-step samjhaya gaya hai.</p>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 BCA Learning Hub | Video Lecture Platform</p>
+    </footer>
+
+</body>
+</html>
