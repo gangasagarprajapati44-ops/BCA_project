@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Learning Hub - 3D Visuals, Notes & Quiz Platform</title>
+    <title>BCA Learning Hub - Admin Manager & Quiz Suite</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0b132b; color: #ffffff; line-height: 1.6; }
@@ -28,12 +28,13 @@
 
         .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 20px; padding-right: 20px; }
 
-        /* Admin Creator Panel */
+        /* Admin Panels Container */
         .admin-panel { display: none; background: #1c2541; padding: 25px; border-radius: 12px; border: 2px solid #ff9800; margin-bottom: 30px; }
         .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.3rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; color: #4cc9f0; font-size: 0.9rem; font-weight: bold; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: #0b132b; border: 1px solid rgba(255,255,255,0.2); color: #fff; border-radius: 6px; font-size: 0.95rem; }
+        .form-group textarea { height: 80px; resize: vertical; }
         
         .btn-publish { background: #28a745; color: white; border: none; padding: 12px 20px; font-weight: bold; border-radius: 6px; cursor: pointer; width: 100%; font-size: 1rem; }
         .btn-publish:hover { background: #218838; }
@@ -49,9 +50,10 @@
         function toggleAdminLogin() {
             let pass = prompt("🔑 Enter Admin Secret Password:");
             if (pass === "bca123") {
-                alert("Welcome Admin! Content & Quiz Designer Unlocked.");
-                document.getElementById("adminPanel").style.display = "block";
-                window.scrollTo({ top: document.getElementById("adminPanel").offsetTop - 80, behavior: 'smooth' });
+                alert("Welcome Admin! Both Content & Quiz Managers Unlocked.");
+                document.getElementById("adminTopicPanel").style.display = "block";
+                document.getElementById("adminQuizPanel").style.display = "block";
+                window.scrollTo({ top: document.getElementById("adminTopicPanel").offsetTop - 80, behavior: 'smooth' });
             } else if(pass !== null) {
                 alert("Wrong Password! Access Denied.");
             }
@@ -83,7 +85,7 @@
                 </div>
             </li>
 
-            <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Hub</a></li>
+            <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
             <li><a href="template.html">Topic Viewer</a></li>
             <li><button class="admin-btn" onclick="toggleAdminLogin()">🔐 Admin Panel</button></li>
         </ul>
@@ -91,9 +93,54 @@
 
     <div class="main-container">
 
-        <!-- Admin Custom Quiz & Content Designer -->
-        <div class="admin-panel" id="adminPanel">
-            <h2>🎯 Admin Custom Quiz & Content Designer</h2>
+        <!-- 1. ADMIN TEXT CONTENT CREATOR FORM (Topic Pages, Definitions, Q&A) -->
+        <div class="admin-panel" id="adminTopicPanel">
+            <h2>✍️ 1. Admin Text & Topic Content Creator</h2>
+            <form onsubmit="event.preventDefault(); alert('Topic Content Successfully Published!');">
+                <div class="form-group">
+                    <label>Select Semester:</label>
+                    <select required>
+                        <option value="Semester 1">Semester 1</option>
+                        <option value="Semester 2">Semester 2</option>
+                        <option value="Semester 3">Semester 3</option>
+                        <option value="Semester 4">Semester 4</option>
+                        <option value="Semester 5">Semester 5</option>
+                        <option value="Semester 6">Semester 6</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Topic Title:</label>
+                    <input type="text" placeholder="Jaise: CPU Architecture & Registers" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Definition & Real-World Example Box:</label>
+                    <textarea placeholder="Topic ki definition aur real-world example yahan likhein..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Short & Long Q&A Box (With Answer Reveal):</label>
+                    <textarea placeholder="Q1: What is CPU? \nAns: CPU is the brain..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>3D Model File Path (.glb) & Diagram URL:</label>
+                    <input type="text" placeholder="models/cpu.glb">
+                </div>
+
+                <div class="form-group">
+                    <label>Practical Lab Activity & Code Task:</label>
+                    <textarea placeholder="Step-by-step practical code assignment..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-publish">🚀 Publish Topic Content Page</button>
+            </form>
+        </div>
+
+        <!-- 2. ADMIN QUIZ CREATOR FORM (Topic, Chapter & Boss Level Quizzes) -->
+        <div class="admin-panel" id="adminQuizPanel">
+            <h2>🎯 2. Admin Custom Quiz Designer</h2>
             <form onsubmit="event.preventDefault(); alert('Quiz Question Successfully Published!');">
                 <div class="form-group">
                     <label>Select Quiz Level Type:</label>
