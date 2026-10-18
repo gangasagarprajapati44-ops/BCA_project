@@ -5,14 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BCA Learning Hub - Cloud Synced 3D Education</title>
     
-    <!-- Firebase Classic Compatibility Scripts (<script> tag setup) -->
+    <!-- Firebase Classic Compatibility Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
-        /* 3D Realistic Study Desk Background Wallpaper */
         body { 
             background: linear-gradient(rgba(11, 19, 43, 0.75), rgba(3, 7, 30, 0.85)), 
                         url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
@@ -23,7 +22,6 @@
             min-height: 100vh;
         }
 
-        /* Glassmorphism Navigation Bar */
         nav { 
             background: rgba(11, 19, 43, 0.75); 
             backdrop-filter: blur(15px); 
@@ -47,7 +45,6 @@
         .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.85rem; padding: 6px 12px; border-radius: 8px; transition: 0.3s; }
         .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; box-shadow: 0 0 10px rgba(58,134,255,0.4); }
 
-        /* Dropdown Styling */
         .dropdown { position: relative; display: inline-block; }
         .dropdown-content { display: none; position: absolute; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(10px); min-width: 180px; box-shadow: 0px 15px 25px rgba(0,0,0,0.6); border-radius: 10px; z-index: 1; border: 1px solid rgba(76,201,240,0.3); overflow: hidden; left: 0; }
         .dropdown-content a { color: #fff; padding: 10px 15px; text-decoration: none; display: block; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
@@ -58,12 +55,10 @@
 
         .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
 
-        /* Search Bar Container */
         .search-container { background: rgba(28, 37, 65, 0.5); backdrop-filter: blur(12px); padding: 18px; border-radius: 15px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.25); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
         .search-box { width: 100%; max-width: 600px; padding: 12px 20px; background: rgba(11, 19, 43, 0.85); border: 2px solid #3a86ff; color: #fff; border-radius: 25px; font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
         .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 20px rgba(76, 201, 240, 0.6), inset 0 0 10px rgba(0,0,0,0.5); }
 
-        /* Admin Panels Container (By default hidden) */
         .admin-panel { display: none; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(15px); padding: 25px; border-radius: 15px; border: 2px solid #ff9800; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
         .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
         .form-group { margin-bottom: 14px; }
@@ -73,7 +68,6 @@
         
         .btn-publish { background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.95rem; margin-top: 10px; }
 
-        /* Hero Section */
         .hero { 
             text-align: center; 
             padding: 50px 20px; 
@@ -109,10 +103,11 @@
     </style>
 
     <script>
-        // Initialize Firebase with your exact keys
+        // Firebase Configuration with Database URL included
         const firebaseConfig = {
             apiKey: "AIzaSyAlnN3WDFMyM9aWy88GyRZUNJk3D1Y-TBE",
             authDomain: "bca-learning-hub.firebaseapp.com",
+            databaseURL: "https://bca-learning-hub-default-rtdb.asia-southeast1.firebasedatabase.app",
             projectId: "bca-learning-hub",
             storageBucket: "bca-learning-hub.firebasestorage.app",
             messagingSenderId: "206989105830",
@@ -136,7 +131,6 @@
             }
         }
 
-        // Save Topic Data to Firebase Realtime Cloud Database
         function saveTopicData(e) {
             e.preventDefault();
             let semester = document.getElementById("topicSem").value;
@@ -164,11 +158,10 @@
                   document.getElementById("topicForm").reset();
               })
               .catch((error) => {
-                  alert("❌ Error saving to Cloud: " + error.message);
+                  alert("❌ Error saving: " + error.message);
               });
         }
 
-        // Save Bulk 20+ Quiz Questions Data to Firebase Realtime Cloud Database
         function saveBulkQuizData(e) {
             e.preventDefault();
             let sem = document.getElementById("quizSem").value;
@@ -221,7 +214,6 @@
 </head>
 <body>
 
-    <!-- Responsive Glassmorphism Navigation Bar -->
     <nav>
         <div class="logo-area">
             <h2>🎓 BCA Learning Hub</h2>
@@ -230,7 +222,6 @@
 
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
-
             <li class="dropdown">
                 <a href="#">Semesters ▾</a>
                 <div class="dropdown-content">
@@ -242,7 +233,6 @@
                     <a href="template.html?sem=6">Semester 6</a>
                 </div>
             </li>
-
             <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
             <li><a href="template.html">Topic Viewer</a></li>
             <li><a href="lectures.html" style="color: #ff4757; font-weight: bold;">🎥 Video Lectures</a></li>
@@ -251,13 +241,10 @@
     </nav>
 
     <div class="main-container">
-
-        <!-- Live Search Bar -->
         <div class="search-container">
             <input type="text" class="search-box" placeholder="🔍 Search any BCA topic, chapter, or question...">
         </div>
 
-        <!-- 1. ADMIN TEXT & MULTI-3D CONTENT CREATOR FORM -->
         <div class="admin-panel" id="adminTopicPanel">
             <h2>✍️ 1. Admin Text & Multi-3D Content Creator</h2>
             <form id="topicForm" onsubmit="saveTopicData(event)">
@@ -302,7 +289,6 @@
             </form>
         </div>
 
-        <!-- 2. ADMIN BULK QUIZ CREATOR FORM (20+ Questions Copy-Paste System) -->
         <div class="admin-panel" id="adminQuizPanel">
             <h2>🎯 2. Admin Bulk Quiz Designer (Copy-Paste 20+ Questions)</h2>
             <form id="bulkQuizForm" onsubmit="saveBulkQuizData(event)">
@@ -338,7 +324,6 @@ Ans: C" required></textarea>
             </form>
         </div>
 
-        <!-- 3. ADMIN VIDEO LECTURE UPLOAD MANAGER FORM -->
         <div class="admin-panel" id="adminVideoPanel">
             <h2>🎥 3. Admin Video Lecture Manager</h2>
             <form onsubmit="event.preventDefault(); alert('Video Lecture Uploaded!');">
@@ -363,7 +348,6 @@ Ans: C" required></textarea>
             </form>
         </div>
 
-        <!-- 3D Glass Hero Section with Start Learning & Take Quiz Buttons -->
         <div class="hero">
             <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
             <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
@@ -373,12 +357,10 @@ Ans: C" required></textarea>
                 <a href="quiz.html" class="btn-success">Take Quiz →</a>
             </div>
         </div>
-
     </div>
 
     <footer>
         <p>© 2026 BCA Learning Hub | 3D Immersive Education Platform</p>
     </footer>
-
 </body>
 </html>
