@@ -3,81 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Topic Viewer & Study Hub | BCA Learning Hub</title>
+    <title>Topic Viewer & Multi 3D Interactive Hub</title>
+    <!-- Include Google Model Viewer for Real 3D Rendering -->
+    <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.4.0/model-viewer.min.js"></script>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: #0b132b; color: #ffffff; line-height: 1.6; }
 
-        /* Navigation Bar */
-        nav { background: rgba(11, 19, 43, 0.98); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); flex-wrap: wrap; }
+        nav { background: rgba(11, 19, 43, 0.98); position: fixed; top: 0; width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 15px 30px; z-index: 1000; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
         .logo-area h2 { font-size: 1.2rem; color: #fff; }
-        .logo-area span { font-size: 0.75rem; color: #3a86ff; display: block; }
-        .nav-links { display: flex; gap: 15px; align-items: center; flex-wrap: wrap; }
-        .nav-links a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; transition: 0.3s; }
-        .nav-links a:hover { background: rgba(58, 134, 255, 0.4); color: #fff; }
+        .nav-links a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; background: rgba(58, 134, 255, 0.2); padding: 8px 15px; border-radius: 20px; }
 
-        /* Main Container */
-        .container { max-width: 900px; margin: 110px auto 40px auto; padding: 0 20px; }
+        .container { max-width: 900px; margin: 100px auto 40px auto; padding: 0 20px; }
 
-        /* Topic Header */
-        .topic-header { background: #1c2541; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 6px solid #4cc9f0; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
-        .topic-header span { color: #4cc9f0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
-        .topic-header h1 { font-size: 1.8rem; margin-top: 5px; color: #ffffff; }
+        .topic-header { background: #1c2541; padding: 25px; border-radius: 12px; margin-bottom: 25px; border-left: 6px solid #4cc9f0; }
+        .topic-header h1 { font-size: 1.8rem; color: #ffffff; margin-top: 5px; }
 
-        /* Content Blocks */
-        .content-block { background: #1c2541; padding: 25px; border-radius: 12px; margin-bottom: 25px; box-shadow: 0 4px 20px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); }
-        .content-block h3 { color: #4cc9f0; margin-bottom: 15px; font-size: 1.2rem; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; flex-wrap: wrap; gap: 10px; }
+        .content-block { background: #1c2541; padding: 25px; border-radius: 12px; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); }
+        .content-block h3 { color: #4cc9f0; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
 
-        /* Voice Button */
-        .voice-btn { background: #3a86ff; color: white; border: none; padding: 5px 12px; border-radius: 15px; font-size: 0.8rem; cursor: pointer; font-weight: bold; }
-        .voice-btn:hover { background: #2563eb; }
+        /* Multi 3D Models Grid System */
+        .models-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; margin-top: 15px; }
+        .viewer-box { background: #000; border-radius: 12px; border: 2px solid #3a86ff; padding: 15px; position: relative; display: flex; flex-direction: column; align-items: center; transition: 0.3s; }
+        model-viewer { width: 100%; height: 250px; background-color: #0b132b; border-radius: 8px; }
 
-        /* Definition & Example */
-        .definition-box p { font-size: 1.05rem; margin-bottom: 12px; color: #e2e8f0; }
-        .example-box { background: rgba(58, 134, 255, 0.1); border-left: 4px solid #3a86ff; padding: 15px; border-radius: 6px; margin-top: 10px; }
-        .example-box strong { color: #4cc9f0; }
-
-        /* 3D Model Viewer Box */
-        .viewer-container { background: #000; border-radius: 8px; height: 280px; display: flex; flex-direction: column; align-items: center; justify-content: center; position: relative; border: 2px dashed rgba(76, 201, 240, 0.4); text-align: center; padding: 20px; }
-        .rotate-icon { font-size: 2.5rem; animation: spin 6s linear infinite; margin-bottom: 10px; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Short & Long Q&A Box */
-        .qa-box { background: #162032; border-left: 6px solid #f77f00; }
-        .qa-item { margin-bottom: 15px; padding-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .qa-question { font-weight: bold; color: #ffb703; margin-bottom: 8px; }
-        .answer-container { display: none; background: rgba(0,0,0,0.3); padding: 12px; border-radius: 6px; margin-top: 8px; color: #cbd5e1; }
-        .show-ans-btn { background: #f77f00; color: #000; border: none; padding: 5px 12px; font-size: 0.8rem; font-weight: bold; border-radius: 4px; cursor: pointer; margin-top: 5px; }
-
-        /* Practical Lab Activity Box */
-        .lab-box { background: #111827; border-left: 6px solid #28a745; }
-        .code-snippet { background: #000; color: #4cc9f0; padding: 15px; border-radius: 6px; font-family: monospace; font-size: 0.95rem; margin-top: 10px; overflow-x: auto; border: 1px solid rgba(255,255,255,0.1); }
-
-        /* Bottom Navigation (Next Topic Button) */
-        .page-navigation { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; gap: 15px; flex-wrap: wrap; }
-        .nav-btn { background: #3a86ff; color: white; text-decoration: none; padding: 12px 25px; border-radius: 8px; font-weight: bold; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 8px; transition: 0.3s; }
-        .nav-btn:hover { background: #2563eb; }
+        /* Fullscreen Expand / Exit Controls for 3D Models */
+        .fullscreen-btn { position: absolute; top: 20px; right: 20px; background: #ff9800; color: #000; border: none; padding: 6px 12px; border-radius: 6px; font-weight: bold; cursor: pointer; z-index: 10; font-size: 0.8rem; }
+        
+        .viewer-box.fullscreen-mode { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; border-radius: 0; border: none; padding: 40px 20px; background: #0b132b; }
+        .viewer-box.fullscreen-mode model-viewer { height: 80vh; }
 
         footer { text-align: center; padding: 30px; color: #8d99ae; font-size: 0.85rem; border-top: 1px solid rgba(255,255,255,0.1); margin-top: 50px; }
     </style>
     <script>
-        function speakText(elementId) {
-            let text = document.getElementById(elementId).innerText;
-            let speech = new SpeechSynthesisUtterance(text);
-            speech.lang = 'hi-IN';
-            window.speechSynthesis.speak(speech);
-        }
-
-        function toggleAnswer(ansId, btn) {
-            let ansBox = document.getElementById(ansId);
-            if(ansBox.style.display === "block") {
-                ansBox.style.display = "none";
-                btn.innerText = "Show Answer";
+        // Fullscreen Toggle Engine for 3D Model Viewers
+        function toggle3DFullscreen(btn) {
+            let parentBox = btn.parentElement;
+            if (parentBox.classList.contains("fullscreen-mode")) {
+                parentBox.classList.remove("fullscreen-mode");
+                btn.innerText = "🔍 Expand Fullscreen";
             } else {
-                ansBox.style.display = "block";
-                btn.innerText = "Hide Answer";
+                parentBox.classList.add("fullscreen-mode");
+                btn.innerText = "✖️ Exit Fullscreen";
             }
         }
+
+        // Live Load Data from Database
+        window.onload = function() {
+            let topics = JSON.parse(localStorage.getItem("bca_topics") || "[]");
+            if(topics.length > 0) {
+                let latest = topics[topics.length - 1]; // Load published topic
+                document.getElementById("displayTitle").innerText = latest.title;
+                document.getElementById("displaySem").innerText = latest.semester;
+                document.getElementById("displayDef").innerHTML = latest.definition;
+                document.getElementById("displayQA").innerText = latest.qa;
+                document.getElementById("displayLab").innerText = latest.lab;
+
+                // Render Multi-3D Model Boxes
+                let gridContainer = document.getElementById("modelsGrid");
+                gridContainer.innerHTML = "";
+                
+                latest.models.forEach((modelUrl, index) => {
+                    let boxHtml = `
+                        <div class="viewer-box">
+                            <button class="fullscreen-btn" onclick="toggle3DFullscreen(this)">🔍 Expand Fullscreen</button>
+                            <span style="color: #4cc9f0; font-weight: bold; margin-bottom: 10px;">3D Model #${index + 1}</span>
+                            <model-viewer src="${modelUrl}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1"></model-viewer>
+                        </div>
+                    `;
+                    gridContainer.innerHTML += boxHtml;
+                });
+            }
+        };
     </script>
 </head>
 <body>
@@ -85,80 +82,53 @@
     <nav>
         <div class="logo-area">
             <h2>🎓 BCA Learning Hub</h2>
-            <span>Topic Study Template</span>
+            <span>Multi-3D Interactive Viewer</span>
         </div>
         <div class="nav-links">
-            <a href="quiz.html">⚡ Take Topic Quiz</a>
+            <a href="quiz.html">⚡ Take Quiz</a>
             <a href="index.html">← Home</a>
         </div>
     </nav>
 
     <div class="container">
         <div class="topic-header">
-            <span id="semTag">Semester 1 • Computer Fundamentals</span>
-            <h1>Central Processing Unit (CPU Architecture)</h1>
+            <span id="displaySem">Semester 1 • Computer Fundamentals</span>
+            <h1 id="displayTitle">Central Processing Unit (CPU Architecture)</h1>
         </div>
 
-        <!-- BLOCK 1: Definition & Analogy -->
-        <div class="content-block definition-box">
-            <h3>
-                <span>📖 1. Definition & Analogy</span>
-                <button class="voice-btn" onclick="speakText('defContent')">🔊 Read Aloud</button>
-            </h3>
-            <div id="defContent">
-                <p><strong>Definition:</strong> The Central Processing Unit (CPU) is the primary component of a computer that interprets instructions and processes data.</p>
-                <div class="example-box">
-                    <p><strong>Real-World Analogy:</strong> Think of the CPU like the human brain taking decisions based on inputs received from sense organs.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- BLOCK 2: 3D Model Viewer -->
         <div class="content-block">
-            <h3>🧊 2. Interactive 3D Model (360° View)</h3>
-            <div class="viewer-container">
-                <div class="rotate-icon">🌐</div>
-                <p><strong>[ 3D Model Container ]</strong><br>Rotate to inspect components.</p>
+            <h3>📖 1. Definition & Explanations</h3>
+            <div id="displayDef">
+                <p>The CPU is the central brain of the computer responsible for executing logic and operations.</p>
             </div>
         </div>
 
-        <!-- BLOCK 3: Short & Long Q&A -->
-        <div class="content-block qa-box">
-            <h3>
-                <span>❓ 3. Short & Long Q&A</span>
-                <button class="voice-btn" onclick="speakText('qaContent')">🔊 Read Q&A</button>
-            </h3>
-            <div id="qaContent">
-                <div class="qa-item">
-                    <div class="qa-question">Q1: What are the main internal components of a CPU?</div>
-                    <button class="show-ans-btn" onclick="toggleAnswer('ans1', this)">Show Answer</button>
-                    <div class="answer-container" id="ans1">
-                        <strong>Answer:</strong> The main components are the Arithmetic Logic Unit (ALU), Control Unit (CU), and Registers cache memory.
-                    </div>
+        <!-- Custom Multi 3D Viewer Container -->
+        <div class="content-block">
+            <h3>🧊 2. Interactive Multi-3D Model Viewer</h3>
+            <div class="models-grid" id="modelsGrid">
+                <!-- Default Sample 3D Box -->
+                <div class="viewer-box">
+                    <button class="fullscreen-btn" onclick="toggle3DFullscreen(this)">🔍 Expand Fullscreen</button>
+                    <span style="color: #4cc9f0; font-weight: bold; margin-bottom: 10px;">3D Model #1</span>
+                    <model-viewer src="https://modelviewer.dev/shared-assets/models/Astronaut.glb" alt="3D Model" auto-rotate camera-controls shadow-intensity="1"></model-viewer>
                 </div>
             </div>
         </div>
 
-        <!-- BLOCK 4: Practical Lab Activity -->
-        <div class="content-block lab-box">
-            <h3>💻 4. Practical Lab Activity & Task</h3>
-            <p><strong>Objective:</strong> Monitor real-time core utilization using simulation script.</p>
-            <div class="code-snippet">
-import os<br>
-print("Active Cores:", os.cpu_count())
-            </div>
+        <div class="content-block">
+            <h3>❓ 3. Questions & Answers</h3>
+            <p id="displayQA">Q1: What are main CPU parts? Ans: ALU, CU, Registers.</p>
         </div>
 
-        <!-- NEXT TOPIC NAVIGATION BUTTON -->
-        <div class="page-navigation">
-            <a href="template.html" class="nav-btn">← Previous Topic</a>
-            <a href="template.html" class="nav-btn">Next Topic →</a>
+        <div class="content-block">
+            <h3>💻 4. Practical Lab Task</h3>
+            <p id="displayLab">Monitor CPU performance through task manager.</p>
         </div>
-
     </div>
 
     <footer>
-        <p>© 2026 BCA Learning Hub | Topic Study Page</p>
+        <p>© 2026 BCA Learning Hub | Interactive Multi-3D Platform</p>
     </footer>
 </body>
 </html>
