@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>⚡ BCA Quiz Arena - Test Your Knowledge</title>
+    <title>BCA Quiz Arena - Exam Hall Experience</title>
+
+    <!-- Firebase Classic Compatibility Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        
+
         body { 
-            background: linear-gradient(rgba(11, 19, 43, 0.85), rgba(3, 7, 30, 0.95)), 
-                        url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
+            background: linear-gradient(rgba(11, 19, 43, 0.85), rgba(3, 7, 30, 0.9)), 
+                        url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             color: #ffffff; 
             min-height: 100vh;
             padding-bottom: 50px;
         }
 
-        /* Navigation Bar */
         nav { 
-            background: rgba(11, 19, 43, 0.8); 
+            background: rgba(11, 19, 43, 0.85); 
             backdrop-filter: blur(15px); 
             position: fixed; 
             top: 0; 
@@ -29,399 +33,184 @@
             padding: 12px 25px; 
             z-index: 1000; 
             border-bottom: 1px solid rgba(76, 201, 240, 0.2); 
-            flex-wrap: wrap; 
         }
         .logo-area h2 { font-size: 1.2rem; color: #fff; }
         .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; }
-        .nav-menu { display: flex; align-items: center; gap: 12px; list-style: none; }
-        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.85rem; padding: 6px 12px; border-radius: 8px; transition: 0.3s; }
+
+        .nav-menu { display: flex; gap: 15px; list-style: none; }
+        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; padding: 6px 12px; border-radius: 8px; }
         .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; }
 
-        .container { max-width: 850px; margin: 100px auto 0 auto; padding: 20px; }
+        .quiz-container { max-width: 850px; margin: 100px auto 30px auto; padding: 20px; }
 
-        /* Quiz Selection Dropdown Box */
-        .quiz-select-card {
-            background: rgba(28, 37, 65, 0.85);
-            backdrop-filter: blur(15px);
-            padding: 25px;
-            border-radius: 15px;
-            border: 1px solid rgba(76, 201, 240, 0.3);
-            text-align: center;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
-        .quiz-select-card h2 { color: #4cc9f0; margin-bottom: 15px; font-size: 1.4rem; }
-        .quiz-select-card select {
-            width: 100%;
-            max-width: 500px;
-            padding: 12px;
-            background: rgba(11, 19, 43, 0.9);
-            border: 2px solid #3a86ff;
-            color: #fff;
-            border-radius: 10px;
-            font-size: 1rem;
-            outline: none;
-            margin-bottom: 15px;
-        }
-
-        /* Quiz Box */
         .quiz-card {
-            display: none;
             background: rgba(28, 37, 65, 0.9);
             backdrop-filter: blur(15px);
+            border-radius: 20px;
             padding: 30px;
-            border-radius: 15px;
             border: 1px solid rgba(76, 201, 240, 0.3);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+            margin-bottom: 25px;
         }
 
-        .quiz-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding-bottom: 15px;
-            margin-bottom: 20px;
-        }
-        .timer { font-size: 1.1rem; font-weight: bold; color: #ff4757; background: rgba(255,71,87,0.1); padding: 5px 15px; border-radius: 20px; border: 1px solid #ff4757; }
+        .quiz-title { color: #ff9800; font-size: 1.5rem; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .quiz-meta { color: #4cc9f0; font-size: 0.85rem; margin-bottom: 20px; }
 
-        .question-title { font-size: 1.2rem; margin-bottom: 20px; color: #fff; }
+        .question-item { background: rgba(11, 19, 43, 0.7); padding: 18px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .question-text { font-size: 1.05rem; font-weight: 600; color: #fff; margin-bottom: 12px; }
 
-        .options-grid { display: flex; flex-direction: column; gap: 12px; margin-bottom: 25px; }
-        .option-btn {
-            background: rgba(11, 19, 43, 0.8);
-            border: 1px solid rgba(76, 201, 240, 0.3);
-            color: #fff;
-            padding: 14px 20px;
-            border-radius: 10px;
-            text-align: left;
+        .options-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .option-label { 
+            display: flex; 
+            align-items: center; 
+            padding: 10px 15px; 
+            background: rgba(255,255,255,0.05); 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: 0.2s; 
+            border: 1px solid transparent; 
             font-size: 0.95rem;
-            cursor: pointer;
-            transition: 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
         }
-        .option-btn:hover { background: rgba(58, 134, 255, 0.4); border-color: #4cc9f0; transform: translateX(5px); }
-        .option-btn.selected { background: #3a86ff; border-color: #4cc9f0; font-weight: bold; }
+        .option-label:hover { background: rgba(58, 134, 255, 0.2); border-color: #3a86ff; }
+        .option-label input { margin-right: 12px; }
 
-        .quiz-nav-btns { display: flex; justify-content: space-between; gap: 10px; }
-        .btn { padding: 10px 22px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; transition: 0.3s; font-size: 0.9rem; }
-        .btn-prev { background: #6c757d; color: #fff; }
-        .btn-next { background: #3a86ff; color: #fff; }
-        .btn-submit { background: #28a745; color: #fff; }
-        .btn:hover { opacity: 0.9; transform: translateY(-2px); }
+        .btn-submit-quiz {
+            background: linear-gradient(135deg, #28a745, #218838);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 30px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 20px;
+            box-shadow: 0 0 20px rgba(40,167,69,0.4);
+        }
 
-        /* Results & Review Section */
-        .result-card {
+        .result-box {
             display: none;
             background: rgba(28, 37, 65, 0.95);
-            backdrop-filter: blur(15px);
-            padding: 30px;
+            padding: 25px;
             border-radius: 15px;
-            border: 2px solid #28a745;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border: 2px solid #4cc9f0;
+            text-align: center;
+            margin-top: 20px;
         }
-        .score-box { text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .score-box h1 { font-size: 2.5rem; color: #4cc9f0; margin-bottom: 5px; }
-        .score-box p { font-size: 1.1rem; color: #a5b4fc; }
 
-        /* Answer Review Items */
-        .review-title { font-size: 1.3rem; color: #ff9800; margin-bottom: 20px; border-left: 4px solid #ff9800; padding-left: 10px; }
-        .review-item {
-            background: rgba(11, 19, 43, 0.85);
-            padding: 18px;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .review-q-text { font-size: 1rem; font-weight: bold; margin-bottom: 10px; color: #fff; }
-        .review-status { display: inline-block; padding: 3px 10px; border-radius: 5px; font-size: 0.75rem; font-weight: bold; margin-bottom: 8px; }
-        .status-correct { background: rgba(40, 167, 69, 0.2); color: #28a745; border: 1px solid #28a745; }
-        .status-wrong { background: rgba(220, 53, 69, 0.2); color: #dc3545; border: 1px solid #dc3545; }
-        .status-skipped { background: rgba(255, 193, 7, 0.2); color: #ffc107; border: 1px solid #ffc107; }
-
-        .review-ans-box { font-size: 0.9rem; line-height: 1.5; }
-        .user-ans { color: #dc3545; }
-        .user-ans.correct-choice { color: #28a745; font-weight: bold; }
-        .correct-ans { color: #28a745; font-weight: bold; margin-top: 4px; }
-
-        .restart-btn { background: linear-gradient(135deg, #3a86ff, #2563eb); color: #fff; border: none; padding: 12px 30px; border-radius: 25px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 20px; display: block; width: 100%; text-align: center; }
-
-        @media(max-width: 768px) {
-            .container { padding: 10px; margin-top: 120px; }
-            .quiz-card, .result-card { padding: 18px; }
-            .quiz-header { flex-direction: column; gap: 10px; align-items: flex-start; }
-        }
+        .no-quiz { text-align: center; color: #a5b4fc; font-size: 1.1rem; padding: 40px; }
     </style>
+
+    <script>
+        // Firebase Config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAlnN3WDFMyM9aWy88GyRZUNJk3D1Y-TBE",
+            authDomain: "bca-learning-hub.firebaseapp.com",
+            databaseURL: "https://bca-learning-hub-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "bca-learning-hub",
+            storageBucket: "bca-learning-hub.firebasestorage.app",
+            messagingSenderId: "206989105830",
+            appId: "1:206989105830:web:93546fed295efab3017267",
+            measurementId: "G-FF3GR0989C"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let allQuizzes = [];
+
+        // Fetch Quizzes from Firebase on Page Load
+        window.onload = function() {
+            const quizContainer = document.getElementById("quizContent");
+
+            db.ref('bca_quizzes').on('value', (snapshot) => {
+                quizContainer.innerHTML = "";
+                const data = snapshot.val();
+
+                if (!data) {
+                    quizContainer.innerHTML = '<div class="no-quiz">⏳ Abhi koi quiz uploaded nahi hai. Admin panel se quiz publish karein!</div>';
+                    return;
+                }
+
+                allQuizzes = Object.values(data);
+                
+                allQuizzes.forEach((quizSet, quizIndex) => {
+                    let quizHtml = `
+                        <div class="quiz-card">
+                            <h2 class="quiz-title">🎯 ${quizSet.topic || "BCA Practice Quiz"}</h2>
+                            <div class="quiz-meta">📚 ${quizSet.semester || "Semester All"} | 🕒 Posted: ${quizSet.timestamp || 'Recently'}</div>
+                            <form id="quizForm_${quizIndex}">
+                    `;
+
+                    quizSet.questions.forEach((q, qIndex) => {
+                        quizHtml += `
+                            <div class="question-item">
+                                <div class="question-text">Q${qIndex + 1}. ${q.question}</div>
+                                <div class="options-list">
+                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="A"> A) ${q.options[0]}</label>
+                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="B"> B) ${q.options[1]}</label>
+                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="C"> C) ${q.options[2]}</label>
+                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="D"> D) ${q.options[3]}</label>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    quizHtml += `
+                                <button type="button" class="btn-submit-quiz" onclick="checkQuizAnswers(${quizIndex})">✅ Submit Exam Answers</button>
+                            </form>
+                            <div class="result-box" id="result_${quizIndex}"></div>
+                        </div>
+                    `;
+
+                    quizContainer.innerHTML += quizHtml;
+                });
+            });
+        };
+
+        function checkQuizAnswers(quizIndex) {
+            const quizSet = allQuizzes[quizIndex];
+            let score = 0;
+            let total = quizSet.questions.length;
+
+            quizSet.questions.forEach((q, qIndex) => {
+                const selected = document.querySelector(`input[name="q_${quizIndex}_${qIndex}"]:checked`);
+                if (selected && selected.value === q.correct) {
+                    score++;
+                }
+            });
+
+            const resultDiv = document.getElementById(`result_${quizIndex}`);
+            resultDiv.style.display = "block";
+            resultDiv.innerHTML = `
+                <h3 style="color: #4cc9f0;">🎉 Exam Result</h3>
+                <p style="font-size: 1.2rem; margin: 10px 0;">Aapka Score: <strong>${score} / ${total}</strong></p>
+                <p style="color: #a5b4fc;">Percentage: <strong>${((score/total)*100).toFixed(1)}%</strong></p>
+            `;
+            window.scrollTo({ top: resultDiv.offsetTop - 100, behavior: 'smooth' });
+        }
+    </script>
 </head>
 <body>
 
     <nav>
         <div class="logo-area">
-            <h2>⚡ BCA Quiz Arena</h2>
-            <span>Test Your Knowledge & Review Mistakes</span>
+            <h2>🎓 BCA Learning Hub</h2>
+            <span>3D Immersive Education</span>
         </div>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
+            <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
             <li><a href="template.html">Topic Viewer</a></li>
-            <li><a href="quiz.html" style="color:#4cc9f0; font-weight:bold;">Quiz Arena</a></li>
         </ul>
     </nav>
 
-    <div class="container">
-
-        <!-- 1. SELECT QUIZ SECTION -->
-        <div class="quiz-select-card" id="selectCard">
-            <h2>🎯 Choose Quiz Topic</h2>
-            <select id="quizDropdown" onchange="loadSelectedQuiz()">
-                <option value="">-- Select Available Quiz --</option>
-            </select>
-            <p style="color: #8d99ae; font-size: 0.85rem;">Select a quiz set uploaded by Admin to start testing.</p>
+    <div class="quiz-container">
+        <h1 style="text-align: center; margin-bottom: 25px; color: #4cc9f0;">⚡ Online Examination Hall</h1>
+        <div id="quizContent">
+            <div class="no-quiz">⏳ Loading Quizzes from Cloud Database...</div>
         </div>
-
-        <!-- 2. LIVE QUIZ CARD -->
-        <div class="quiz-card" id="quizCard">
-            <div class="quiz-header">
-                <div>
-                    <h3 id="quizTitle" style="color: #4cc9f0;">Quiz Title</h3>
-                    <span id="questionProgress" style="font-size: 0.85rem; color: #a5b4fc;">Question 1 of 20</span>
-                </div>
-                <div class="timer" id="timerDisplay">⏱️ Time: 15:00</div>
-            </div>
-
-            <div class="question-title" id="questionText">Question goes here?</div>
-
-            <div class="options-grid" id="optionsContainer">
-                <!-- Dynamic Options -->
-            </div>
-
-            <div class="quiz-nav-btns">
-                <button class="btn btn-prev" onclick="prevQuestion()" id="prevBtn">← Previous</button>
-                <button class="btn btn-next" onclick="nextQuestion()" id="nextBtn">Next →</button>
-                <button class="btn btn-submit" onclick="submitQuiz()" id="submitBtn" style="display:none;">🚀 Submit Quiz</button>
-            </div>
-        </div>
-
-        <!-- 3. DETAILED RESULT & WRONG ANSWERS REVIEW CARD -->
-        <div class="result-card" id="resultCard">
-            <div class="score-box">
-                <h1 id="scorePercentage">0%</h1>
-                <p id="scoreText">You scored 0 out of 0</p>
-            </div>
-
-            <h3 class="review-title">🔍 Detailed Answer Key & Mistake Review</h3>
-            
-            <div id="reviewContainer">
-                <!-- Dynamic Questions Review with Correct/Wrong Highlighting -->
-            </div>
-
-            <button class="restart-btn" onclick="location.reload()">🔄 Retake Another Quiz</button>
-        </div>
-
     </div>
-
-    <script>
-        let currentQuizData = null;
-        let currentQIndex = 0;
-        let userAnswers = {}; // Stores question index -> selected option index (0,1,2,3)
-        let timerInterval;
-        let timeLeft = 900; // 15 minutes in seconds
-
-        // Load Quiz List on Page Load
-        window.onload = function() {
-            let quizzes = JSON.parse(localStorage.getItem("bca_quizzes") || "[]");
-            let dropdown = document.getElementById("quizDropdown");
-
-            if(quizzes.length === 0) {
-                // Default Sample Quiz if Admin hasn't added any yet
-                let sampleQuiz = {
-                    semester: "Sem 1",
-                    topic: "Computer Fundamentals Sample Quiz",
-                    questions: [
-                        {
-                            question: "What is the primary brain of a computer system?",
-                            options: ["RAM", "Hard Disk", "CPU", "Monitor"],
-                            correct: "C"
-                        },
-                        {
-                            question: "Which memory is volatile in nature?",
-                            options: ["ROM", "RAM", "HDD", "SSD"],
-                            correct: "B"
-                        },
-                        {
-                            question: "1 Byte is equal to how many bits?",
-                            options: ["4 bits", "8 bits", "16 bits", "32 bits"],
-                            correct: "B"
-                        }
-                    ]
-                };
-                quizzes.push(sampleQuiz);
-            }
-
-            quizzes.forEach((q, index) => {
-                let option = document.createElement("option");
-                option.value = index;
-                option.textContent = `[${q.semester}] - ${q.topic} (${q.questions.length} Qs)`;
-                dropdown.appendChild(option);
-            });
-        };
-
-        function loadSelectedQuiz() {
-            let selectedIdx = document.getElementById("quizDropdown").value;
-            if(selectedIdx === "") return;
-
-            let quizzes = JSON.parse(localStorage.getItem("bca_quizzes") || "[]");
-            if(quizzes.length === 0) {
-                // Load default sample
-                currentQuizData = {
-                    topic: "Computer Fundamentals Sample Quiz",
-                    questions: [
-                        { question: "What is the primary brain of a computer system?", options: ["RAM", "Hard Disk", "CPU", "Monitor"], correct: "C" },
-                        { question: "Which memory is volatile in nature?", options: ["ROM", "RAM", "HDD", "SSD"], correct: "B" },
-                        { question: "1 Byte is equal to how many bits?", options: ["4 bits", "8 bits", "16 bits", "32 bits"], correct: "B" }
-                    ]
-                };
-            } else {
-                currentQuizData = quizzes[selectedIdx];
-            }
-
-            document.getElementById("selectCard").style.display = "none";
-            document.getElementById("quizCard").style.display = "block";
-            document.getElementById("quizTitle").innerText = currentQuizData.topic;
-
-            currentQIndex = 0;
-            userAnswers = {};
-            startTimer();
-            renderQuestion();
-        }
-
-        function startTimer() {
-            timeLeft = (currentQuizData.questions.length) * 45; // 45 seconds per question
-            updateTimerDisplay();
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerDisplay();
-                if(timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    alert("⏰ Time is up! Submitting your quiz automatically.");
-                    submitQuiz();
-                }
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            let minutes = Math.floor(timeLeft / 60);
-            let seconds = timeLeft % 60;
-            document.getElementById("timerDisplay").innerText = `⏱️ Time: ${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
-        }
-
-        function renderQuestion() {
-            let qData = currentQuizData.questions[currentQIndex];
-            document.getElementById("questionProgress").innerText = `Question ${currentQIndex + 1} of ${currentQuizData.questions.length}`;
-            document.getElementById("questionText").innerText = `Q${currentQIndex + 1}. ${qData.question}`;
-
-            let optionsContainer = document.getElementById("optionsContainer");
-            optionsContainer.innerHTML = "";
-
-            let optionLabels = ["A", "B", "C", "D"];
-            qData.options.forEach((opt, idx) => {
-                let btn = document.createElement("div");
-                btn.className = "option-btn" + (userAnswers[currentQIndex] === idx ? " selected" : "");
-                btn.onclick = () => selectOption(idx);
-                btn.innerHTML = `<b style="color:#4cc9f0;">${optionLabels[idx]}:</b> ${opt}`;
-                optionsContainer.appendChild(btn);
-            });
-
-            document.getElementById("prevBtn").style.visibility = currentQIndex === 0 ? "hidden" : "visible";
-            
-            if(currentQIndex === currentQuizData.questions.length - 1) {
-                document.getElementById("nextBtn").style.display = "none";
-                document.getElementById("submitBtn").style.display = "block";
-            } else {
-                document.getElementById("nextBtn").style.display = "block";
-                document.getElementById("submitBtn").style.display = "none";
-            }
-        }
-
-        function selectOption(optIndex) {
-            userAnswers[currentQIndex] = optIndex;
-            renderQuestion();
-        }
-
-        function nextQuestion() {
-            if(currentQIndex < currentQuizData.questions.length - 1) {
-                currentQIndex++;
-                renderQuestion();
-            }
-        }
-
-        function prevQuestion() {
-            if(currentQIndex > 0) {
-                currentQIndex--;
-                renderQuestion();
-            }
-        }
-
-        function submitQuiz() {
-            clearInterval(timerInterval);
-            document.getElementById("quizCard").style.display = "none";
-            document.getElementById("resultCard").style.display = "block";
-
-            let correctCount = 0;
-            let optionMap = { "A": 0, "B": 1, "C": 2, "D": 3 };
-            let letterMap = ["A", "B", "C", "D"];
-
-            let reviewContainer = document.getElementById("reviewContainer");
-            reviewContainer.innerHTML = "";
-
-            currentQuizData.questions.forEach((q, idx) => {
-                let correctOptIdx = optionMap[q.correct.toUpperCase()];
-                let userOptIdx = userAnswers[idx];
-
-                let isCorrect = (userOptIdx === correctOptIdx);
-                let isSkipped = (userOptIdx === undefined);
-
-                if(isCorrect) correctCount++;
-
-                // Build Review Item Box
-                let item = document.createElement("div");
-                item.className = "review-item";
-
-                let statusBadge = "";
-                if(isCorrect) {
-                    statusBadge = `<span class="review-status status-correct">✓ Correct</span>`;
-                } else if(isSkipped) {
-                    statusBadge = `<span class="review-status status-skipped">⚠️ Not Answered</span>`;
-                } else {
-                    statusBadge = `<span class="review-status status-wrong">✗ Wrong Answer</span>`;
-                }
-
-                let userAnsText = isSkipped ? "<i style='color:#aaa;'>None Selected</i>" : `${letterMap[userOptIdx]}: ${q.options[userOptIdx]}`;
-                let correctAnsText = `${letterMap[correctOptIdx]}: ${q.options[correctOptIdx]}`;
-
-                item.innerHTML = `
-                    ${statusBadge}
-                    <div class="review-q-text">Q${idx + 1}. ${q.question}</div>
-                    <div class="review-ans-box">
-                        <div>Aapka Answer: <span class="user-ans ${isCorrect ? 'correct-choice' : ''}">${userAnsText}</span></div>
-                        ${!isCorrect ? `<div class="correct-ans">Sahi Answer: ${correctAnsText}</div>` : ''}
-                    </div>
-                `;
-
-                reviewContainer.appendChild(item);
-            });
-
-            // Calculate Score
-            let total = currentQuizData.questions.length;
-            let percentage = Math.round((correctCount / total) * 100);
-
-            document.getElementById("scorePercentage").innerText = `${percentage}%`;
-            document.getElementById("scoreText").innerText = `Aapne ${total} mein se ${correctCount} questions sahi kiye hain.`;
-            
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-    </script>
 
 </body>
 </html>
