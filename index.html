@@ -93,13 +93,21 @@
 
         footer { text-align: center; padding: 30px; border-top: 1px solid rgba(76, 201, 240, 0.2); margin-top: 50px; color: #8d99ae; font-size: 0.8rem; background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(10px); }
 
-        @media(max-width: 768px) {
+        /* Enhanced Responsive Media Queries for Mobile, Tablets & Laptops */
+        @media(max-width: 900px) {
             nav { padding: 10px 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
-            .nav-menu { width: 100%; justify-content: space-between; gap: 5px; }
-            .main-container { padding-top: 130px; }
-            .hero h1 { font-size: 1.6rem; }
-            .hero { padding: 35px 15px; }
+            .nav-menu { width: 100%; justify-content: flex-start; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
+            .main-container { padding-top: 140px; }
+            .hero h1 { font-size: 1.5rem; }
+            .hero { padding: 30px 15px; }
             .admin-panel { padding: 15px; }
+        }
+
+        @media(max-width: 480px) {
+            .hero h1 { font-size: 1.25rem; }
+            .hero p { font-size: 0.9rem; }
+            .nav-menu a { font-size: 0.75rem; padding: 4px 8px; }
+            .search-box { font-size: 0.9rem; padding: 10px 15px; }
         }
     </style>
     <script>
@@ -279,82 +287,4 @@
         </div>
 
         <!-- 2. ADMIN BULK QUIZ CREATOR FORM (20+ Questions Copy-Paste System) -->
-        <div class="admin-panel" id="adminQuizPanel">
-            <h2>🎯 2. Admin Bulk Quiz Designer (Copy-Paste 20+ Questions)</h2>
-            <form id="bulkQuizForm" onsubmit="saveBulkQuizData(event)">
-                <div class="form-group">
-                    <label>Select Semester & Chapter/Topic:</label>
-                    <select id="quizSem" required>
-                        <option value="Sem 1 - Computer Fundamentals">Semester 1 - Computer Fundamentals</option>
-                        <option value="Sem 2 - Data Structures">Semester 2 - Data Structures</option>
-                        <option value="Sem 3 - DBMS & Java">Semester 3 - DBMS & Java</option>
-                        <option value="Sem 4 - Web Tech">Semester 4 - Web Tech</option>
-                        <option value="Sem 5 - Cyber Security">Semester 5 - Cyber Security</option>
-                        <option value="Sem 6 - AI & Android">Semester 6 - AI & Android</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Topic Title:</label>
-                    <input type="text" id="quizTopicTitle" placeholder="e.g. CPU & Registers 20 Question Set" required>
-                </div>
-
-                <div class="form-group">
-                    <label>Paste 20+ Questions Here (Bulk Format):</label>
-                    <textarea id="bulkQuizText" style="height: 200px; font-family: monospace;" placeholder="Format:
-Q: Question text here?
-A: Option A
-B: Option B
-C: Option C
-D: Option D
-Ans: C" required></textarea>
-                </div>
-
-                <button type="submit" class="btn-publish">🚀 Save 20+ Questions & Publish Quiz</button>
-            </form>
-        </div>
-
-        <!-- 3. ADMIN VIDEO LECTURE UPLOAD MANAGER FORM -->
-        <div class="admin-panel" id="adminVideoPanel">
-            <h2>🎥 3. Admin Video Lecture Manager</h2>
-            <form onsubmit="event.preventDefault(); alert('Video Lecture Uploaded!');">
-                <div class="form-group">
-                    <label>Select Semester:</label>
-                    <select required>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
-                        <option value="3">Semester 3</option>
-                        <option value="4">Semester 4</option>
-                        <option value="5">Semester 5</option>
-                        <option value="6">Semester 6</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Topic Name & Video Link:</label>
-                    <input type="text" placeholder="YouTube Embed / MP4 URL" required>
-                </div>
-
-                <button type="submit" class="btn-publish" style="background: linear-gradient(135deg, #ff4757, #ff6b81);">🎥 Upload Video Lecture</button>
-            </form>
-        </div>
-
-        <!-- 3D Glass Hero Section with Start Learning & Take Quiz Buttons -->
-        <div class="hero">
-            <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
-            <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
-            <br>
-            <div class="hero-btns">
-                <a href="template.html" class="btn-primary">Start Learning →</a>
-                <a href="quiz.html" class="btn-success">Take Quiz →</a>
-            </div>
-        </div>
-
-    </div>
-
-    <footer>
-        <p>© 2026 BCA Learning Hub | 3D Immersive Education Platform</p>
-    </footer>
-
-</body>
-</html>
+        <div class="admin-panel" id="admin
