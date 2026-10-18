@@ -3,22 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Learning Hub - Secure Owner Portal</title>
+    <title>BCA Learning Hub - 3D Immersive Education</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         
+        /* 3D Realistic Study Desk Background Wallpaper */
         body { 
-            background: linear-gradient(rgba(11, 19, 43, 0.85), rgba(3, 7, 30, 0.95)), 
+            background: linear-gradient(rgba(11, 19, 43, 0.75), rgba(3, 7, 30, 0.85)), 
                         url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             color: #ffffff; 
             line-height: 1.6; 
+            overflow-x: hidden; 
             min-height: 100vh;
         }
 
+        /* Glassmorphism Navigation Bar */
         nav { 
-            background: rgba(11, 19, 43, 0.8); 
+            background: rgba(11, 19, 43, 0.75); 
             backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
             position: fixed; 
             top: 0; 
             width: 100%; 
@@ -28,22 +32,35 @@
             padding: 12px 25px; 
             z-index: 1000; 
             border-bottom: 1px solid rgba(76, 201, 240, 0.2); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            flex-wrap: wrap; 
         }
-        .logo-area h2 { font-size: 1.2rem; color: #fff; }
-        .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; }
+        .logo-area h2 { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(76,201,240,0.5); }
+        .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; letter-spacing: 1px; }
 
         .nav-menu { display: flex; align-items: center; gap: 12px; list-style: none; flex-wrap: wrap; }
         .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.85rem; padding: 6px 12px; border-radius: 8px; transition: 0.3s; }
-        .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; }
+        .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; box-shadow: 0 0 10px rgba(58,134,255,0.4); }
 
-        /* Hidden Admin Trigger for Owner */
-        .owner-secret-trigger { color: transparent; cursor: pointer; user-select: none; font-size: 0.8rem; }
+        /* Dropdown Styling */
+        .dropdown { position: relative; display: inline-block; }
+        .dropdown-content { display: none; position: absolute; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(10px); min-width: 180px; box-shadow: 0px 15px 25px rgba(0,0,0,0.6); border-radius: 10px; z-index: 1; border: 1px solid rgba(76,201,240,0.3); overflow: hidden; left: 0; }
+        .dropdown-content a { color: #fff; padding: 10px 15px; text-decoration: none; display: block; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .dropdown-content a:hover { background-color: #3a86ff; }
+        .dropdown:hover .dropdown-content { display: block; }
+
+        .admin-btn { background: linear-gradient(135deg, #ff9800, #f77f00); color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 14px !important; border: none; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 15px rgba(255,152,0,0.4); }
 
         .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
 
-        /* Admin Panels Container (Hidden from Public View) */
-        .admin-panel-wrapper { display: none; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(15px); padding: 25px; border-radius: 15px; border: 2px solid #ff9800; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
-        .admin-panel-wrapper h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
+        /* Live Search Bar Container */
+        .search-container { background: rgba(28, 37, 65, 0.5); backdrop-filter: blur(12px); padding: 18px; border-radius: 15px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.25); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .search-box { width: 100%; max-width: 600px; padding: 12px 20px; background: rgba(11, 19, 43, 0.85); border: 2px solid #3a86ff; color: #fff; border-radius: 25px; font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 20px rgba(76, 201, 240, 0.6), inset 0 0 10px rgba(0,0,0,0.5); }
+
+        /* Admin Panels Container */
+        .admin-panel { display: none; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(15px); padding: 25px; border-radius: 15px; border: 2px solid #ff9800; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 5px; color: #4cc9f0; font-size: 0.85rem; font-weight: bold; }
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 10px; background: rgba(11, 19, 43, 0.9); border: 1px solid rgba(76, 201, 240, 0.3); color: #fff; border-radius: 8px; font-size: 0.9rem; }
@@ -51,34 +68,55 @@
         
         .btn-publish { background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.95rem; margin-top: 10px; }
 
-        .hero { text-align: center; padding: 50px 20px; background: rgba(28, 37, 65, 0.45); backdrop-filter: blur(16px); border-radius: 20px; border: 1px solid rgba(76, 201, 240, 0.35); }
-        .hero h1 { font-size: 2.2rem; margin-bottom: 15px; color: #fff; }
-        .hero p { color: #a5b4fc; max-width: 700px; margin: 0 auto 25px auto; }
+        /* 3D Glass Hero Banner Section */
+        .hero { 
+            text-align: center; 
+            padding: 50px 20px; 
+            background: rgba(28, 37, 65, 0.45); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 20px; 
+            border: 1px solid rgba(76, 201, 240, 0.35); 
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(76, 201, 240, 0.15);
+            position: relative;
+            overflow: hidden;
+        }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0, #3a86ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(76,201,240,0.3); }
+        .hero p { color: #a5b4fc; max-width: 700px; margin: 0 auto 25px auto; font-size: 1rem; }
+        .hero-btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         
-        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(76, 201, 240, 0.2); margin-top: 50px; color: #8d99ae; font-size: 0.8rem; }
+        .btn-primary { background: linear-gradient(135deg, #3a86ff, #2563eb); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 0 20px rgba(58,134,255,0.5); transition: 0.3s; display: inline-block; }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(58,134,255,0.8); }
+
+        .btn-success { background: linear-gradient(135deg, #28a745, #218838); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 0 20px rgba(40,167,69,0.5); transition: 0.3s; display: inline-block; }
+        .btn-success:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(40,167,69,0.8); }
+
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(76, 201, 240, 0.2); margin-top: 50px; color: #8d99ae; font-size: 0.8rem; background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(10px); }
+
+        @media(max-width: 768px) {
+            nav { padding: 10px 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
+            .nav-menu { width: 100%; justify-content: space-between; gap: 5px; }
+            .main-container { padding-top: 130px; }
+            .hero h1 { font-size: 1.6rem; }
+            .hero { padding: 35px 15px; }
+            .admin-panel { padding: 15px; }
+        }
     </style>
     <script>
-        // Owner Authentication Check
-        function verifyOwnerAccess() {
-            let pass = prompt("🔐 Enter Strong Owner Passcode:");
+        function toggleAdminLogin() {
+            let pass = prompt("🔑 Enter Owner Password:");
             if (pass === "BCA@Admin#2026!Secured") {
-                alert("✅ Owner Identity Verified! Admin Controls Unlocked.");
-                document.getElementById("ownerAdminContainer").style.display = "block";
-                window.scrollTo({ top: document.getElementById("ownerAdminContainer").offsetTop - 100, behavior: 'smooth' });
-            } else if (pass !== null) {
-                alert("❌ Unauthorized Access Attempted! Incorrect Passcode.");
+                alert("Welcome Admin! Content, Quiz & Video Managers Unlocked.");
+                document.getElementById("adminTopicPanel").style.display = "block";
+                document.getElementById("adminQuizPanel").style.display = "block";
+                document.getElementById("adminVideoPanel").style.display = "block";
+                window.scrollTo({ top: document.getElementById("adminTopicPanel").offsetTop - 120, behavior: 'smooth' });
+            } else if(pass !== null) {
+                alert("Wrong Password! Access Denied.");
             }
         }
 
-        // Auto-check URL parameter for secret owner entry (?admin=true)
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            if(urlParams.get('admin') === 'true') {
-                verifyOwnerAccess();
-            }
-        };
-
-        // Real-Time Local Database Saving Logic for Topic & Custom 3D Models
+        // Save Data to Browser Local Storage Database
         function saveTopicData(e) {
             e.preventDefault();
             let semester = document.getElementById("topicSem").value;
@@ -104,13 +142,14 @@
             existingTopics.push(topicObject);
             localStorage.setItem("bca_topics", JSON.stringify(existingTopics));
 
-            alert("🎉 Success! Topic & " + modelList.length + " 3D Models published to website database.");
+            alert("🎉 Success! Topic & 3D Models updated on website.");
             document.getElementById("topicForm").reset();
         }
     </script>
 </head>
 <body>
 
+    <!-- Responsive Glassmorphism Navigation Bar -->
     <nav>
         <div class="logo-area">
             <h2>🎓 BCA Learning Hub</h2>
@@ -119,19 +158,36 @@
 
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
+
+            <li class="dropdown">
+                <a href="#">Semesters ▾</a>
+                <div class="dropdown-content">
+                    <a href="template.html?sem=1">Semester 1</a>
+                    <a href="template.html?sem=2">Semester 2</a>
+                    <a href="template.html?sem=3">Semester 3</a>
+                    <a href="template.html?sem=4">Semester 4</a>
+                    <a href="template.html?sem=5">Semester 5</a>
+                    <a href="template.html?sem=6">Semester 6</a>
+                </div>
+            </li>
+
             <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
             <li><a href="template.html">Topic Viewer</a></li>
             <li><a href="lectures.html" style="color: #ff4757; font-weight: bold;">🎥 Video Lectures</a></li>
-            <!-- Hidden secret click trigger for Owner only -->
-            <li class="owner-secret-trigger" onclick="verifyOwnerAccess()">⚙️</li>
+            <li><button class="admin-btn" onclick="toggleAdminLogin()">🔐 Admin Panel</button></li>
         </ul>
     </nav>
 
     <div class="main-container">
 
-        <!-- Hidden Owner Admin Panel Container -->
-        <div class="admin-panel-wrapper" id="ownerAdminContainer">
-            <h2>✍️ Owner Content & Multi-3D Model Manager</h2>
+        <!-- Live Search Bar -->
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="🔍 Search any BCA topic, chapter, or question...">
+        </div>
+
+        <!-- 1. ADMIN TEXT & MULTI-3D CONTENT CREATOR FORM -->
+        <div class="admin-panel" id="adminTopicPanel">
+            <h2>✍️ 1. Admin Text & Multi-3D Content Creator</h2>
             <form id="topicForm" onsubmit="saveTopicData(event)">
                 <div class="form-group">
                     <label>Select Semester:</label>
@@ -147,45 +203,113 @@
 
                 <div class="form-group">
                     <label>Topic Title:</label>
-                    <input type="text" id="topicTitle" placeholder="e.g. CPU Architecture & Memory Hierarchy" required>
+                    <input type="text" id="topicTitle" placeholder="Jaise: CPU Architecture & Registers" required>
                 </div>
 
                 <div class="form-group">
                     <label>Definition & Real-World Example Box:</label>
-                    <textarea id="topicDef" placeholder="Enter topic description and real-world analogy..." required></textarea>
+                    <textarea id="topicDef" placeholder="Topic ki definition aur real-world example yahan likhein..." required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Short & Long Q&A Box:</label>
-                    <textarea id="topicQA" placeholder="Q1: What is CPU? \nAns: Central Processing Unit..."></textarea>
-                </div>
-
-                <!-- Custom Multi-3D Model Upload Box Input -->
-                <div class="form-group">
-                    <label>3D Model Paths / URLs (Comma Separated for Multiple 3D Boxes):</label>
-                    <input type="text" id="topicModels" placeholder="models/cpu.glb, models/ram.glb, models/motherboard.glb" required>
-                    <small style="color: #adb5bd;">Separate multiple 3D model URLs with commas to generate custom 3D viewer boxes.</small>
+                    <label>Short & Long Q&A Box (With Answer Reveal):</label>
+                    <textarea id="topicQA" placeholder="Q1: What is CPU? \nAns: CPU is the brain..."></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Practical Lab Activity Task:</label>
+                    <label>3D Model Paths / URLs (Comma Separated for Custom 3D Boxes):</label>
+                    <input type="text" id="topicModels" placeholder="models/cpu.glb, models/ram.glb" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Practical Lab Activity & Code Task:</label>
                     <textarea id="topicLab" placeholder="Step-by-step practical code assignment..."></textarea>
                 </div>
 
-                <button type="submit" class="btn-publish">🚀 Publish Content & Live Update Website</button>
+                <button type="submit" class="btn-publish">🚀 Save & Live Update Website</button>
             </form>
         </div>
 
-        <!-- Hero Section -->
+        <!-- 2. ADMIN QUIZ CREATOR FORM -->
+        <div class="admin-panel" id="adminQuizPanel">
+            <h2>🎯 2. Admin Custom Quiz Designer</h2>
+            <form onsubmit="event.preventDefault(); alert('Quiz Question Published!');">
+                <div class="form-group">
+                    <label>Select Quiz Level Type:</label>
+                    <select required>
+                        <option value="topic">Topic-Wise Quiz</option>
+                        <option value="chapter">Chapter-Wise Quiz</option>
+                        <option value="boss">🔥 Semester Boss Level Quiz</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Question Text:</label>
+                    <input type="text" placeholder="Apna Quiz Question likhein..." required>
+                </div>
+
+                <div class="form-group">
+                    <label>Option Details (A, B, C, D):</label>
+                    <input type="text" placeholder="Option A" required style="margin-bottom: 5px;">
+                    <input type="text" placeholder="Option B" required style="margin-bottom: 5px;">
+                    <input type="text" placeholder="Option C" required style="margin-bottom: 5px;">
+                    <input type="text" placeholder="Option D" required style="margin-bottom: 5px;">
+                </div>
+
+                <div class="form-group">
+                    <label>Select Correct Answer Key:</label>
+                    <select required>
+                        <option value="A">Option A</option>
+                        <option value="B">Option B</option>
+                        <option value="C">Option C</option>
+                        <option value="D">Option D</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn-publish">🚀 Publish Quiz Question</button>
+            </form>
+        </div>
+
+        <!-- 3. ADMIN VIDEO LECTURE UPLOAD MANAGER FORM -->
+        <div class="admin-panel" id="adminVideoPanel">
+            <h2>🎥 3. Admin Video Lecture Manager</h2>
+            <form onsubmit="event.preventDefault(); alert('Video Lecture Uploaded!');">
+                <div class="form-group">
+                    <label>Select Semester:</label>
+                    <select required>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Topic Name & Video Link:</label>
+                    <input type="text" placeholder="YouTube Embed / MP4 URL" required>
+                </div>
+
+                <button type="submit" class="btn-publish" style="background: linear-gradient(135deg, #ff4757, #ff6b81);">🎥 Upload Video Lecture</button>
+            </form>
+        </div>
+
+        <!-- 3D Glass Hero Section with Start Learning & Take Quiz Buttons -->
         <div class="hero">
             <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
-            <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive multi-3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
+            <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
+            <br>
+            <div class="hero-btns">
+                <a href="template.html" class="btn-primary">Start Learning →</a>
+                <a href="quiz.html" class="btn-success">Take Quiz →</a>
+            </div>
         </div>
 
     </div>
 
     <footer>
-        <p>© 2026 BCA Learning Hub | Secure Owner Managed Platform</p>
+        <p>© 2026 BCA Learning Hub | 3D Immersive Education Platform</p>
     </footer>
 
 </body>
