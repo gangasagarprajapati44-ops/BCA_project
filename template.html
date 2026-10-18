@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Topic Viewer - Cloud Synced Content</title>
+    <title>BCA Topic Viewer - 3D Immersive Education</title>
 
     <!-- Firebase Classic Compatibility Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
+    <!-- Google Model Viewer for 3D Models Support -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
 
         body { 
-            background: linear-gradient(rgba(11, 19, 43, 0.85), rgba(3, 7, 30, 0.9)), 
+            background: linear-gradient(rgba(11, 19, 43, 0.88), rgba(3, 7, 30, 0.92)), 
                         url('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             color: #ffffff; 
             min-height: 100vh;
-            padding-bottom: 50px;
+            padding-bottom: 60px;
         }
 
         nav { 
             background: rgba(11, 19, 43, 0.85); 
             backdrop-filter: blur(15px); 
+            -webkit-backdrop-filter: blur(15px);
             position: fixed; 
             top: 0; 
             width: 100%; 
@@ -33,36 +37,132 @@
             padding: 12px 25px; 
             z-index: 1000; 
             border-bottom: 1px solid rgba(76, 201, 240, 0.2); 
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
-        .logo-area h2 { font-size: 1.2rem; color: #fff; }
-        .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; }
+        .logo-area h2 { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(76,201,240,0.5); }
+        .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; letter-spacing: 1px; }
 
-        .nav-menu { display: flex; gap: 15px; list-style: none; }
-        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; padding: 6px 12px; border-radius: 8px; }
+        .nav-menu { display: flex; gap: 15px; list-style: none; align-items: center; }
+        .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; padding: 6px 14px; border-radius: 8px; transition: 0.3s; }
         .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; }
 
-        .content-container { max-width: 900px; margin: 100px auto 30px auto; padding: 20px; }
+        .content-container { max-width: 950px; margin: 100px auto 30px auto; padding: 20px; }
 
         .topic-card {
-            background: rgba(28, 37, 65, 0.9);
-            backdrop-filter: blur(15px);
+            background: rgba(28, 37, 65, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             border-radius: 20px;
-            padding: 30px;
-            border: 1px solid rgba(76, 201, 240, 0.3);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            margin-bottom: 30px;
+            padding: 35px;
+            border: 1px solid rgba(76, 201, 240, 0.35);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+            margin-bottom: 35px;
         }
 
-        .topic-title { color: #4cc9f0; font-size: 1.8rem; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .topic-meta { color: #ff9800; font-size: 0.9rem; margin-bottom: 20px; font-weight: bold; }
+        .topic-title { 
+            color: #4cc9f0; 
+            font-size: 2rem; 
+            margin-bottom: 12px; 
+            border-bottom: 2px solid rgba(76,201,240,0.3); 
+            padding-bottom: 12px; 
+            text-shadow: 0 0 15px rgba(76,201,240,0.3);
+        }
         
-        .section-box { background: rgba(11, 19, 43, 0.7); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05); }
-        .section-box h3 { color: #3a86ff; margin-bottom: 10px; font-size: 1.1rem; }
-        .section-box p, .section-box pre { color: #e2e8f0; font-size: 0.95rem; white-space: pre-wrap; line-height: 1.6; }
+        .topic-meta { 
+            color: #ff9800; 
+            font-size: 0.95rem; 
+            margin-bottom: 25px; 
+            font-weight: bold; 
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .section-box { 
+            background: rgba(11, 19, 43, 0.75); 
+            padding: 22px; 
+            border-radius: 14px; 
+            margin-bottom: 22px; 
+            border: 1px solid rgba(255, 255, 255, 0.08); 
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.3);
+        }
+        
+        .section-box h3 { 
+            color: #3a86ff; 
+            margin-bottom: 12px; 
+            font-size: 1.2rem; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .section-box p { 
+            color: #e2e8f0; 
+            font-size: 1.05rem; 
+            line-height: 1.8; 
+            word-break: break-word;
+            white-space: pre-wrap;
+        }
 
-        .model-badge { display: inline-block; background: rgba(76, 201, 240, 0.2); color: #4cc9f0; padding: 6px 12px; border-radius: 6px; margin: 4px; font-size: 0.85rem; border: 1px solid rgba(76,201,240,0.4); }
+        .section-box pre {
+            background: rgba(5, 10, 25, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            color: #4cc9f0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.95rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            border: 1px solid rgba(76, 201, 240, 0.2);
+        }
 
-        .no-content { text-align: center; color: #a5b4fc; font-size: 1.1rem; padding: 50px; }
+        /* 3D Viewer Container Styling */
+        .viewer-container {
+            width: 100%;
+            height: 380px;
+            background: radial-gradient(circle, #1a233a 0%, #0b132b 100%);
+            border-radius: 12px;
+            border: 2px solid #4cc9f0;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 25px rgba(76, 201, 240, 0.25);
+            margin-top: 10px;
+        }
+
+        model-viewer {
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
+        }
+
+        .model-fallback-text {
+            text-align: center;
+            color: #8d99ae;
+            font-size: 0.95rem;
+            padding: 20px;
+        }
+
+        .model-badge { 
+            display: inline-block; 
+            background: rgba(76, 201, 240, 0.15); 
+            color: #4cc9f0; 
+            padding: 8px 14px; 
+            border-radius: 8px; 
+            margin: 6px 6px 0 0; 
+            font-size: 0.9rem; 
+            border: 1px solid rgba(76,201,240,0.4); 
+        }
+
+        .no-content { text-align: center; color: #a5b4fc; font-size: 1.2rem; padding: 60px; }
+
+        @media(max-width: 768px) {
+            .topic-card { padding: 20px; }
+            .topic-title { font-size: 1.5rem; }
+            .viewer-container { height: 280px; }
+        }
     </style>
 
     <script>
@@ -93,20 +193,42 @@
                     return;
                 }
 
-                const topicsArray = Object.values(data).reverse(); // Latest topic sabse upar dikhega
+                const topicsArray = Object.values(data).reverse(); // Latest topic top par
 
                 topicsArray.forEach((item) => {
                     let modelsHtml = "";
+                    let viewerHtml = "";
+
                     if (item.models && item.models.length > 0) {
+                        // Pehla model 3D Viewer box ke liye use karenge agar valid path ho
+                        let firstModelUrl = item.models[0].trim();
+                        
+                        if (firstModelUrl.endsWith('.glb') || firstModelUrl.endsWith('.gltf')) {
+                            viewerHtml = `
+                                <div class="viewer-container">
+                                    <model-viewer src="${firstModelUrl}" alt="3D Model Viewer" auto-rotate camera-controls shadow-intensity="1"></model-viewer>
+                                </div>
+                            `;
+                        } else {
+                            viewerHtml = `
+                                <div class="viewer-container">
+                                    <div class="model-fallback-text">📦 3D Model Source: <strong>${firstModelUrl}</strong><br><small>(GLB/GLTF format required for 360° interactive rendering)</small></div>
+                                </div>
+                            `;
+                        }
+
                         item.models.forEach(m => {
-                            modelsHtml += `<span class="model-badge">📦 3D Model: ${m}</span>`;
+                            modelsHtml += `<span class="model-badge">📦 ${m}</span>`;
                         });
                     }
 
                     let cardHtml = `
                         <div class="topic-card">
                             <h2 class="topic-title">${item.title}</h2>
-                            <div class="topic-meta">🎓 ${item.semester} &nbsp;|&nbsp; 🕒 ${item.timestamp || 'Recent'}</div>
+                            <div class="topic-meta">
+                                <span>🎓 ${item.semester}</span>
+                                <span>🕒 ${item.timestamp || 'Recent'}</span>
+                            </div>
 
                             <div class="section-box">
                                 <h3>📖 Definition & Real-World Example</h3>
@@ -116,18 +238,18 @@
                             ${item.qa ? `
                             <div class="section-box">
                                 <h3>❓ Important Q&A Box</h3>
-                                <pre>${item.qa}</pre>
+                                <p>${item.qa}</p>
                             </div>` : ''}
 
-                            ${modelsHtml ? `
                             <div class="section-box">
-                                <h3>🧊 Attached 3D Models</h3>
-                                <div>${modelsHtml}</div>
-                            </div>` : ''}
+                                <h3>🧊 Interactive 3D Visualizer Box</h3>
+                                ${viewerHtml}
+                                <div style="margin-top: 15px;">${modelsHtml}</div>
+                            </div>
 
                             ${item.lab ? `
                             <div class="section-box">
-                                <h3>💻 Practical Lab Activity & Code</h3>
+                                <h3>💻 Practical Lab Activity & Code Task</h3>
                                 <pre>${item.lab}</pre>
                             </div>` : ''}
                         </div>
@@ -154,7 +276,7 @@
     </nav>
 
     <div class="content-container">
-        <h1 style="text-align: center; margin-bottom: 25px; color: #4cc9f0;">📚 Cloud Synced BCA Study Materials</h1>
+        <h1 style="text-align: center; margin-bottom: 30px; color: #4cc9f0; text-shadow: 0 0 15px rgba(76,201,240,0.4);">📚 Cloud Synced BCA Study Materials & 3D Lab</h1>
         <div id="dynamicTopics">
             <div class="no-content">⏳ Loading Topics from Cloud Database...</div>
         </div>
