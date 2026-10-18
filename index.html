@@ -20,7 +20,7 @@
 
         /* Glassmorphism Navigation Bar */
         nav { 
-            background: rgba(11, 19, 43, 0.75); 
+            background: rgba(11, 19, 43, 0.85); 
             backdrop-filter: blur(15px); 
             -webkit-backdrop-filter: blur(15px);
             position: fixed; 
@@ -51,14 +51,14 @@
 
         .admin-btn { background: linear-gradient(135deg, #ff9800, #f77f00); color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 14px !important; border: none; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 15px rgba(255,152,0,0.4); }
 
-        .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
+        .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; padding-bottom: 50px; }
 
         /* Search Bar Container */
         .search-container { background: rgba(28, 37, 65, 0.5); backdrop-filter: blur(12px); padding: 18px; border-radius: 15px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.25); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
         .search-box { width: 100%; max-width: 600px; padding: 12px 20px; background: rgba(11, 19, 43, 0.85); border: 2px solid #3a86ff; color: #fff; border-radius: 25px; font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
         .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 20px rgba(76, 201, 240, 0.6), inset 0 0 10px rgba(0,0,0,0.5); }
 
-        /* Admin Panels Container (By default hidden) */
+        /* Admin Panels Container (Initially Hidden, Unlocked via Password) */
         .admin-panel { display: none; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(15px); padding: 25px; border-radius: 15px; border: 2px solid #ff9800; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
         .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
         .form-group { margin-bottom: 14px; }
@@ -93,21 +93,14 @@
 
         footer { text-align: center; padding: 30px; border-top: 1px solid rgba(76, 201, 240, 0.2); margin-top: 50px; color: #8d99ae; font-size: 0.8rem; background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(10px); }
 
-        /* Enhanced Responsive Media Queries for Mobile, Tablets & Laptops */
+        /* Responsive Media Queries */
         @media(max-width: 900px) {
             nav { padding: 10px 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
-            .nav-menu { width: 100%; justify-content: flex-start; gap: 8px; overflow-x: auto; padding-bottom: 5px; }
-            .main-container { padding-top: 140px; }
+            .nav-menu { width: 100%; justify-content: space-between; gap: 5px; }
+            .main-container { padding-top: 130px; }
             .hero h1 { font-size: 1.5rem; }
             .hero { padding: 30px 15px; }
             .admin-panel { padding: 15px; }
-        }
-
-        @media(max-width: 480px) {
-            .hero h1 { font-size: 1.25rem; }
-            .hero p { font-size: 0.9rem; }
-            .nav-menu a { font-size: 0.75rem; padding: 4px 8px; }
-            .search-box { font-size: 0.9rem; padding: 10px 15px; }
         }
     </style>
     <script>
@@ -124,7 +117,7 @@
             }
         }
 
-        // Save Data to Browser Local Storage Database for Topics
+        // Save Topic Data to Local Storage
         function saveTopicData(e) {
             e.preventDefault();
             let semester = document.getElementById("topicSem").value;
@@ -154,7 +147,7 @@
             document.getElementById("topicForm").reset();
         }
 
-        // Save Bulk 20+ Quiz Questions Data
+        // Save Bulk Quiz Data
         function saveBulkQuizData(e) {
             e.preventDefault();
             let sem = document.getElementById("quizSem").value;
@@ -286,5 +279,83 @@
             </form>
         </div>
 
-        <!-- 2. ADMIN BULK QUIZ CREATOR FORM (20+ Questions Copy-Paste System) -->
-        <div class="admin-panel" id="admin
+        <!-- 2. ADMIN BULK QUIZ CREATOR FORM -->
+        <div class="admin-panel" id="adminQuizPanel">
+            <h2>🎯 2. Admin Bulk Quiz Designer (Copy-Paste 20+ Questions)</h2>
+            <form id="bulkQuizForm" onsubmit="saveBulkQuizData(event)">
+                <div class="form-group">
+                    <label>Select Semester & Chapter/Topic:</label>
+                    <select id="quizSem" required>
+                        <option value="Sem 1 - Computer Fundamentals">Semester 1 - Computer Fundamentals</option>
+                        <option value="Sem 2 - Data Structures">Semester 2 - Data Structures</option>
+                        <option value="Sem 3 - DBMS & Java">Semester 3 - DBMS & Java</option>
+                        <option value="Sem 4 - Web Tech">Semester 4 - Web Tech</option>
+                        <option value="Sem 5 - Cyber Security">Semester 5 - Cyber Security</option>
+                        <option value="Sem 6 - AI & Android">Semester 6 - AI & Android</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Topic Title:</label>
+                    <input type="text" id="quizTopicTitle" placeholder="e.g. CPU & Registers 20 Question Set" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Paste 20+ Questions Here (Bulk Format):</label>
+                    <textarea id="bulkQuizText" style="height: 200px; font-family: monospace;" placeholder="Format:
+Q: Question text here?
+A: Option A
+B: Option B
+C: Option C
+D: Option D
+Ans: C" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-publish">🚀 Save 20+ Questions & Publish Quiz</button>
+            </form>
+        </div>
+
+        <!-- 3. ADMIN VIDEO LECTURE UPLOAD MANAGER FORM -->
+        <div class="admin-panel" id="adminVideoPanel">
+            <h2>🎥 3. Admin Video Lecture Manager</h2>
+            <form onsubmit="event.preventDefault(); alert('Video Lecture Uploaded!');">
+                <div class="form-group">
+                    <label>Select Semester:</label>
+                    <select required>
+                        <option value="1">Semester 1</option>
+                        <option value="2">Semester 2</option>
+                        <option value="3">Semester 3</option>
+                        <option value="4">Semester 4</option>
+                        <option value="5">Semester 5</option>
+                        <option value="6">Semester 6</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Topic Name & Video Link:</label>
+                    <input type="text" placeholder="YouTube Embed / MP4 URL" required>
+                </div>
+
+                <button type="submit" class="btn-publish" style="background: linear-gradient(135deg, #ff4757, #ff6b81);">🎥 Upload Video Lecture</button>
+            </form>
+        </div>
+
+        <!-- 3D Glass Hero Section with Start Learning & Take Quiz Buttons -->
+        <div class="hero">
+            <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
+            <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
+            <br>
+            <div class="hero-btns">
+                <a href="template.html" class="btn-primary">Start Learning →</a>
+                <a href="quiz.html" class="btn-success">Take Quiz →</a>
+            </div>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>© 2026 BCA Learning Hub | 3D Immersive Education Platform</p>
+    </footer>
+
+</body>
+</html>
