@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Quiz Arena - Exam Hall Experience</title>
+    <title>BCA Quiz Arena - Timed Examination & Practice</title>
 
     <!-- Firebase Classic Compatibility Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
 
         body { 
-            background: linear-gradient(rgba(11, 19, 43, 0.85), rgba(3, 7, 30, 0.9)), 
+            background: linear-gradient(rgba(11, 19, 43, 0.88), rgba(3, 7, 30, 0.92)), 
                         url('https://images.unsplash.com/photo-1434030216411-0b793f4b4173?q=80&w=2070&auto=format&fit=crop') no-repeat center center fixed;
             background-size: cover;
             color: #ffffff; 
             min-height: 100vh;
-            padding-bottom: 50px;
+            padding-bottom: 60px;
+            line-height: 1.6;
         }
 
         nav { 
@@ -37,11 +38,11 @@
         .logo-area h2 { font-size: 1.2rem; color: #fff; }
         .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; }
 
-        .nav-menu { display: flex; gap: 15px; list-style: none; }
+        .nav-menu { display: flex; gap: 15px; list-style: none; align-items: center; }
         .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.9rem; padding: 6px 12px; border-radius: 8px; }
         .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; }
 
-        .quiz-container { max-width: 850px; margin: 100px auto 30px auto; padding: 20px; }
+        .quiz-container { max-width: 880px; margin: 100px auto 30px auto; padding: 0 20px; }
 
         .quiz-card {
             background: rgba(28, 37, 65, 0.9);
@@ -50,20 +51,20 @@
             padding: 30px;
             border: 1px solid rgba(76, 201, 240, 0.3);
             box-shadow: 0 15px 35px rgba(0,0,0,0.5);
-            margin-bottom: 25px;
+            margin-bottom: 30px;
         }
 
-        .quiz-title { color: #ff9800; font-size: 1.5rem; margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
-        .quiz-meta { color: #4cc9f0; font-size: 0.85rem; margin-bottom: 20px; }
+        .quiz-title { color: #ff9800; font-size: 1.6rem; margin-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; }
+        .quiz-meta { color: #4cc9f0; font-size: 0.85rem; margin-bottom: 20px; font-weight: 600; }
 
-        .question-item { background: rgba(11, 19, 43, 0.7); padding: 18px; border-radius: 12px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.05); }
+        .question-item { background: rgba(11, 19, 43, 0.75); padding: 20px; border-radius: 12px; margin-bottom: 18px; border: 1px solid rgba(255,255,255,0.06); }
         .question-text { font-size: 1.05rem; font-weight: 600; color: #fff; margin-bottom: 12px; }
 
-        .options-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .options-list { list-style: none; display: flex; flex-direction: column; gap: 10px; }
         .option-label { 
             display: flex; 
             align-items: center; 
-            padding: 10px 15px; 
+            padding: 12px 16px; 
             background: rgba(255,255,255,0.05); 
             border-radius: 8px; 
             cursor: pointer; 
@@ -72,7 +73,31 @@
             font-size: 0.95rem;
         }
         .option-label:hover { background: rgba(58, 134, 255, 0.2); border-color: #3a86ff; }
-        .option-label input { margin-right: 12px; }
+        .option-label input { margin-right: 12px; transform: scale(1.1); }
+
+        .reveal-ans-box {
+            display: none;
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            border-radius: 8px;
+            color: #2ecc71;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .btn-reveal-single {
+            background: rgba(76, 201, 240, 0.15);
+            color: #4cc9f0;
+            border: 1px solid #4cc9f0;
+            padding: 5px 12px;
+            font-size: 0.8rem;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .btn-reveal-single:hover { background: rgba(76, 201, 240, 0.3); }
 
         .btn-submit-quiz {
             background: linear-gradient(135deg, #28a745, #218838);
@@ -98,11 +123,23 @@
             margin-top: 20px;
         }
 
-        .no-quiz { text-align: center; color: #a5b4fc; font-size: 1.1rem; padding: 40px; }
+        .admin-del-btn {
+            display: none;
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+        .no-quiz { text-align: center; color: #a5b4fc; font-size: 1.1rem; padding: 60px; }
     </style>
 
     <script>
-        // Firebase Config
         const firebaseConfig = {
             apiKey: "AIzaSyAlnN3WDFMyM9aWy88GyRZUNJk3D1Y-TBE",
             authDomain: "bca-learning-hub.firebaseapp.com",
@@ -117,9 +154,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
-        let allQuizzes = [];
+        let allQuizzes = {};
 
-        // Fetch Quizzes from Firebase on Page Load
         window.onload = function() {
             const quizContainer = document.getElementById("quizContent");
 
@@ -132,14 +168,15 @@
                     return;
                 }
 
-                allQuizzes = Object.values(data);
-                
-                allQuizzes.forEach((quizSet, quizIndex) => {
+                allQuizzes = data;
+                let entries = Object.entries(data).reverse();
+
+                entries.forEach(([quizId, quizSet]) => {
                     let quizHtml = `
-                        <div class="quiz-card">
+                        <div class="quiz-card" id="quiz_${quizId}">
                             <h2 class="quiz-title">🎯 ${quizSet.topic || "BCA Practice Quiz"}</h2>
                             <div class="quiz-meta">📚 ${quizSet.semester || "Semester All"} | 🕒 Posted: ${quizSet.timestamp || 'Recently'}</div>
-                            <form id="quizForm_${quizIndex}">
+                            <form id="quizForm_${quizId}">
                     `;
 
                     quizSet.questions.forEach((q, qIndex) => {
@@ -147,47 +184,92 @@
                             <div class="question-item">
                                 <div class="question-text">Q${qIndex + 1}. ${q.question}</div>
                                 <div class="options-list">
-                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="A"> A) ${q.options[0]}</label>
-                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="B"> B) ${q.options[1]}</label>
-                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="C"> C) ${q.options[2]}</label>
-                                    <label class="option-label"><input type="radio" name="q_${quizIndex}_${qIndex}" value="D"> D) ${q.options[3]}</label>
+                                    <label class="option-label"><input type="radio" name="q_${quizId}_${qIndex}" value="A"> A) ${q.options[0]}</label>
+                                    <label class="option-label"><input type="radio" name="q_${quizId}_${qIndex}" value="B"> B) ${q.options[1]}</label>
+                                    <label class="option-label"><input type="radio" name="q_${quizId}_${qIndex}" value="C"> C) ${q.options[2]}</label>
+                                    <label class="option-label"><input type="radio" name="q_${quizId}_${qIndex}" value="D"> D) ${q.options[3]}</label>
+                                </div>
+                                <button type="button" class="btn-reveal-single" onclick="toggleSingleAnswer('${quizId}', ${qIndex})">👁️ Reveal Answer</button>
+                                <div class="reveal-ans-box" id="ans_box_${quizId}_${qIndex}">
+                                    ✅ Correct Answer: Option ${q.correct}
                                 </div>
                             </div>
                         `;
                     });
 
                     quizHtml += `
-                                <button type="button" class="btn-submit-quiz" onclick="checkQuizAnswers(${quizIndex})">✅ Submit Exam Answers</button>
+                                <button type="button" class="btn-submit-quiz" onclick="checkQuizAnswers('${quizId}')">✅ Submit & Check Full Score</button>
                             </form>
-                            <div class="result-box" id="result_${quizIndex}"></div>
+                            <div class="result-box" id="result_${quizId}"></div>
+                            <button class="admin-del-btn" onclick="deleteQuiz('${quizId}')">🗑️ Delete Entire Quiz Set</button>
                         </div>
                     `;
 
                     quizContainer.innerHTML += quizHtml;
                 });
+
+                if(sessionStorage.getItem("bca_admin_auth") === "true") {
+                    enableQuizAdminUI();
+                }
             });
         };
 
-        function checkQuizAnswers(quizIndex) {
-            const quizSet = allQuizzes[quizIndex];
+        function toggleSingleAnswer(quizId, qIndex) {
+            const ansBox = document.getElementById(`ans_box_${quizId}_${qIndex}`);
+            if (ansBox.style.display === "block") {
+                ansBox.style.display = "none";
+            } else {
+                ansBox.style.display = "block";
+            }
+        }
+
+        function checkQuizAnswers(quizId) {
+            const quizSet = allQuizzes[quizId];
             let score = 0;
             let total = quizSet.questions.length;
 
             quizSet.questions.forEach((q, qIndex) => {
-                const selected = document.querySelector(`input[name="q_${quizIndex}_${qIndex}"]:checked`);
+                const selected = document.querySelector(`input[name="q_${quizId}_${qIndex}"]:checked`);
+                const ansBox = document.getElementById(`ans_box_${quizId}_${qIndex}`);
+                
+                // Show answer box after submit
+                ansBox.style.display = "block";
+
                 if (selected && selected.value === q.correct) {
                     score++;
                 }
             });
 
-            const resultDiv = document.getElementById(`result_${quizIndex}`);
+            const resultDiv = document.getElementById(`result_${quizId}`);
             resultDiv.style.display = "block";
             resultDiv.innerHTML = `
-                <h3 style="color: #4cc9f0;">🎉 Exam Result</h3>
-                <p style="font-size: 1.2rem; margin: 10px 0;">Aapka Score: <strong>${score} / ${total}</strong></p>
+                <h3 style="color: #4cc9f0;">🎉 Quiz Result</h3>
+                <p style="font-size: 1.2rem; margin: 10px 0;">Score: <strong>${score} / ${total}</strong></p>
                 <p style="color: #a5b4fc;">Percentage: <strong>${((score/total)*100).toFixed(1)}%</strong></p>
             `;
-            window.scrollTo({ top: resultDiv.offsetTop - 100, behavior: 'smooth' });
+        }
+
+        function verifyAdminQuiz() {
+            let pass = prompt("🔐 Enter Admin Password:");
+            if (pass === "BCA@Admin#2026!Secured") {
+                sessionStorage.setItem("bca_admin_auth", "true");
+                enableQuizAdminUI();
+                alert("Admin Controls Unlocked!");
+            } else if(pass !== null) {
+                alert("Wrong Password!");
+            }
+        }
+
+        function enableQuizAdminUI() {
+            document.querySelectorAll('.admin-del-btn').forEach(btn => btn.style.display = "inline-block");
+        }
+
+        function deleteQuiz(quizId) {
+            if (confirm("⚠️ Delete this quiz set permanently?")) {
+                db.ref('bca_quizzes/' + quizId).remove()
+                  .then(() => alert("🗑️ Quiz Deleted!"))
+                  .catch(err => alert("Error: " + err.message));
+            }
         }
     </script>
 </head>
@@ -202,11 +284,12 @@
             <li><a href="index.html">Home</a></li>
             <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
             <li><a href="template.html">Topic Viewer</a></li>
+            <li><a href="#" onclick="verifyAdminQuiz()" style="color: #ff9800; font-size: 0.85rem;">🔐 Admin Mode</a></li>
         </ul>
     </nav>
 
     <div class="quiz-container">
-        <h1 style="text-align: center; margin-bottom: 25px; color: #4cc9f0;">⚡ Online Examination Hall</h1>
+        <h1 style="text-align: center; margin-bottom: 25px; color: #4cc9f0;">⚡ Online Examination & Practice Arena</h1>
         <div id="quizContent">
             <div class="no-quiz">⏳ Loading Quizzes from Cloud Database...</div>
         </div>
