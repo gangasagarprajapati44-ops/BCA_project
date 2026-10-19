@@ -25,7 +25,6 @@
         nav { 
             background: rgba(11, 19, 43, 0.75); 
             backdrop-filter: blur(15px); 
-            -webkit-backdrop-filter: blur(15px);
             position: fixed; 
             top: 0; 
             width: 100%; 
@@ -35,31 +34,49 @@
             padding: 12px 25px; 
             z-index: 1000; 
             border-bottom: 1px solid rgba(76, 201, 240, 0.2); 
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
             flex-wrap: wrap; 
         }
-        .logo-area h2 { font-size: 1.2rem; color: #fff; text-shadow: 0 0 10px rgba(76,201,240,0.5); }
+        .logo-area h2 { font-size: 1.2rem; color: #fff; }
         .logo-area span { font-size: 0.7rem; color: #4cc9f0; display: block; letter-spacing: 1px; }
 
         .nav-menu { display: flex; align-items: center; gap: 12px; list-style: none; flex-wrap: wrap; }
         .nav-menu a { color: #cfd9df; text-decoration: none; font-size: 0.85rem; padding: 6px 12px; border-radius: 8px; transition: 0.3s; }
-        .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; box-shadow: 0 0 10px rgba(58,134,255,0.4); }
+        .nav-menu a:hover { background: rgba(58, 134, 255, 0.3); color: #fff; }
 
         .dropdown { position: relative; display: inline-block; }
-        .dropdown-content { display: none; position: absolute; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(10px); min-width: 180px; box-shadow: 0px 15px 25px rgba(0,0,0,0.6); border-radius: 10px; z-index: 1; border: 1px solid rgba(76,201,240,0.3); overflow: hidden; left: 0; }
+        .dropdown-content { display: none; position: absolute; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(10px); min-width: 180px; border-radius: 10px; z-index: 1; border: 1px solid rgba(76,201,240,0.3); overflow: hidden; left: 0; }
         .dropdown-content a { color: #fff; padding: 10px 15px; text-decoration: none; display: block; font-size: 0.85rem; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .dropdown-content a:hover { background-color: #3a86ff; }
         .dropdown:hover .dropdown-content { display: block; }
 
-        .admin-btn { background: linear-gradient(135deg, #ff9800, #f77f00); color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 14px !important; border: none; cursor: pointer; font-size: 0.85rem; box-shadow: 0 0 15px rgba(255,152,0,0.4); }
+        .admin-btn { background: linear-gradient(135deg, #ff9800, #f77f00); color: #000 !important; font-weight: bold; border-radius: 20px !important; padding: 6px 14px !important; border: none; cursor: pointer; font-size: 0.85rem; }
 
         .main-container { padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-left: 15px; padding-right: 15px; }
 
-        .search-container { background: rgba(28, 37, 65, 0.5); backdrop-filter: blur(12px); padding: 18px; border-radius: 15px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.25); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
-        .search-box { width: 100%; max-width: 600px; padding: 12px 20px; background: rgba(11, 19, 43, 0.85); border: 2px solid #3a86ff; color: #fff; border-radius: 25px; font-size: 1rem; outline: none; transition: 0.3s; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
-        .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 20px rgba(76, 201, 240, 0.6), inset 0 0 10px rgba(0,0,0,0.5); }
+        .search-container { background: rgba(28, 37, 65, 0.5); backdrop-filter: blur(12px); padding: 20px; border-radius: 15px; margin-bottom: 25px; text-align: center; border: 1px solid rgba(76, 201, 240, 0.25); position: relative; }
+        .search-box { width: 100%; max-width: 650px; padding: 14px 22px; background: rgba(11, 19, 43, 0.85); border: 2px solid #3a86ff; color: #fff; border-radius: 30px; font-size: 1rem; outline: none; transition: 0.3s; }
+        .search-box:focus { border-color: #4cc9f0; box-shadow: 0 0 20px rgba(76, 201, 240, 0.6); }
 
-        .admin-panel { display: none; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(15px); padding: 25px; border-radius: 15px; border: 2px solid #ff9800; margin-bottom: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); }
+        .search-results-dropdown {
+            display: none;
+            position: absolute;
+            top: 75px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 650px;
+            background: rgba(11, 19, 43, 0.98);
+            border: 1px solid #4cc9f0;
+            border-radius: 12px;
+            z-index: 100;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+        .search-result-item { padding: 12px 18px; border-bottom: 1px solid rgba(255,255,255,0.08); text-align: left; cursor: pointer; transition: 0.2s; }
+        .search-result-item:hover { background: rgba(58, 134, 255, 0.3); color: #4cc9f0; }
+
+        .admin-panel { display: none; background: rgba(28, 37, 65, 0.95); backdrop-filter: blur(15px); padding: 25px; border-radius: 15px; border: 2px solid #ff9800; margin-bottom: 25px; }
         .admin-panel h2 { color: #ff9800; margin-bottom: 15px; font-size: 1.2rem; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; }
         .form-group { margin-bottom: 14px; }
         .form-group label { display: block; margin-bottom: 5px; color: #4cc9f0; font-size: 0.85rem; font-weight: bold; }
@@ -68,42 +85,18 @@
         
         .btn-publish { background: linear-gradient(135deg, #28a745, #218838); color: white; border: none; padding: 12px; font-weight: bold; border-radius: 8px; cursor: pointer; width: 100%; font-size: 0.95rem; margin-top: 10px; }
 
-        .hero { 
-            text-align: center; 
-            padding: 50px 20px; 
-            background: rgba(28, 37, 65, 0.45); 
-            backdrop-filter: blur(16px); 
-            -webkit-backdrop-filter: blur(16px);
-            border-radius: 20px; 
-            border: 1px solid rgba(76, 201, 240, 0.35); 
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(76, 201, 240, 0.15);
-            position: relative;
-            overflow: hidden;
-        }
-        .hero h1 { font-size: 2.2rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0, #3a86ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-shadow: 0 0 20px rgba(76,201,240,0.3); }
+        .hero { text-align: center; padding: 50px 20px; background: rgba(28, 37, 65, 0.45); backdrop-filter: blur(16px); border-radius: 20px; border: 1px solid rgba(76, 201, 240, 0.35); }
+        .hero h1 { font-size: 2.2rem; margin-bottom: 15px; background: linear-gradient(to right, #ffffff, #4cc9f0, #3a86ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero p { color: #a5b4fc; max-width: 700px; margin: 0 auto 25px auto; font-size: 1rem; }
         .hero-btns { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
         
-        .btn-primary { background: linear-gradient(135deg, #3a86ff, #2563eb); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 0 20px rgba(58,134,255,0.5); transition: 0.3s; display: inline-block; }
-        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(58,134,255,0.8); }
+        .btn-primary { background: linear-gradient(135deg, #3a86ff, #2563eb); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; display: inline-block; }
+        .btn-success { background: linear-gradient(135deg, #28a745, #218838); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; display: inline-block; }
 
-        .btn-success { background: linear-gradient(135deg, #28a745, #218838); color: white; text-decoration: none; padding: 12px 28px; border-radius: 25px; font-weight: bold; font-size: 0.95rem; box-shadow: 0 0 20px rgba(40,167,69,0.5); transition: 0.3s; display: inline-block; }
-        .btn-success:hover { transform: translateY(-3px); box-shadow: 0 0 30px rgba(40,167,69,0.8); }
-
-        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(76, 201, 240, 0.2); margin-top: 50px; color: #8d99ae; font-size: 0.8rem; background: rgba(11, 19, 43, 0.85); backdrop-filter: blur(10px); }
-
-        @media(max-width: 900px) {
-            nav { padding: 10px 15px; flex-direction: column; align-items: flex-start; gap: 10px; }
-            .nav-menu { width: 100%; justify-content: space-between; gap: 5px; }
-            .main-container { padding-top: 140px; }
-            .hero h1 { font-size: 1.5rem; }
-            .hero { padding: 30px 15px; }
-            .admin-panel { padding: 15px; }
-        }
+        footer { text-align: center; padding: 30px; border-top: 1px solid rgba(76, 201, 240, 0.2); margin-top: 50px; color: #8d99ae; font-size: 0.8rem; background: rgba(11, 19, 43, 0.85); }
     </style>
 
     <script>
-        // Firebase Configuration with Database URL included
         const firebaseConfig = {
             apiKey: "AIzaSyAlnN3WDFMyM9aWy88GyRZUNJk3D1Y-TBE",
             authDomain: "bca-learning-hub.firebaseapp.com",
@@ -118,97 +111,109 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
 
+        let searchableTopics = [];
+
+        window.onload = function() {
+            db.ref('bca_topics').on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    searchableTopics = Object.entries(data).map(([id, item]) => ({
+                        id: id,
+                        title: item.title,
+                        semester: item.semester
+                    }));
+                }
+            });
+        };
+
+        function handleSearchInput(query) {
+            const resultsBox = document.getElementById("searchResults");
+            resultsBox.innerHTML = "";
+            
+            if (!query.trim()) {
+                resultsBox.style.display = "none";
+                return;
+            }
+
+            const filtered = searchableTopics.filter(t => t.title.toLowerCase().includes(query.toLowerCase()));
+
+            if (filtered.length > 0) {
+                resultsBox.style.display = "block";
+                filtered.forEach(item => {
+                    resultsBox.innerHTML += `
+                        <div class="search-result-item" onclick="redirectToTopic('${item.id}')">
+                            📖 <strong>${item.title}</strong> <small style="color: #ff9800;">(${item.semester})</small>
+                        </div>
+                    `;
+                });
+            } else {
+                resultsBox.style.display = "block";
+                resultsBox.innerHTML = `<div class="search-result-item" style="color: #8d99ae;">❌ No topic found for "${query}"</div>`;
+            }
+        }
+
+        function redirectToTopic(topicId) {
+            window.location.href = `template.html?id=${topicId}`;
+        }
+
         function toggleAdminLogin() {
             let pass = prompt("🔑 Enter Owner Password:");
             if (pass === "BCA@Admin#2026!Secured") {
-                alert("Welcome Admin! Content, Quiz & Video Managers Unlocked.");
+                sessionStorage.setItem("bca_admin_auth", "true");
+                alert("Welcome Admin!");
                 document.getElementById("adminTopicPanel").style.display = "block";
                 document.getElementById("adminQuizPanel").style.display = "block";
-                document.getElementById("adminVideoPanel").style.display = "block";
-                window.scrollTo({ top: document.getElementById("adminTopicPanel").offsetTop - 120, behavior: 'smooth' });
             } else if(pass !== null) {
-                alert("Wrong Password! Access Denied.");
+                alert("Wrong Password!");
             }
         }
 
         function saveTopicData(e) {
             e.preventDefault();
-            let semester = document.getElementById("topicSem").value;
-            let title = document.getElementById("topicTitle").value;
-            let def = document.getElementById("topicDef").value;
-            let qa = document.getElementById("topicQA").value;
-            let modelsRaw = document.getElementById("topicModels").value;
-            let lab = document.getElementById("topicLab").value;
-
-            let modelList = modelsRaw.split(',').map(item => item.trim()).filter(item => item !== "");
-
             let topicObject = {
-                semester: semester,
-                title: title,
-                definition: def,
-                qa: qa,
-                models: modelList,
-                lab: lab,
+                semester: document.getElementById("topicSem").value,
+                title: document.getElementById("topicTitle").value,
+                definition: document.getElementById("topicDef").value,
+                qa: document.getElementById("topicQA").value,
+                models: document.getElementById("topicModels").value.split(',').map(i => i.trim()).filter(i => i !== ""),
+                lab: document.getElementById("topicLab").value,
                 timestamp: new Date().toLocaleString()
             };
 
-            db.ref('bca_topics').push(topicObject)
-              .then(() => {
-                  alert("🎉 Success! Topic & 3D Models saved to Cloud Database.");
-                  document.getElementById("topicForm").reset();
-              })
-              .catch((error) => {
-                  alert("❌ Error saving: " + error.message);
-              });
+            db.ref('bca_topics').push(topicObject).then(() => {
+                alert("🎉 Topic Published!");
+                document.getElementById("topicForm").reset();
+            });
         }
 
         function saveBulkQuizData(e) {
             e.preventDefault();
-            let sem = document.getElementById("quizSem").value;
-            let topic = document.getElementById("quizTopicTitle").value;
             let rawText = document.getElementById("bulkQuizText").value;
-
             let blocks = rawText.split(/\n\s*\n/);
             let parsedQuestions = [];
 
             blocks.forEach(block => {
                 let lines = block.split('\n').map(l => l.trim()).filter(l => l !== "");
                 if(lines.length >= 6) {
-                    let q = lines[0].replace(/^Q:\s*/i, '');
-                    let optA = lines[1].replace(/^A:\s*/i, '');
-                    let optB = lines[2].replace(/^B:\s*/i, '');
-                    let optC = lines[3].replace(/^C:\s*/i, '');
-                    let optD = lines[4].replace(/^D:\s*/i, '');
-                    let ans = lines[5].replace(/^Ans:\s*/i, '').toUpperCase();
-
                     parsedQuestions.push({
-                        question: q,
-                        options: [optA, optB, optC, optD],
-                        correct: ans
+                        question: lines[0].replace(/^Q:\s*/i, ''),
+                        options: [lines[1].replace(/^A:\s*/i, ''), lines[2].replace(/^B:\s*/i, ''), lines[3].replace(/^C:\s*/i, ''), lines[4].replace(/^D:\s*/i, '')],
+                        correct: lines[5].replace(/^Ans:\s*/i, '').toUpperCase()
                     });
                 }
             });
 
-            if(parsedQuestions.length === 0) {
-                alert("⚠️ Please check question format!");
-                return;
-            }
+            if(parsedQuestions.length === 0) return alert("⚠️ Invalid Quiz Format!");
 
-            let quizPayload = {
-                semester: sem,
-                topic: topic,
+            db.ref('bca_quizzes').push({
+                semester: document.getElementById("quizSem").value,
+                topic: document.getElementById("quizTopicTitle").value,
                 questions: parsedQuestions,
                 timestamp: new Date().toLocaleString()
-            };
-
-            db.ref('bca_quizzes').push(quizPayload)
-              .then(() => {
-                  alert("🎉 Successfully added " + parsedQuestions.length + " Questions to Cloud Quiz Arena!");
-                  document.getElementById("bulkQuizForm").reset();
-              })
-              .catch((error) => {
-                  alert("❌ Error saving quiz: " + error.message);
-              });
+            }).then(() => {
+                alert("🎉 Quiz Published!");
+                document.getElementById("bulkQuizForm").reset();
+            });
         }
     </script>
 </head>
@@ -222,31 +227,20 @@
 
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
-            <li class="dropdown">
-                <a href="#">Semesters ▾</a>
-                <div class="dropdown-content">
-                    <a href="template.html?sem=1">Semester 1</a>
-                    <a href="template.html?sem=2">Semester 2</a>
-                    <a href="template.html?sem=3">Semester 3</a>
-                    <a href="template.html?sem=4">Semester 4</a>
-                    <a href="template.html?sem=5">Semester 5</a>
-                    <a href="template.html?sem=6">Semester 6</a>
-                </div>
-            </li>
             <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
             <li><a href="template.html">Topic Viewer</a></li>
-            <li><a href="lectures.html" style="color: #ff4757; font-weight: bold;">🎥 Video Lectures</a></li>
             <li><button class="admin-btn" onclick="toggleAdminLogin()">🔐 Admin Panel</button></li>
         </ul>
     </nav>
 
     <div class="main-container">
         <div class="search-container">
-            <input type="text" class="search-box" placeholder="🔍 Search any BCA topic, chapter, or question...">
+            <input type="text" class="search-box" placeholder="🔍 Type topic name to auto-redirect..." oninput="handleSearchInput(this.value)">
+            <div class="search-results-dropdown" id="searchResults"></div>
         </div>
 
         <div class="admin-panel" id="adminTopicPanel">
-            <h2>✍️ 1. Admin Text & Multi-3D Content Creator</h2>
+            <h2>✍️ Admin Content & 3D Model Publisher</h2>
             <form id="topicForm" onsubmit="saveTopicData(event)">
                 <div class="form-group">
                     <label>Select Semester:</label>
@@ -262,95 +256,65 @@
 
                 <div class="form-group">
                     <label>Topic Title:</label>
-                    <input type="text" id="topicTitle" placeholder="Jaise: CPU Architecture & Registers" required>
+                    <input type="text" id="topicTitle" placeholder="e.g. CPU Architecture" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Definition & Real-World Example Box:</label>
-                    <textarea id="topicDef" placeholder="Topic ki definition aur real-world example yahan likhein..." required></textarea>
+                    <label>Definition:</label>
+                    <textarea id="topicDef" required></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>Short & Long Q&A Box (With Answer Reveal):</label>
-                    <textarea id="topicQA" placeholder="Q1: What is CPU? \nAns: CPU is the brain..."></textarea>
+                    <label>Short/Long Q&A Box:</label>
+                    <textarea id="topicQA"></textarea>
                 </div>
 
                 <div class="form-group">
-                    <label>3D Model Paths / URLs (Comma Separated for Custom 3D Boxes):</label>
-                    <input type="text" id="topicModels" placeholder="models/cpu.glb,models/ram.glb" required>
+                    <label>3D Models (Comma Separated):</label>
+                    <input type="text" id="topicModels" placeholder="models/cpu.glb, models/ram.glb">
                 </div>
 
                 <div class="form-group">
-                    <label>Practical Lab Activity & Code Task:</label>
-                    <textarea id="topicLab" placeholder="Step-by-step practical code assignment..."></textarea>
+                    <label>Practical Lab Code:</label>
+                    <textarea id="topicLab"></textarea>
                 </div>
 
-                <button type="submit" class="btn-publish">🚀 Save & Live Update Website</button>
+                <button type="submit" class="btn-publish">🚀 Save & Live Update</button>
             </form>
         </div>
 
         <div class="admin-panel" id="adminQuizPanel">
-            <h2>🎯 2. Admin Bulk Quiz Designer (Copy-Paste 20+ Questions)</h2>
+            <h2>🎯 Admin Bulk Quiz Designer</h2>
             <form id="bulkQuizForm" onsubmit="saveBulkQuizData(event)">
                 <div class="form-group">
-                    <label>Select Semester & Chapter/Topic:</label>
+                    <label>Select Semester:</label>
                     <select id="quizSem" required>
-                        <option value="Sem 1 - Computer Fundamentals">Semester 1 - Computer Fundamentals</option>
-                        <option value="Sem 2 - Data Structures">Semester 2 - Data Structures</option>
-                        <option value="Sem 3 - DBMS & Java">Semester 3 - DBMS & Java</option>
-                        <option value="Sem 4 - Web Tech">Semester 4 - Web Tech</option>
-                        <option value="Sem 5 - Cyber Security">Semester 5 - Cyber Security</option>
-                        <option value="Sem 6 - AI & Android">Semester 6 - AI & Android</option>
+                        <option value="Semester 1">Semester 1</option>
+                        <option value="Semester 2">Semester 2</option>
+                        <option value="Semester 3">Semester 3</option>
+                        <option value="Semester 4">Semester 4</option>
+                        <option value="Semester 5">Semester 5</option>
+                        <option value="Semester 6">Semester 6</option>
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label>Topic Title:</label>
-                    <input type="text" id="quizTopicTitle" placeholder="e.g. CPU & Registers 20 Question Set" required>
+                    <input type="text" id="quizTopicTitle" required>
                 </div>
 
                 <div class="form-group">
-                    <label>Paste 20+ Questions Here (Bulk Format):</label>
-                    <textarea id="bulkQuizText" style="height: 200px; font-family: monospace;" placeholder="Format:
-Q: Question text here?
-A: Option A
-B: Option B
-C: Option C
-D: Option D
-Ans: C" required></textarea>
+                    <label>Paste 20+ Questions (Bulk Format):</label>
+                    <textarea id="bulkQuizText" style="height: 180px; font-family: monospace;" required></textarea>
                 </div>
 
-                <button type="submit" class="btn-publish">🚀 Save 20+ Questions & Publish Quiz</button>
-            </form>
-        </div>
-
-        <div class="admin-panel" id="adminVideoPanel">
-            <h2>🎥 3. Admin Video Lecture Manager</h2>
-            <form onsubmit="event.preventDefault(); alert('Video Lecture Uploaded!');">
-                <div class="form-group">
-                    <label>Select Semester:</label>
-                    <select required>
-                        <option value="1">Semester 1</option>
-                        <option value="2">Semester 2</option>
-                        <option value="3">Semester 3</option>
-                        <option value="4">Semester 4</option>
-                        <option value="5">Semester 5</option>
-                        <option value="6">Semester 6</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label>Topic Name & Video Link:</label>
-                    <input type="text" placeholder="YouTube Embed / MP4 URL" required>
-                </div>
-
-                <button type="submit" class="btn-publish" style="background: linear-gradient(135deg, #ff4757, #ff6b81);">🎥 Upload Video Lecture</button>
+                <button type="submit" class="btn-publish">🚀 Save & Publish Quiz</button>
             </form>
         </div>
 
         <div class="hero">
             <h1>LEARN BCA WITH 3D VISUALS & QUIZZES</h1>
-            <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, bilingual notes, short/long Q&A, and timed examination quizzes.</p>
+            <p>Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models and timed quizzes.</p>
             <br>
             <div class="hero-btns">
                 <a href="template.html" class="btn-primary">Start Learning →</a>
