@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Quiz Arena - Timed Examination & Practice</title>
+    <title>BCA Quiz Arena - Timed Examination</title>
 
     <!-- Firebase Classic Compatibility Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -19,7 +19,6 @@
             color: #ffffff; 
             min-height: 100vh;
             padding-bottom: 60px;
-            line-height: 1.6;
         }
 
         nav { 
@@ -69,7 +68,6 @@
             border-radius: 8px; 
             cursor: pointer; 
             transition: 0.2s; 
-            border: 1px solid transparent; 
             font-size: 0.95rem;
         }
         .option-label:hover { background: rgba(58, 134, 255, 0.2); border-color: #3a86ff; }
@@ -97,7 +95,6 @@
             cursor: pointer;
             margin-top: 10px;
         }
-        .btn-reveal-single:hover { background: rgba(76, 201, 240, 0.3); }
 
         .btn-submit-quiz {
             background: linear-gradient(135deg, #28a745, #218838);
@@ -110,7 +107,6 @@
             cursor: pointer;
             width: 100%;
             margin-top: 20px;
-            box-shadow: 0 0 20px rgba(40,167,69,0.4);
         }
 
         .result-box {
@@ -157,6 +153,9 @@
         let allQuizzes = {};
 
         window.onload = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetQuizId = urlParams.get('id');
+
             const quizContainer = document.getElementById("quizContent");
 
             db.ref('bca_quizzes').on('value', (snapshot) => {
@@ -164,12 +163,20 @@
                 const data = snapshot.val();
 
                 if (!data) {
-                    quizContainer.innerHTML = '<div class="no-quiz">⏳ Abhi koi quiz uploaded nahi hai. Admin panel se quiz publish karein!</div>';
+                    quizContainer.innerHTML = '<div class="no-quiz">⏳ Abhi koi quiz uploaded nahi hai.</div>';
                     return;
                 }
 
                 allQuizzes = data;
-                let entries = Object.entries(data).reverse();
+                let entries = Object.entries(data);
+                if (targetQuizId) {
+                    entries = entries.filter(([id, val]) => id === targetQuizId);
+                }
+
+                if (entries.length === 0) {
+                    quizContainer.innerHTML = '<div class="no-quiz">❌ Yeh quiz nahi mila. <br><br><a href="index.html" style="color:#4cc9f0;">← Home par jayein</a></div>';
+                    return;
+                }
 
                 entries.forEach(([quizId, quizSet]) => {
                     let quizHtml = `
@@ -209,18 +216,14 @@
                 });
 
                 if(sessionStorage.getItem("bca_admin_auth") === "true") {
-                    enableQuizAdminUI();
+                    document.querySelectorAll('.admin-del-btn').forEach(btn => btn.style.display = "inline-block");
                 }
             });
         };
 
         function toggleSingleAnswer(quizId, qIndex) {
             const ansBox = document.getElementById(`ans_box_${quizId}_${qIndex}`);
-            if (ansBox.style.display === "block") {
-                ansBox.style.display = "none";
-            } else {
-                ansBox.style.display = "block";
-            }
+            ansBox.style.display = ansBox.style.display === "block" ? "none" : "block";
         }
 
         function checkQuizAnswers(quizId) {
@@ -231,8 +234,6 @@
             quizSet.questions.forEach((q, qIndex) => {
                 const selected = document.querySelector(`input[name="q_${quizId}_${qIndex}"]:checked`);
                 const ansBox = document.getElementById(`ans_box_${quizId}_${qIndex}`);
-                
-                // Show answer box after submit
                 ansBox.style.display = "block";
 
                 if (selected && selected.value === q.correct) {
@@ -253,22 +254,17 @@
             let pass = prompt("🔐 Enter Admin Password:");
             if (pass === "BCA@Admin#2026!Secured") {
                 sessionStorage.setItem("bca_admin_auth", "true");
-                enableQuizAdminUI();
-                alert("Admin Controls Unlocked!");
+                document.querySelectorAll('.admin-del-btn').forEach(btn => btn.style.display = "inline-block");
+                alert("Admin Mode Unlocked!");
             } else if(pass !== null) {
                 alert("Wrong Password!");
             }
         }
 
-        function enableQuizAdminUI() {
-            document.querySelectorAll('.admin-del-btn').forEach(btn => btn.style.display = "inline-block");
-        }
-
         function deleteQuiz(quizId) {
             if (confirm("⚠️ Delete this quiz set permanently?")) {
                 db.ref('bca_quizzes/' + quizId).remove()
-                  .then(() => alert("🗑️ Quiz Deleted!"))
-                  .catch(err => alert("Error: " + err.message));
+                  .then(() => { alert("🗑️ Deleted!"); window.location.href = "index.html"; });
             }
         }
     </script>
@@ -282,16 +278,13 @@
         </div>
         <ul class="nav-menu">
             <li><a href="index.html">Home</a></li>
-            <li><a href="quiz.html" style="color: #4cc9f0; font-weight: bold;">⚡ Quiz Arena</a></li>
-            <li><a href="template.html">Topic Viewer</a></li>
             <li><a href="#" onclick="verifyAdminQuiz()" style="color: #ff9800; font-size: 0.85rem;">🔐 Admin Mode</a></li>
         </ul>
     </nav>
 
     <div class="quiz-container">
-        <h1 style="text-align: center; margin-bottom: 25px; color: #4cc9f0;">⚡ Online Examination & Practice Arena</h1>
         <div id="quizContent">
-            <div class="no-quiz">⏳ Loading Quizzes from Cloud Database...</div>
+            <div class="no-quiz">⏳ Loading Quiz...</div>
         </div>
     </div>
 
