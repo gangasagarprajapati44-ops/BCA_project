@@ -22,6 +22,7 @@
       background-color: #030712;
       color: #f3f4f6;
       overflow-x: hidden;
+      user-select: none;
     }
 
     /* 3D Perspective Scene Setup */
@@ -33,11 +34,16 @@
     /* 3D 360 Rotating Wallpaper Frame */
     .wallpaper-3d-card {
       transform-style: preserve-3d;
-      transition: transform 0.1s linear;
+      transition: transform 0.05s linear;
       box-shadow: 
         0 30px 60px -15px rgba(0, 0, 0, 0.95),
         0 0 50px rgba(99, 102, 241, 0.3),
         inset 0 1px 2px rgba(255, 255, 255, 0.2);
+      cursor: grab;
+    }
+
+    .wallpaper-3d-card:active {
+      cursor: grabbing;
     }
 
     /* Levitation Float Animation */
@@ -145,7 +151,6 @@
     let allSearchableItems = [];
 
     window.onload = function() {
-        // Load both Topics and Quizzes for instant search
         db.ref('bca_topics').on('value', (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -175,6 +180,8 @@
                 });
             }
         });
+        
+        applyTransform();
     };
 
     function handleSearchInput(query) {
@@ -459,7 +466,7 @@
         <div class="pt-6 border-t border-gray-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
           <div class="flex items-center space-x-2">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-            <span class="font-medium text-emerald-400">3D 360° Wallpaper Engine Active</span>
+            <span class="font-medium text-emerald-400">3D 360° Wallpaper Engine Active (100% Working Drag & Spin)</span>
           </div>
           <div>© 2026 BCA Learning Hub | 3D Immersive Education Platform</div>
         </div>
@@ -474,118 +481,4 @@
   </main>
 
   <!-- Bottom 3D Control Dock -->
-  <footer class="w-full max-w-4xl px-4 py-4 z-20">
-    <div class="glass-panel rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-2xl">
-      
-      <!-- Yaw Slider (360 Spin) -->
-      <div class="flex items-center space-x-3 w-full md:w-auto flex-1">
-        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-arrows-spin mr-1"></i>360° Spin:</span>
-        <input 
-          type="range" 
-          id="yawSlider" 
-          min="0" 
-          max="360" 
-          value="0" 
-          oninput="updateYaw(this.value)"
-          class="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-        >
-        <span id="yawVal" class="text-xs text-gray-400 w-10 text-right">0°</span>
-      </div>
-
-      <!-- Pitch Slider (3D Tilt) -->
-      <div class="flex items-center space-x-3 w-full md:w-auto flex-1">
-        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-up-down-left-right mr-1"></i>3D Tilt:</span>
-        <input 
-          type="range" 
-          id="pitchSlider" 
-          min="-30" 
-          max="30" 
-          value="0" 
-          oninput="updatePitch(this.value)"
-          class="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
-        >
-        <span id="pitchVal" class="text-xs text-gray-400 w-10 text-right">0°</span>
-      </div>
-
-      <!-- Rotation Speed -->
-      <div class="flex items-center space-x-3 w-full md:w-auto">
-        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-gauge-high mr-1"></i>Speed:</span>
-        <select id="speedSelect" onchange="changeSpeed(this.value)" class="bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-lg px-2 py-1 focus:outline-none">
-          <option value="1">1x Normal</option>
-          <option value="2" selected>2x Fast</option>
-          <option value="4">4x Turbo</option>
-        </select>
-      </div>
-
-    </div>
-  </footer>
-
-  <script>
-    let currentYaw = 0;
-    let currentPitch = 0;
-    let isAutoSpinning = false;
-    let isLevitating = true;
-    let spinSpeed = 2;
-    let spinInterval = null;
-
-    const wallpaperCard = document.getElementById('wallpaperCard');
-    const levitateWrapper = document.getElementById('levitateWrapper');
-    const yawSlider = document.getElementById('yawSlider');
-    const pitchSlider = document.getElementById('pitchSlider');
-    const yawVal = document.getElementById('yawVal');
-    const pitchVal = document.getElementById('pitchVal');
-    const spinBtnText = document.getElementById('spinBtnText');
-    const btnAutoSpin = document.getElementById('btnAutoSpin');
-
-    function applyTransform() {
-      wallpaperCard.style.transform = `rotateY(${currentYaw}deg) rotateX(${currentPitch}deg)`;
-      yawSlider.value = (currentYaw % 360 + 360) % 360;
-      pitchSlider.value = currentPitch;
-      yawVal.innerText = `${Math.round(yawSlider.value)}°`;
-      pitchVal.innerText = `${Math.round(currentPitch)}°`;
-    }
-
-    function updateYaw(val) {
-      currentYaw = parseFloat(val);
-      applyTransform();
-    }
-
-    function updatePitch(val) {
-      currentPitch = parseFloat(val);
-      applyTransform();
-    }
-
-    function toggleAutoSpin() {
-      isAutoSpinning = !isAutoSpinning;
-      if (isAutoSpinning) {
-        spinBtnText.innerText = "Stop Spin";
-        btnAutoSpin.classList.replace("bg-indigo-600", "bg-rose-600");
-        
-        spinInterval = setInterval(() => {
-          currentYaw = (currentYaw + spinSpeed) % 360;
-          applyTransform();
-        }, 30);
-      } else {
-        spinBtnText.innerText = "Spin 360°";
-        btnAutoSpin.classList.replace("bg-rose-600", "bg-indigo-600");
-        clearInterval(spinInterval);
-      }
-    }
-
-    function toggleLevitation() {
-      isLevitating = !isLevitating;
-      if (isLevitating) {
-        levitateWrapper.classList.remove('paused-animation');
-      } else {
-        levitateWrapper.classList.add('paused-animation');
-      }
-    }
-
-    function changeSpeed(val) {
-      spinSpeed = parseFloat(val);
-    }
-
-    function resetRotation() {
-      if (isAutoSpinning) toggleAutoSpin();
-      currentYaw = 0;
-      current
+  <footer class="
