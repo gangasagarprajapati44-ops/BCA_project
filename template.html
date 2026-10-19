@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BCA Topic Viewer - 3D Interactive Glassmorphism</title>
+    <title>BCA Topic Viewer - Rainbow 3D Project Notes</title>
 
     <!-- Firebase Classic Compatibility Scripts -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -13,20 +13,23 @@
     <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
 
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-        body { 
-            background: radial-gradient(circle at center, #1a1c29 0%, #08070b 100%);
+        body {
+            background: #0d1117;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             min-height: 100vh;
-            color: #fff;
-            overflow-x: hidden;
+            color: #1f2937;
             padding-bottom: 80px;
         }
 
         /* Top Navigation Bar */
         nav { 
-            background: rgba(8, 7, 11, 0.85); 
+            background: rgba(13, 17, 23, 0.95); 
             backdrop-filter: blur(15px); 
             position: fixed; 
             top: 0; 
@@ -36,505 +39,116 @@
             align-items: center; 
             padding: 14px 30px; 
             z-index: 1000; 
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1); 
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1); 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .logo-area h2 { font-size: 1.2rem; color: #fff; }
-        .logo-area span { font-size: 0.7rem; color: #a855f7; display: block; letter-spacing: 1px; font-weight: bold; }
+        .logo-area span { font-size: 0.75rem; color: #38bdf8; display: block; letter-spacing: 1px; font-weight: bold; }
 
         .nav-menu { display: flex; gap: 15px; list-style: none; align-items: center; }
         .nav-menu a { color: #cbd5e1; text-decoration: none; font-size: 0.9rem; padding: 6px 14px; border-radius: 8px; transition: 0.3s; }
-        .nav-menu a:hover { background: rgba(99, 102, 241, 0.3); color: #fff; }
+        .nav-menu a:hover { background: rgba(79, 70, 229, 0.3); color: #fff; }
 
         .content-container { 
-            max-width: 900px; 
-            margin: 120px auto 40px auto; 
+            max-width: 850px; 
+            margin: 110px auto 40px auto; 
             padding: 0 20px; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        /* Background Ambient Glowing Elements */
-        .bg-glow {
-            position: fixed;
-            width: 400px;
-            height: 400px;
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            filter: blur(120px);
-            opacity: 0.2;
-            z-index: 0;
-            pointer-events: none;
-            animation: floatGlow 8s ease-in-out infinite alternate;
-        }
-
-        @keyframes floatGlow {
-            0% { transform: translate(-100px, -100px) scale(1); }
-            100% { transform: translate(100px, 100px) scale(1.2); }
-        }
-
-        /* 3D Scene Wrapper */
-        .scene-container {
+        /* Rainbow Gradient Border Container */
+        .rainbow-card-wrapper {
             position: relative;
             width: 100%;
-            max-width: 750px;
-            transform-style: preserve-3d;
-            transition: transform 0.1s ease-out;
-            z-index: 2;
+            padding: 3px; /* Rainbow border thickness */
+            border-radius: 20px;
+            background: linear-gradient(135deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #8b00ff);
+            /* Static 3D Layer Shadow */
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(255, 255, 255, 0.1);
             margin-bottom: 40px;
         }
 
-        /* The Main 3D Card */
-        .note-3d-card {
+        /* Inner Card Content Area (Pure Clean White for crisp text readability) */
+        .rainbow-card-content {
+            background: #ffffff;
+            color: #1f2937;
+            padding: 35px;
+            border-radius: 18px;
             position: relative;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 24px;
-            padding: 40px;
-            box-shadow: 
-                0 30px 60px rgba(0, 0, 0, 0.5),
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            transform-style: preserve-3d;
         }
 
-        /* Layered 3D Floating Elements inside the Card */
-        .card-header {
-            transform: translateZ(40px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            padding-bottom: 20px;
-        }
-
-        .project-tag {
+        .card-badge {
             display: inline-block;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
+            background: #4f46e5;
+            color: #ffffff;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            padding: 6px 14px;
-            border-radius: 30px;
-            margin-bottom: 12px;
-            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+            letter-spacing: 1px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            margin-bottom: 15px;
         }
 
         h1 {
-            color: #ffffff;
-            font-size: 28px;
-            font-weight: 700;
-            line-height: 1.3;
-            text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            font-size: 26px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 15px;
             word-break: break-word;
         }
 
-        .card-body {
-            transform: translateZ(25px);
-            color: #cbd5e1;
-            font-size: 15px;
-            line-height: 1.7;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .content-box-item {
-            background: rgba(15, 23, 42, 0.6);
+        .project-section-box {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
             padding: 20px;
-            border-radius: 14px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            margin-bottom: 20px;
         }
 
-        .content-box-item h3 {
-            color: #a855f7;
+        .project-section-box h3 {
             font-size: 1.1rem;
+            color: #111827;
             margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .content-box-item p, .content-box-item pre {
-            color: #e2e8f0;
-            font-size: 0.95rem;
+        .project-notes-text {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #374151;
             white-space: pre-wrap;
             word-break: break-word;
         }
 
-        .content-box-item pre {
-            background: rgba(5, 7, 15, 0.9);
-            padding: 14px;
-            border-radius: 8px;
+        .project-code-block {
+            background: #111827;
             color: #38bdf8;
-            font-family: monospace;
-            border: 1px solid rgba(56, 189, 248, 0.2);
-            margin-top: 8px;
-        }
-
-        /* Q&A Reveal Button */
-        .btn-toggle-answer {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            padding: 6px 14px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            border-radius: 8px;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(99, 102, 241, 0.4);
-            transition: 0.3s;
-        }
-        .btn-toggle-answer:hover { opacity: 0.9; transform: translateY(-1px); }
-        .qa-answer-content { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed rgba(168, 85, 247, 0.4); }
-
-        /* 3D Viewers Grid */
-        .viewers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 15px;
-            margin-top: 12px;
-        }
-        .viewer-card-wrapper {
-            background: rgba(8, 7, 11, 0.85);
-            border-radius: 12px;
-            border: 1px solid rgba(168, 85, 247, 0.4);
-            overflow: hidden;
-            display: flex;
-            flex-direction: column;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .viewer-card-wrapper:hover {
-            transform: translateY(-4px);
-            border-color: #a855f7;
-            box-shadow: 0 8px 25px rgba(168, 85, 247, 0.3);
-        }
-        .viewer-container { width: 100%; height: 230px; background: radial-gradient(circle, #1a1c29 0%, #08070b 100%); }
-        model-viewer { width: 100%; height: 100%; }
-        .viewer-footer {
-            padding: 10px 14px;
-            background: rgba(15, 23, 42, 0.95);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .card-footer {
-            transform: translateZ(50px);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .author-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .avatar {
-            width: 38px;
-            height: 38px;
-            background: linear-gradient(135deg, #ec4899, #8b5cf6);
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            font-weight: bold;
+            padding: 16px;
+            border-radius: 10px;
+            font-family: 'Courier New', Courier, monospace;
             font-size: 14px;
-            box-shadow: 0 4px 10px rgba(236, 72, 153, 0.4);
+            overflow-x: auto;
+            white-space: pre-wrap;
+            margin-top: 10px;
         }
 
-        .author-text span { display: block; }
-        .author-name { color: #fff; font-size: 13px; font-weight: 600; }
-        .author-status { color: #34d399; font-size: 11px; }
-
-        .action-btn {
-            background: #fff;
-            color: #0f172a;
+        /* Q&A Toggle Button */
+        .btn-toggle-answer {
+            background: #4f46e5;
+            color: #ffffff;
             border: none;
-            padding: 10px 20px;
-            font-weight: 600;
-            font-size: 13px;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2);
-        }
-        .action-btn:hover {
-            background: #6366f1;
-            color: #fff;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(99, 102, 241, 0.5);
-        }
-
-        /* Admin Delete Control */
-        .admin-action-bar { display: none; }
-        .btn-admin-del {
-            background: #ef4444;
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
+            padding: 5px 12px;
+            font-size: 12px;
             font-weight: bold;
-            font-size: 0.85rem;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.2s;
         }
-        .btn-admin-del:hover { background: #dc2626; }
+        .btn-toggle-answer:hover { background: #4338ca; }
+        .qa-answer-content { display: none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed #d1d5db; }
 
-        /* Fullscreen Modal */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(8, 7, 11, 0.95); backdrop-filter: blur(15px); z-index: 2000; justify-content: center; align-items: center; padding: 25px; }
-        .modal-content { width: 90%; max-width: 900px; height: 80vh; background: #1a1c29; border: 2px solid #a855f7; border-radius: 20px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 0 50px rgba(168, 85, 247, 0.4); }
-        .modal-header { padding: 15px 25px; background: #08070b; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.1); }
-        .modal-header h3 { color: #a855f7; font-size: 1.1rem; }
-        .close-modal-btn { background: #ef4444; color: white; border: none; padding: 6px 14px; border-radius: 8px; cursor: pointer; font-weight: bold; }
-        .modal-body { flex: 1; width: 100%; height: 100%; }
-        .modal-body model-viewer { width: 100%; height: 100%; }
-
-        .no-content { text-align: center; color: #cbd5e1; font-size: 1.1rem; padding: 80px; }
-    </style>
-
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyAlnN3WDFMyM9aWy88GyRZUNJk3D1Y-TBE",
-            authDomain: "bca-learning-hub.firebaseapp.com",
-            databaseURL: "https://bca-learning-hub-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "bca-learning-hub",
-            storageBucket: "bca-learning-hub.firebasestorage.app",
-            messagingSenderId: "206989105830",
-            appId: "1:206989105830:web:93546fed295efab3017267",
-            measurementId: "G-FF3GR0989C"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.database();
-
-        window.onload = function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const targetTopicId = urlParams.get('id');
-
-            const container = document.getElementById("dynamicTopics");
-
-            db.ref('bca_topics').on('value', (snapshot) => {
-                container.innerHTML = "";
-                const data = snapshot.val();
-
-                if (!data) {
-                    container.innerHTML = '<div class="no-content">⏳ Abhi koi topic uploaded nahi hai.</div>';
-                    return;
-                }
-
-                let entries = Object.entries(data);
-                if (targetTopicId) {
-                    entries = entries.filter(([id, val]) => id === targetTopicId);
-                }
-
-                if (entries.length === 0) {
-                    container.innerHTML = '<div class="no-content">❌ Yeh topic nahi mila. <br><br><a href="index.html" style="color:#a855f7;">← Home par jayein</a></div>';
-                    return;
-                }
-
-                entries.forEach(([topicId, item]) => {
-                    let viewersHtml = "";
-                    if (item.models && item.models.length > 0) {
-                        item.models.forEach((modelPath, mIndex) => {
-                            let cleanPath = modelPath.trim();
-                            if (cleanPath) {
-                                viewersHtml += `
-                                    <div class="viewer-card-wrapper" onclick="openFullscreenModal('${cleanPath}', '${item.title} - Model ${mIndex + 1}')">
-                                        <div class="viewer-container">
-                                            <model-viewer src="${cleanPath}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1" interaction-prompt="none"></model-viewer>
-                                        </div>
-                                        <div class="viewer-footer">
-                                            <span>📦 3D Model #${mIndex + 1}</span>
-                                            <span style="color:#a855f7; font-weight:bold;">🔍 Expand</span>
-                                        </div>
-                                    </div>
-                                `;
-                            }
-                        });
-                    }
-
-                    let cardHtml = `
-                        <div class="scene-container" id="sceneCard_${topicId}">
-                            <div class="note-3d-card">
-                                <div class="card-header">
-                                    <span class="project-tag">${item.semester}</span>
-                                    <h1>${item.title}</h1>
-                                </div>
-                                
-                                <div class="card-body">
-                                    <div class="content-box-item">
-                                        <h3>📖 Definition & Real-World Context</h3>
-                                        <p>${item.definition}</p>
-                                    </div>
-
-                                    ${item.qa ? `
-                                    <div class="content-box-item">
-                                        <h3>
-                                            <span>❓ Important Q&A Module</span>
-                                            <button class="btn-toggle-answer" onclick="toggleAnswer('${topicId}')" id="btn_qa_${topicId}">👁️ Show Answer</button>
-                                        </h3>
-                                        <div class="qa-answer-content" id="qa_content_${topicId}">
-                                            <p>${item.qa}</p>
-                                        </div>
-                                    </div>` : ''}
-
-                                    ${viewersHtml ? `
-                                    <div class="content-box-item">
-                                        <h3>🧊 Interactive 3D Model Visualizer</h3>
-                                        <div class="viewers-grid">
-                                            ${viewersHtml}
-                                        </div>
-                                    </div>` : ''}
-
-                                    ${item.lab ? `
-                                    <div class="content-box-item">
-                                        <h3>💻 Practical Lab Activity & Code</h3>
-                                        <pre>${item.lab}</pre>
-                                    </div>` : ''}
-                                </div>
-
-                                <div class="card-footer">
-                                    <div class="author-info">
-                                        <div class="avatar">BCA</div>
-                                        <div class="author-text">
-                                            <span class="author-name">Cloud Synced</span>
-                                            <span class="author-status">● ${item.timestamp || 'Active'}</span>
-                                        </div>
-                                    </div>
-                                    
-                                    <div style="display:flex; gap:10px; align-items:center;">
-                                        <div class="admin-action-bar" id="admin_bar_${topicId}">
-                                            <button class="btn-admin-del" onclick="deleteTopic('${topicId}')">🗑️ Delete</button>
-                                        </div>
-                                        <button class="action-btn" onclick="window.scrollTo({top:0, behavior:'smooth'})">Back to Top</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-                    container.innerHTML += cardHtml;
-                });
-
-                // Attach mouse parallax effect to newly rendered card
-                initParallax();
-
-                if(sessionStorage.getItem("bca_admin_auth") === "true") {
-                    document.querySelectorAll('.admin-action-bar').forEach(bar => bar.style.display = "block");
-                }
-            });
-        };
-
-        function initParallax() {
-            const cardContainer = document.querySelector('.scene-container');
-            if (!cardContainer) return;
-
-            document.addEventListener('mousemove', (e) => {
-                const xAxis = (window.innerWidth / 2 - e.pageX) / 25;
-                const yAxis = (window.innerHeight / 2 - e.pageY) / 25;
-                cardContainer.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
-            });
-
-            document.addEventListener('mouseleave', () => {
-                cardContainer.style.transform = `rotateY(0deg) rotateX(0deg)`;
-                cardContainer.style.transition = `transform 0.5s ease`;
-            });
-
-            document.addEventListener('mouseenter', () => {
-                cardContainer.style.transition = `none`;
-            });
-        }
-
-        function toggleAnswer(topicId) {
-            const content = document.getElementById(`qa_content_${topicId}`);
-            const btn = document.getElementById(`btn_qa_${topicId}`);
-            if (content.style.display === "block") {
-                content.style.display = "none";
-                btn.innerHTML = "👁️ Show Answer";
-            } else {
-                content.style.display = "block";
-                btn.innerHTML = "🔒 Hide Answer";
-            }
-        }
-
-        function verifyAdminForView() {
-            let pass = prompt("🔐 Enter Admin Password:");
-            if (pass === "BCA@Admin#2026!Secured") {
-                sessionStorage.setItem("bca_admin_auth", "true");
-                document.querySelectorAll('.admin-action-bar').forEach(bar => bar.style.display = "block");
-                alert("Admin Mode Unlocked!");
-            } else if(pass !== null) {
-                alert("Wrong Password!");
-            }
-        }
-
-        function deleteTopic(topicId) {
-            if (confirm("⚠️ Is topic ko permanently delete karna chahte hain?")) {
-                db.ref('bca_topics/' + topicId).remove()
-                  .then(() => { alert("🗑️ Topic Deleted!"); window.location.href = "index.html"; });
-            }
-        }
-
-        function openFullscreenModal(modelSrc, modelTitle) {
-            document.getElementById("modalTitle").innerText = modelTitle;
-            document.getElementById("modalViewerContainer").innerHTML = `<model-viewer src="${modelSrc}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1"></model-viewer>`;
-            document.getElementById("fullscreenModal").style.display = "flex";
-        }
-
-        function closeFullscreenModal() {
-            document.getElementById("fullscreenModal").style.display = "none";
-            document.getElementById("modalViewerContainer").innerHTML = "";
-        }
-    </script>
-</head>
-<body>
-
-    <div class="bg-glow"></div>
-
-    <nav>
-        <div class="logo-area">
-            <h2>🎓 BCA Learning Hub</h2>
-            <span>3D Immersive Education</span>
-        </div>
-        <ul class="nav-menu">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="quiz.html">⚡ Quiz Arena</a></li>
-            <li><a href="#" onclick="verifyAdminForView()" style="color: #a855f7; font-size: 0.85rem; font-weight: bold;">🔐 Admin Mode</a></li>
-        </ul>
-    </nav>
-
-    <div class="content-container">
-        <div id="dynamicTopics" style="width: 100%; display: flex; justify-content: center;">
-            <div class="no-content">⏳ Loading 3D Interactive Glassmorphism Card...</div>
-        </div>
-    </div>
-
-    <!-- Fullscreen Modal -->
-    <div class="modal-overlay" id="fullscreenModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modalTitle">3D Model Interactive View</h3>
-                <button class="close-modal-btn" onclick="closeFullscreenModal()">❌ Close [X]</button>
-            </div>
-            <div class="modal-body" id="modalViewerContainer"></div>
-        </div>
-    </div>
-
-</body>
-</html>
+        /* 3D
