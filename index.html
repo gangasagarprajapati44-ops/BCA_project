@@ -27,14 +27,14 @@
 
     /* 3D Perspective Scene Setup */
     .viewport-3d {
-      perspective: 1400px;
+      perspective: 1500px;
       transform-style: preserve-3d;
     }
 
     /* 3D 360 Rotating Wallpaper Frame */
     .wallpaper-3d-card {
       transform-style: preserve-3d;
-      transition: transform 0.05s linear;
+      will-change: transform;
       box-shadow: 
         0 30px 60px -15px rgba(0, 0, 0, 0.95),
         0 0 50px rgba(99, 102, 241, 0.3),
@@ -46,38 +46,9 @@
       cursor: grabbing;
     }
 
-    /* Levitation Float Animation */
-    @keyframes levitate {
-      0% { transform: translateY(0px) rotateX(3deg); }
-      50% { transform: translateY(-15px) rotateX(-2deg); }
-      100% { transform: translateY(0px) rotateX(3deg); }
-    }
-
-    .levitating-wallpaper {
-      animation: levitate 5s ease-in-out infinite;
-      transform-style: preserve-3d;
-    }
-
-    .paused-animation {
-      animation-play-state: paused !important;
-    }
-
-    /* Ground Shadow Effect */
-    .ground-shadow {
-      background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 75%);
-      filter: blur(14px);
-      animation: shadowPulse 5s ease-in-out infinite;
-    }
-
-    @keyframes shadowPulse {
-      0% { transform: scale(1); opacity: 0.85; }
-      50% { transform: scale(0.7); opacity: 0.3; }
-      100% { transform: scale(1); opacity: 0.85; }
-    }
-
     /* Glassmorphism Panel */
     .glass-panel {
-      background: rgba(17, 24, 39, 0.88);
+      background: rgba(17, 24, 39, 0.9);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -303,11 +274,6 @@
         <span id="spinBtnText">Spin 360°</span>
       </button>
 
-      <button id="btnLevitate" onclick="toggleLevitation()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs font-semibold hover:bg-gray-700 transition flex items-center space-x-2">
-        <i class="fa-solid fa-arrows-up-down"></i>
-        <span>Float FX</span>
-      </button>
-
       <button onclick="resetRotation()" class="px-3 py-1.5 rounded-lg bg-gray-800 text-gray-300 text-xs font-semibold hover:bg-gray-700 transition" title="Reset View">
         <i class="fa-solid fa-arrows-to-circle"></i>
       </button>
@@ -317,168 +283,307 @@
   <!-- Main 3D Viewport & Rotating Wallpaper -->
   <main class="w-full flex-1 flex flex-col items-center justify-center px-4 py-6 z-10 viewport-3d relative">
     
-    <!-- Levitating Wrapper -->
-    <div id="levitateWrapper" class="levitating-wallpaper w-full max-w-4xl flex flex-col items-center">
+    <!-- 3D 360 Rotating Wallpaper Card -->
+    <div id="wallpaperCard" class="wallpaper-3d-card neon-border w-full max-w-4xl glass-panel rounded-3xl p-6 sm:p-9 relative">
       
-      <!-- 3D 360 Rotating Wallpaper Card -->
-      <div id="wallpaperCard" class="wallpaper-3d-card neon-border w-full glass-panel rounded-3xl p-6 sm:p-9 transition-all duration-75 relative">
-        
-        <!-- App Window Top Control Dots -->
-        <nav class="flex flex-col sm:flex-row justify-between items-center pb-6 border-b border-gray-800/80 gap-4">
-          <div class="flex items-center space-x-2">
-            <span class="w-3 h-3 rounded-full bg-red-500 inline-block shadow-md shadow-red-500/50"></span>
-            <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block shadow-md shadow-yellow-500/50"></span>
-            <span class="w-3 h-3 rounded-full bg-green-500 inline-block shadow-md shadow-green-500/50"></span>
-            <span class="ml-2 text-sm font-bold text-gray-200 tracking-wide">BCA Learning Hub - 3D Space</span>
-          </div>
-
-          <div class="flex items-center space-x-4 sm:space-x-6 text-sm font-medium">
-            <a href="index.html" class="text-indigo-400 hover:text-white transition flex items-center space-x-1">
-              <i class="fa-solid fa-house text-xs"></i>
-              <span>Home</span>
-            </a>
-            <a href="quiz.html" class="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1">
-              <i class="fa-solid fa-bolt text-xs text-amber-400"></i>
-              <span>Quiz Arena</span>
-            </a>
-            <a href="template.html" class="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1">
-              <i class="fa-solid fa-book-open text-xs text-emerald-400"></i>
-              <span>Topic Viewer</span>
-            </a>
-            <button onclick="toggleAdminLogin()" class="px-3 py-1.5 rounded-lg bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition flex items-center space-x-1 shadow-md shadow-amber-500/20">
-              <i class="fa-solid fa-user-gear"></i>
-              <span>Admin Panel</span>
-            </button>
-          </div>
-        </nav>
-
-        <!-- Search Bar with Live Redirection Dropdown -->
-        <div class="my-6 relative">
-          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-indigo-400">
-            <i class="fa-solid fa-magnifying-glass"></i>
-          </div>
-          <input 
-            type="text" 
-            id="searchInput"
-            oninput="handleSearchInput(this.value)"
-            placeholder="🔍 Search topic, quiz, or 3D model..." 
-            class="w-full bg-gray-950/80 border border-indigo-500/30 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-100 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition shadow-inner"
-          >
-          <div class="search-results-dropdown" id="searchResults"></div>
+      <!-- App Window Top Control Dots -->
+      <nav class="flex flex-col sm:flex-row justify-between items-center pb-6 border-b border-gray-800/80 gap-4">
+        <div class="flex items-center space-x-2">
+          <span class="w-3 h-3 rounded-full bg-red-500 inline-block shadow-md shadow-red-500/50"></span>
+          <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block shadow-md shadow-yellow-500/50"></span>
+          <span class="w-3 h-3 rounded-full bg-green-500 inline-block shadow-md shadow-green-500/50"></span>
+          <span class="ml-2 text-sm font-bold text-gray-200 tracking-wide">BCA Learning Hub - 3D Space</span>
         </div>
 
-        <!-- Admin Panel 1: Topic Publisher Form -->
-        <div id="adminTopicPanel" class="hidden mb-6 bg-gray-950/90 border-2 border-amber-500 p-5 rounded-2xl">
-            <h3 class="text-amber-400 font-bold text-lg mb-3">✍️ Admin Content & 3D Model Publisher</h3>
-            <form id="topicForm" onsubmit="saveTopicData(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Select Semester:</label>
-                    <select id="topicSem" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
-                        <option value="Semester 1">Semester 1</option>
-                        <option value="Semester 2">Semester 2</option>
-                        <option value="Semester 3">Semester 3</option>
-                        <option value="Semester 4">Semester 4</option>
-                        <option value="Semester 5">Semester 5</option>
-                        <option value="Semester 6">Semester 6</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Topic Title:</label>
-                    <input type="text" id="topicTitle" placeholder="e.g. CPU Architecture" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
-                </div>
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Definition:</label>
-                    <textarea id="topicDef" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-20" required></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Short/Long Q&A Box:</label>
-                    <textarea id="topicQA" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-16"></textarea>
-                </div>
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">3D Models (Comma Separated):</label>
-                    <input type="text" id="topicModels" placeholder="models/cpu.glb, models/ram.glb" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs">
-                </div>
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Practical Lab Code:</label>
-                    <textarea id="topicLab" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-16"></textarea>
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition">🚀 Save & Live Update</button>
-            </form>
+        <div class="flex items-center space-x-4 sm:space-x-6 text-sm font-medium">
+          <a href="index.html" class="text-indigo-400 hover:text-white transition flex items-center space-x-1">
+            <i class="fa-solid fa-house text-xs"></i>
+            <span>Home</span>
+          </a>
+          <a href="quiz.html" class="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1">
+            <i class="fa-solid fa-bolt text-xs text-amber-400"></i>
+            <span>Quiz Arena</span>
+          </a>
+          <a href="template.html" class="text-gray-300 hover:text-indigo-400 transition flex items-center space-x-1">
+            <i class="fa-solid fa-book-open text-xs text-emerald-400"></i>
+            <span>Topic Viewer</span>
+          </a>
+          <button onclick="toggleAdminLogin()" class="px-3 py-1.5 rounded-lg bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition flex items-center space-x-1 shadow-md shadow-amber-500/20">
+            <i class="fa-solid fa-user-gear"></i>
+            <span>Admin Panel</span>
+          </button>
         </div>
+      </nav>
 
-        <!-- Admin Panel 2: Bulk Quiz Designer -->
-        <div id="adminQuizPanel" class="hidden mb-6 bg-gray-950/90 border-2 border-amber-500 p-5 rounded-2xl">
-            <h3 class="text-amber-400 font-bold text-lg mb-3">🎯 Admin Bulk Quiz Designer</h3>
-            <form id="bulkQuizForm" onsubmit="saveBulkQuizData(event)" class="space-y-3">
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Select Semester:</label>
-                    <select id="quizSem" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
-                        <option value="Semester 1">Semester 1</option>
-                        <option value="Semester 2">Semester 2</option>
-                        <option value="Semester 3">Semester 3</option>
-                        <option value="Semester 4">Semester 4</option>
-                        <option value="Semester 5">Semester 5</option>
-                        <option value="Semester 6">Semester 6</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Topic Title:</label>
-                    <input type="text" id="quizTopicTitle" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
-                </div>
-                <div>
-                    <label class="block text-xs text-indigo-400 font-bold mb-1">Paste 20+ Questions (Bulk Format):</label>
-                    <textarea id="bulkQuizText" placeholder="Q: ... &#10;A: ... &#10;B: ... &#10;C: ... &#10;D: ... &#10;Ans: A" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-28 font-mono" required></textarea>
-                </div>
-                <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition">🚀 Save & Publish Quiz</button>
-            </form>
+      <!-- Search Bar with Live Redirection Dropdown -->
+      <div class="my-6 relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-indigo-400">
+          <i class="fa-solid fa-magnifying-glass"></i>
         </div>
+        <input 
+          type="text" 
+          id="searchInput"
+          oninput="handleSearchInput(this.value)"
+          placeholder="🔍 Search topic, quiz, or 3D model..." 
+          class="w-full bg-gray-950/80 border border-indigo-500/30 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-100 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition shadow-inner"
+        >
+        <div class="search-results-dropdown" id="searchResults"></div>
+      </div>
 
-        <!-- Hero Content -->
-        <div class="py-8 text-center flex flex-col items-center">
-          <span class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-4 shadow-sm">
-            <i class="fa-solid fa-cubes text-indigo-400"></i>
-            <span>Interactive Semester 1 to 6 Curriculum</span>
-          </span>
+      <!-- Admin Panel 1: Topic Publisher Form -->
+      <div id="adminTopicPanel" class="hidden mb-6 bg-gray-950/90 border-2 border-amber-500 p-5 rounded-2xl">
+          <h3 class="text-amber-400 font-bold text-lg mb-3">✍️ Admin Content & 3D Model Publisher</h3>
+          <form id="topicForm" onsubmit="saveTopicData(event)" class="space-y-3">
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Select Semester:</label>
+                  <select id="topicSem" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
+                      <option value="Semester 1">Semester 1</option>
+                      <option value="Semester 2">Semester 2</option>
+                      <option value="Semester 3">Semester 3</option>
+                      <option value="Semester 4">Semester 4</option>
+                      <option value="Semester 5">Semester 5</option>
+                      <option value="Semester 6">Semester 6</option>
+                  </select>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Topic Title:</label>
+                  <input type="text" id="topicTitle" placeholder="e.g. CPU Architecture" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Definition:</label>
+                  <textarea id="topicDef" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-20" required></textarea>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Short/Long Q&A Box:</label>
+                  <textarea id="topicQA" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-16"></textarea>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">3D Models (Comma Separated):</label>
+                  <input type="text" id="topicModels" placeholder="models/cpu.glb, models/ram.glb" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs">
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Practical Lab Code:</label>
+                  <textarea id="topicLab" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-16"></textarea>
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition">🚀 Save & Live Update</button>
+          </form>
+      </div>
 
-          <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 leading-snug">
-            LEARN BCA WITH <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">3D VISUALS & QUIZZES</span>
-          </h2>
+      <!-- Admin Panel 2: Bulk Quiz Designer -->
+      <div id="adminQuizPanel" class="hidden mb-6 bg-gray-950/90 border-2 border-amber-500 p-5 rounded-2xl">
+          <h3 class="text-amber-400 font-bold text-lg mb-3">🎯 Admin Bulk Quiz Designer</h3>
+          <form id="bulkQuizForm" onsubmit="saveBulkQuizData(event)" class="space-y-3">
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Select Semester:</label>
+                  <select id="quizSem" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
+                      <option value="Semester 1">Semester 1</option>
+                      <option value="Semester 2">Semester 2</option>
+                      <option value="Semester 3">Semester 3</option>
+                      <option value="Semester 4">Semester 4</option>
+                      <option value="Semester 5">Semester 5</option>
+                      <option value="Semester 6">Semester 6</option>
+                  </select>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Topic Title:</label>
+                  <input type="text" id="quizTopicTitle" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Paste 20+ Questions (Bulk Format):</label>
+                  <textarea id="bulkQuizText" placeholder="Q: ... &#10;A: ... &#10;B: ... &#10;C: ... &#10;D: ... &#10;Ans: A" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-28 font-mono" required></textarea>
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition">🚀 Save & Publish Quiz</button>
+          </form>
+      </div>
 
-          <p class="text-sm sm:text-base text-gray-300 max-w-2xl font-normal leading-relaxed mb-8">
-            Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models and timed quizzes.
-          </p>
+      <!-- Hero Content -->
+      <div class="py-8 text-center flex flex-col items-center">
+        <span class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-4 shadow-sm">
+          <i class="fa-solid fa-cubes text-indigo-400"></i>
+          <span>Interactive Semester 1 to 6 Curriculum</span>
+        </span>
 
-          <!-- Action Buttons -->
-          <div class="flex flex-wrap justify-center items-center gap-4">
-            <a href="template.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm hover:from-blue-500 hover:to-indigo-500 transition-all shadow-lg shadow-indigo-600/30 flex items-center space-x-2 group">
-              <span>Start Learning</span>
-              <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
-            </a>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 leading-snug">
+          LEARN BCA WITH <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">3D VISUALS & QUIZZES</span>
+        </h2>
 
-            <a href="quiz.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-600/30 flex items-center space-x-2 group">
-              <span>Take Quiz</span>
-              <i class="fa-solid fa-clock group-hover:rotate-12 transition-transform"></i>
-            </a>
-          </div>
+        <p class="text-sm sm:text-base text-gray-300 max-w-2xl font-normal leading-relaxed mb-8">
+          Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models and timed quizzes.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap justify-center items-center gap-4">
+          <a href="template.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm hover:from-blue-500 hover:to-indigo-500 transition-all shadow-lg shadow-indigo-600/30 flex items-center space-x-2 group">
+            <span>Start Learning</span>
+            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </a>
+
+          <a href="quiz.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-600/30 flex items-center space-x-2 group">
+            <span>Take Quiz</span>
+            <i class="fa-solid fa-clock group-hover:rotate-12 transition-transform"></i>
+          </a>
         </div>
+      </div>
 
-        <!-- Wallpaper Footer Info -->
-        <div class="pt-6 border-t border-gray-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
-          <div class="flex items-center space-x-2">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
-            <span class="font-medium text-emerald-400">3D 360° Wallpaper Engine Active (100% Working Drag & Spin)</span>
-          </div>
-          <div>© 2026 BCA Learning Hub | 3D Immersive Education Platform</div>
+      <!-- Wallpaper Footer Info -->
+      <div class="pt-6 border-t border-gray-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="font-medium text-emerald-400">3D 360° Engine Active (Drag mouse anywhere to rotate)</span>
         </div>
-
+        <div>© 2026 BCA Learning Hub | 3D Immersive Education Platform</div>
       </div>
 
     </div>
 
-    <!-- Levitating Ground Shadow -->
-    <div id="groundShadow" class="ground-shadow w-80 sm:w-[32rem] h-9 rounded-full mt-6 pointer-events-none"></div>
-
   </main>
 
   <!-- Bottom 3D Control Dock -->
-  <footer class="
+  <footer class="w-full max-w-4xl px-4 py-4 z-20">
+    <div class="glass-panel rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-2xl">
+      
+      <!-- Yaw Slider (360 Spin) -->
+      <div class="flex items-center space-x-3 w-full md:w-auto flex-1">
+        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-arrows-spin mr-1"></i>360° Spin:</span>
+        <input 
+          type="range" 
+          id="yawSlider" 
+          min="0" 
+          max="360" 
+          value="0" 
+          oninput="updateYaw(this.value)"
+          class="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+        >
+        <span id="yawVal" class="text-xs text-gray-400 w-10 text-right">0°</span>
+      </div>
+
+      <!-- Pitch Slider (3D Tilt) -->
+      <div class="flex items-center space-x-3 w-full md:w-auto flex-1">
+        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-up-down-left-right mr-1"></i>3D Tilt:</span>
+        <input 
+          type="range" 
+          id="pitchSlider" 
+          min="-30" 
+          max="30" 
+          value="0" 
+          oninput="updatePitch(this.value)"
+          class="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+        >
+        <span id="pitchVal" class="text-xs text-gray-400 w-10 text-right">0°</span>
+      </div>
+
+      <!-- Rotation Speed -->
+      <div class="flex items-center space-x-3 w-full md:w-auto">
+        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-gauge-high mr-1"></i>Speed:</span>
+        <select id="speedSelect" onchange="changeSpeed(this.value)" class="bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-lg px-2 py-1 focus:outline-none">
+          <option value="1">1x Normal</option>
+          <option value="2" selected>2x Fast</option>
+          <option value="4">4x Turbo</option>
+        </select>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    let currentYaw = 0;
+    let currentPitch = 0;
+    let isAutoSpinning = false;
+    let spinSpeed = 2;
+    let spinInterval = null;
+
+    const wallpaperCard = document.getElementById('wallpaperCard');
+    const yawSlider = document.getElementById('yawSlider');
+    const pitchSlider = document.getElementById('pitchSlider');
+    const yawVal = document.getElementById('yawVal');
+    const pitchVal = document.getElementById('pitchVal');
+    const spinBtnText = document.getElementById('spinBtnText');
+    const btnAutoSpin = document.getElementById('btnAutoSpin');
+
+    function applyTransform() {
+      if (wallpaperCard) {
+        wallpaperCard.style.transform = `rotateY(${currentYaw}deg) rotateX(${currentPitch}deg)`;
+      }
+      if (yawSlider) yawSlider.value = (currentYaw % 360 + 360) % 360;
+      if (pitchSlider) pitchSlider.value = currentPitch;
+      if (yawVal) yawVal.innerText = `${Math.round((currentYaw % 360 + 360) % 360)}°`;
+      if (pitchVal) pitchVal.innerText = `${Math.round(currentPitch)}°`;
+    }
+
+    function updateYaw(val) {
+      currentYaw = parseFloat(val);
+      applyTransform();
+    }
+
+    function updatePitch(val) {
+      currentPitch = parseFloat(val);
+      applyTransform();
+    }
+
+    function toggleAutoSpin() {
+      isAutoSpinning = !isAutoSpinning;
+      if (isAutoSpinning) {
+        spinBtnText.innerText = "Stop Spin";
+        btnAutoSpin.classList.remove("bg-indigo-600");
+        btnAutoSpin.classList.add("bg-rose-600");
+        
+        spinInterval = setInterval(() => {
+          currentYaw = (currentYaw + spinSpeed) % 360;
+          applyTransform();
+        }, 30);
+      } else {
+        spinBtnText.innerText = "Spin 360°";
+        btnAutoSpin.classList.remove("bg-rose-600");
+        btnAutoSpin.classList.add("bg-indigo-600");
+        clearInterval(spinInterval);
+      }
+    }
+
+    function changeSpeed(val) {
+      spinSpeed = parseFloat(val);
+    }
+
+    function resetRotation() {
+      if (isAutoSpinning) toggleAutoSpin();
+      currentYaw = 0;
+      currentPitch = 0;
+      applyTransform();
+    }
+
+    // --- MOUSE DRAG ROTATION LOGIC ---
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    window.addEventListener('mousedown', (e) => {
+      if (['INPUT', 'BUTTON', 'A', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let deltaX = e.clientX - startX;
+      let deltaY = e.clientY - startY;
+
+      currentYaw += deltaX * 0.4;
+      currentPitch -= deltaY * 0.4;
+
+      if (currentPitch > 30) currentPitch = 30;
+      if (currentPitch < -30) currentPitch = -30;
+
+      startX = e.clientX;
+      startY = e.clientY;
+
+      applyTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    applyTransform();
+  </script>
+</body>
+</html>
