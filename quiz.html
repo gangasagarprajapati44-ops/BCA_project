@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCA Learning Hub - 3D Quiz Arena</title>
+  <title>BCA Learning Hub - Chapter-Wise 3D Quiz Arena</title>
   
   <!-- Firebase Classic Compatibility Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -25,7 +25,6 @@
       overflow-x: hidden;
     }
 
-    /* Cyber Matrix Background */
     .matrix-bg {
       background-image: 
         radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.12) 0%, rgba(2, 6, 23, 0.98) 80%),
@@ -34,7 +33,6 @@
       background-size: 100% 100%, 50px 50px, 50px 50px;
     }
 
-    /* 3D Cyan Box (Practice) */
     .box-3d-cyan {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(20px);
@@ -48,7 +46,6 @@
       box-shadow: 0 30px 60px rgba(6, 182, 212, 0.4);
     }
 
-    /* 3D Rainbow Box (Test Box) */
     .box-3d-rainbow {
       background: rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(20px);
@@ -73,7 +70,6 @@
       box-shadow: 0 30px 60px rgba(236, 72, 153, 0.3), 0 0 40px rgba(6, 182, 212, 0.3);
     }
 
-    /* Option Item 3D Buttons */
     .opt-btn {
       background: #0f172a;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -97,7 +93,6 @@
       pointer-events: none;
     }
 
-    /* Rainbow Text Gradient */
     .rainbow-text {
       background: linear-gradient(135deg, #ef4444, #f59e0b, #10b981, #06b6d4, #8b5cf6, #ec4899);
       -webkit-background-clip: text;
@@ -127,12 +122,12 @@
       </div>
       <div>
         <h1 class="text-xl font-black tracking-tight text-white">BCA 3D Quiz Arena</h1>
-        <span class="text-xs text-cyan-400 font-medium">Smart Practice & Rainbow Test Center</span>
+        <span class="text-xs text-cyan-400 font-medium">Chapter-Wise Practice & Rainbow Test Box</span>
       </div>
     </div>
 
     <div class="flex items-center space-x-3">
-      <button onclick="openAdminModal()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition flex items-center space-x-2">
+      <button onclick="openAdminModalWithAuth()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition flex items-center space-x-2">
         <i class="fa-solid fa-lock text-amber-400"></i>
         <span>Admin Panel</span>
       </button>
@@ -147,20 +142,20 @@
   <main id="portalSelection" class="w-full max-w-5xl my-auto py-10 z-10">
     <div class="text-center mb-10">
       <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wide mb-2">Chuniye Apna Arena</h2>
-      <p class="text-gray-400 text-sm">Practice karein ya Rainbow Test Arena mein apni tayyari aazmayein</p>
+      <p class="text-gray-400 text-sm">Chapter-Wise Practice Karein Ya Rainbow Test Box Mein Lifelines Ke Sath Attempt Karein</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
       
       <!-- Practice MCQ Box -->
-      <div onclick="startPracticeMode()" class="box-3d-cyan rounded-3xl p-8 cursor-pointer flex flex-col justify-between h-80 relative overflow-hidden group">
+      <div onclick="showChapterSelection('practice')" class="box-3d-cyan rounded-3xl p-8 cursor-pointer flex flex-col justify-between h-80 relative overflow-hidden group">
         <div class="absolute -right-6 -top-6 text-cyan-500/10 text-9xl group-hover:scale-110 transition duration-500">
           <i class="fa-solid fa-book-open-reader"></i>
         </div>
         <div>
-          <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-bold">Custom Capacity</span>
+          <span class="px-3 py-1 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 text-xs font-bold">Chapter-Wise Practice</span>
           <h3 class="text-2xl font-black text-white mt-4 mb-2">Practice MCQ Box</h3>
-          <p class="text-xs text-gray-300 leading-relaxed">Unlimited custom questions, toggle show answer feature, and single-click continuous page voice reader.</p>
+          <p class="text-xs text-gray-300 leading-relaxed">Chapter chuniye, unlimited MCQs padhiye, show-answer dekhiye, aur full-page voice reader ka maza lijiye.</p>
         </div>
         <div class="flex items-center justify-between border-t border-cyan-500/20 pt-4">
           <span class="text-xs text-cyan-400 font-bold"><i class="fa-solid fa-volume-high mr-1"></i> Continuous Audio Reader</span>
@@ -171,14 +166,14 @@
       </div>
 
       <!-- Live Test Arena Box -->
-      <div onclick="startTestMode()" class="box-3d-rainbow p-8 cursor-pointer flex flex-col justify-between h-80 relative overflow-hidden group">
+      <div onclick="showChapterSelection('test')" class="box-3d-rainbow p-8 cursor-pointer flex flex-col justify-between h-80 relative overflow-hidden group">
         <div class="absolute -right-6 -top-6 text-pink-500/10 text-9xl group-hover:scale-110 transition duration-500">
           <i class="fa-solid fa-stopwatch"></i>
         </div>
         <div>
-          <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/40 text-xs font-bold">4 Lifelines Included</span>
+          <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/40 text-xs font-bold">Chapter-Wise Test Box</span>
           <h3 class="text-2xl font-black rainbow-text mt-4 mb-2">Rainbow Test Arena</h3>
-          <p class="text-xs text-gray-300 leading-relaxed">Timed challenge, 4 active lifelines (50:50, AI Hint, +15s Time Freeze, Skip), and ultra 3D rainbow scorecard.</p>
+          <p class="text-xs text-gray-300 leading-relaxed">Chapter chuniye, timed challenge attempt karein, 4 active lifelines ka use karein, aur 3D scorecard paayein.</p>
         </div>
         <div class="flex items-center justify-between border-t border-purple-500/20 pt-4">
           <span class="text-xs text-pink-400 font-bold"><i class="fa-solid fa-trophy mr-1"></i> Rainbow 3D Scoreboard</span>
@@ -191,32 +186,44 @@
     </div>
   </main>
 
+  <!-- Chapter Selection Modal Screen -->
+  <div id="chapterModal" class="modal-overlay">
+    <div class="bg-slate-900 border-2 border-cyan-500 rounded-3xl p-6 sm:p-8 max-w-lg w-full text-center relative shadow-2xl">
+      <h3 class="text-xl font-black text-white mb-2"><i class="fa-solid fa-layer-group text-cyan-400 mr-2"></i>Select Chapter</h3>
+      <p id="chapterModalSub" class="text-xs text-cyan-300 mb-6">Choose a chapter to begin</p>
+
+      <div id="chapterListContainer" class="space-y-3 max-h-60 overflow-y-auto mb-6 pr-1">
+        <!-- Dynamic Chapter Buttons -->
+      </div>
+
+      <button onclick="closeChapterModal()" class="w-full py-2.5 bg-gray-800 hover:bg-gray-700 text-gray-300 font-bold text-xs rounded-xl transition">
+        Cancel & Go Back
+      </button>
+    </div>
+  </div>
+
   <!-- Practice Arena Screen -->
   <section id="practiceArena" class="w-full max-w-4xl my-auto hidden z-10 py-6">
     <div class="bg-slate-900/90 border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
       
-      <!-- Top Action Bar -->
       <div class="flex flex-wrap justify-between items-center gap-4 pb-6 border-b border-cyan-900/50 mb-6">
         <div>
           <button onclick="backToPortal()" class="text-xs text-cyan-400 font-bold hover:underline flex items-center">
             <i class="fa-solid fa-arrow-left mr-1"></i> Exit Practice
           </button>
-          <h2 class="text-xl font-extrabold text-white mt-1">Practice MCQ Arena</h2>
+          <h2 id="practiceHeaderTitle" class="text-xl font-extrabold text-white mt-1">Practice MCQ Arena</h2>
         </div>
 
-        <!-- Continuous Full Page Speech Audio Button -->
         <button id="audioReaderBtn" onclick="toggleContinuousAudio()" class="px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg shadow-cyan-500/30 flex items-center space-x-2 transition">
           <i id="audioIcon" class="fa-solid fa-volume-high"></i>
           <span id="audioText">Start Page Audio</span>
         </button>
       </div>
 
-      <!-- MCQ Container List -->
       <div id="practiceMcqList" class="space-y-8 max-h-[60vh] overflow-y-auto pr-2">
-        <!-- Practice MCQs Dynamic Load Here -->
+        <!-- Dynamic Practice MCQs -->
       </div>
 
-      <!-- Submit Practice Button -->
       <div class="mt-8 pt-6 border-t border-cyan-900/50 flex justify-end">
         <button onclick="submitPractice()" class="px-8 py-3 bg-gradient-to-r from-cyan-500 to-blue-600 text-black font-extrabold rounded-2xl shadow-lg shadow-cyan-500/40 hover:scale-105 transition">
           Submit & View 3D Scorecard 🚀
@@ -226,15 +233,17 @@
     </div>
   </section>
 
-  <!-- Live Test Arena Screen (Rainbow Styling) -->
+  <!-- Live Test Arena Screen -->
   <section id="testArena" class="w-full max-w-3xl my-auto hidden z-10 py-6">
     <div class="box-3d-rainbow p-6 sm:p-8 shadow-2xl relative">
       
-      <!-- Top Bar -->
-      <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-800">
-        <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 text-xs font-bold">
-          Question <span id="testCurrentNum">1</span>/<span id="testTotalNum">0</span>
-        </span>
+      <div class="flex justify-between items-center mb-4 pb-4 border-b border-gray-800">
+        <div>
+          <span id="testChapterBadge" class="text-xs text-pink-400 font-bold block mb-1">Chapter Name</span>
+          <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30 text-xs font-bold">
+            Question <span id="testCurrentNum">1</span>/<span id="testTotalNum">0</span>
+          </span>
+        </div>
         <div class="flex items-center space-x-2 bg-black/80 px-4 py-1.5 rounded-full border border-pink-500/30">
           <i class="fa-solid fa-stopwatch text-pink-400 animate-pulse"></i>
           <span id="testTimer" class="font-mono text-lg font-bold text-pink-300">20s</span>
@@ -257,12 +266,10 @@
         </button>
       </div>
 
-      <!-- Test Question Box -->
       <div class="mb-6">
         <h3 id="testQuestionText" class="text-xl font-bold text-white leading-relaxed">Loading Test Question...</h3>
       </div>
 
-      <!-- Options Container -->
       <div id="testOptionsContainer" class="grid grid-cols-1 gap-3 mb-8">
         <!-- Test Options Loaded Here -->
       </div>
@@ -292,402 +299,4 @@
         </div>
         <div class="bg-slate-950/90 p-4 rounded-2xl border border-pink-500/30">
           <span class="block text-gray-400 text-[10px] uppercase font-bold">Accuracy Percentage</span>
-          <span id="scorePercent" class="text-2xl font-black rainbow-text">0%</span>
-        </div>
-      </div>
-
-      <button onclick="closeScoreModal()" class="w-full py-3.5 bg-gradient-to-r from-cyan-500 via-purple-500 to-pink-500 text-white font-black rounded-2xl transition shadow-lg shadow-pink-500/40 hover:scale-105">
-        Awesome, Close Arena! 🎉
-      </button>
-    </div>
-  </div>
-
-  <!-- Admin Panel Modal -->
-  <div id="adminModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center mb-6 border-b border-amber-500/30 pb-4">
-        <h3 class="text-lg font-extrabold text-amber-400"><i class="fa-solid fa-sliders mr-2"></i>Admin Quiz Manager</h3>
-        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-sm">❌ Close</button>
-      </div>
-
-      <form onsubmit="saveQuestionToDatabase(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Target Arena Box:</label>
-          <select id="adminTargetBox" class="w-full p-3 bg-slate-950 border border-amber-500/30 rounded-xl text-white">
-            <option value="practice">Practice MCQ Box (Cyan)</option>
-            <option value="test">Rainbow Test Arena Box (Rainbow)</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Question Text:</label>
-          <textarea id="adminQText" class="w-full p-3 bg-slate-950 border border-amber-500/30 rounded-xl text-white h-20" required></textarea>
-        </div>
-
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option A:</label>
-            <input type="text" id="adminOpt0" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option B:</label>
-            <input type="text" id="adminOpt1" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option C:</label>
-            <input type="text" id="adminOpt2" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option D:</label>
-            <input type="text" id="adminOpt3" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Correct Option Index (0 = A, 1 = B, 2 = C, 3 = D):</label>
-          <select id="adminCorrectIdx" class="w-full p-3 bg-slate-950 border border-amber-500/30 rounded-xl text-white">
-            <option value="0">Option A</option>
-            <option value="1">Option B</option>
-            <option value="2">Option C</option>
-            <option value="3">Option D</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Optional AI Hint (For Test Box):</label>
-          <input type="text" id="adminHint" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" placeholder="Sawal se juda koi ishara...">
-        </div>
-
-        <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-extrabold rounded-xl transition">
-          🚀 Save Question
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <footer class="w-full max-w-6xl py-4 text-center text-xs text-cyan-500/60 z-10">
-    © 2026 BCA Learning Hub | 3D Interactive Dual Quiz Engine
-  </footer>
-
-  <!-- JavaScript Logic Engine -->
-  <script>
-    const firebaseConfig = {
-        apiKey: "AIzaSyAlnN3WDFMyM9aWy88GyRZUNJk3D1Y-TBE",
-        authDomain: "bca-learning-hub.firebaseapp.com",
-        databaseURL: "https://bca-learning-hub-default-rtdb.asia-southeast1.firebasedatabase.app",
-        projectId: "bca-learning-hub",
-        storageBucket: "bca-learning-hub.firebasestorage.app",
-        messagingSenderId: "206989105830",
-        appId: "1:206989105830:web:93546fed295efab3017267",
-        measurementId: "G-FF3GR0989C"
-    };
-    
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    let practiceQuestions = [];
-    let testQuestions = [];
-    let selectedPracticeAnswers = {};
-    
-    let isSpeaking = false;
-    let synth = window.speechSynthesis;
-    let speechUtterance = null;
-
-    let currentTestIdx = 0;
-    let testScore = 0;
-    let testTimerInterval = null;
-    let testTimeLeft = 20;
-    let selectedTestOpt = null;
-
-    window.onload = function() {
-      // Realtime Dynamic Data Sync from Database
-      db.ref('bca_arena_practice').on('value', snapshot => {
-        const data = snapshot.val();
-        practiceQuestions = data ? Object.values(data) : [];
-      });
-
-      db.ref('bca_arena_test').on('value', snapshot => {
-        const data = snapshot.val();
-        testQuestions = data ? Object.values(data) : [];
-      });
-    };
-
-    /* Practice Arena Functions */
-    function startPracticeMode() {
-      if(practiceQuestions.length === 0) {
-        alert("Practice Box mein filhaal koi sawal nahi hain. Admin Panel se upload karein!");
-        return;
-      }
-      document.getElementById('portalSelection').classList.add('hidden');
-      document.getElementById('practiceArena').classList.remove('hidden');
-      renderPracticeList();
-    }
-
-    function renderPracticeList() {
-      const container = document.getElementById('practiceMcqList');
-      container.innerHTML = "";
-
-      practiceQuestions.forEach((q, qIndex) => {
-        let optsHtml = "";
-        q.options.forEach((opt, oIndex) => {
-          optsHtml += `
-            <button id="pOpt_${qIndex}_${oIndex}" onclick="selectPracticeOpt(${qIndex}, ${oIndex})" class="opt-btn w-full p-3.5 rounded-2xl text-left text-xs font-semibold text-gray-200 flex justify-between items-center">
-              <span>${String.fromCharCode(65 + oIndex)}. ${opt}</span>
-              <i class="fa-regular fa-circle check-icon text-gray-600"></i>
-            </button>
-          `;
-        });
-
-        container.innerHTML += `
-          <div class="bg-slate-950 p-5 rounded-2xl border border-cyan-500/20">
-            <h3 class="text-sm font-bold text-white mb-3">${qIndex + 1}. ${q.question}</h3>
-            <div class="space-y-2 mb-3">${optsHtml}</div>
-            <div class="flex justify-between items-center pt-2">
-              <button onclick="toggleAnswer(${qIndex}, ${q.correct})" class="text-xs text-amber-400 font-bold hover:underline flex items-center">
-                <i class="fa-solid fa-eye mr-1"></i> Show Answer
-              </button>
-              <span id="ansText_${qIndex}" class="text-xs font-bold text-emerald-400 hidden">Correct: Option ${String.fromCharCode(65 + q.correct)}</span>
-            </div>
-          </div>
-        `;
-      });
-    }
-
-    function selectPracticeOpt(qIdx, oIdx) {
-      selectedPracticeAnswers[qIdx] = oIdx;
-      for(let i=0; i<4; i++) {
-        let el = document.getElementById(`pOpt_${qIdx}_${i}`);
-        if(el) el.classList.remove('selected');
-      }
-      document.getElementById(`pOpt_${qIdx}_${oIdx}`).classList.add('selected');
-    }
-
-    function toggleAnswer(qIdx, correctIdx) {
-      let ansSpan = document.getElementById(`ansText_${qIdx}`);
-      let correctOptBtn = document.getElementById(`pOpt_${qIdx}_${correctIdx}`);
-      
-      if(ansSpan.classList.contains('hidden')) {
-        ansSpan.classList.remove('hidden');
-        correctOptBtn.classList.add('correct');
-      } else {
-        ansSpan.classList.add('hidden');
-        correctOptBtn.classList.remove('correct');
-      }
-    }
-
-    /* Single Click Continuous Full Page Voice Reader */
-    function toggleContinuousAudio() {
-      if(isSpeaking) {
-        synth.cancel();
-        isSpeaking = false;
-        document.getElementById('audioText').innerText = "Start Page Audio";
-        document.getElementById('audioIcon').className = "fa-solid fa-volume-high";
-      } else {
-        if(practiceQuestions.length === 0) return;
-        
-        let fullTextToRead = "Starting Practice Questions Audio Reader. ";
-        practiceQuestions.forEach((q, idx) => {
-          fullTextToRead += `Question number ${idx + 1}. ${q.question}. `;
-          q.options.forEach((opt, oIdx) => {
-            fullTextToRead += `Option ${String.fromCharCode(65 + oIdx)}, ${opt}. `;
-          });
-          fullTextToRead += `Correct Answer is Option ${String.fromCharCode(65 + q.correct)}, ${q.options[q.correct]}. `;
-        });
-
-        speechUtterance = new SpeechSynthesisUtterance(fullTextToRead);
-        speechUtterance.rate = 0.9;
-        
-        speechUtterance.onend = function() {
-          isSpeaking = false;
-          document.getElementById('audioText').innerText = "Start Page Audio";
-          document.getElementById('audioIcon').className = "fa-solid fa-volume-high";
-        };
-
-        synth.speak(speechUtterance);
-        isSpeaking = true;
-        document.getElementById('audioText').innerText = "Stop Page Audio";
-        document.getElementById('audioIcon').className = "fa-solid fa-circle-stop text-red-400 animate-pulse";
-      }
-    }
-
-    function submitPractice() {
-      let correctCount = 0;
-      practiceQuestions.forEach((q, idx) => {
-        if(selectedPracticeAnswers[idx] === q.correct) {
-          correctCount++;
-        }
-      });
-
-      let percent = Math.round((correctCount / practiceQuestions.length) * 100);
-      document.getElementById('scoreCorrect').innerText = `${correctCount}/${practiceQuestions.length}`;
-      document.getElementById('scorePercent').innerText = `${percent}%`;
-      document.getElementById('scoreModal').style.display = "flex";
-    }
-
-    /* Live Test Arena Functions */
-    function startTestMode() {
-      if(testQuestions.length === 0) {
-        alert("Live Test Box mein filhaal koi sawal nahi hain. Admin Panel se upload karein!");
-        return;
-      }
-      currentTestIdx = 0;
-      testScore = 0;
-      resetLifelines();
-      document.getElementById('portalSelection').classList.add('hidden');
-      document.getElementById('testArena').classList.remove('hidden');
-      document.getElementById('testTotalNum').innerText = testQuestions.length;
-      loadTestQuestion();
-    }
-
-    function resetLifelines() {
-      ['life50', 'lifeHint', 'lifeFreeze', 'lifeSkip'].forEach(id => {
-        let btn = document.getElementById(id);
-        if(btn) {
-          btn.disabled = false;
-          btn.style.opacity = "1";
-        }
-      });
-    }
-
-    function loadTestQuestion() {
-      clearInterval(testTimerInterval);
-      testTimeLeft = 20;
-      selectedTestOpt = null;
-      document.getElementById('testTimer').innerText = `${testTimeLeft}s`;
-      
-      const q = testQuestions[currentTestIdx];
-      document.getElementById('testCurrentNum').innerText = currentTestIdx + 1;
-      document.getElementById('testQuestionText').innerText = q.question;
-
-      const container = document.getElementById('testOptionsContainer');
-      container.innerHTML = "";
-
-      q.options.forEach((opt, oIndex) => {
-        container.innerHTML += `
-          <button id="tOpt_${oIndex}" onclick="selectTestOpt(${oIndex})" class="opt-btn w-full p-3.5 rounded-2xl text-left text-xs font-semibold text-gray-200 flex justify-between items-center">
-            <span>${String.fromCharCode(65 + oIndex)}. ${opt}</span>
-            <i class="fa-regular fa-circle check-icon text-gray-600"></i>
-          </button>
-        `;
-      });
-
-      testTimerInterval = setInterval(() => {
-        testTimeLeft--;
-        document.getElementById('testTimer').innerText = `${testTimeLeft}s`;
-        if(testTimeLeft <= 0) {
-          clearInterval(testTimerInterval);
-          nextTestQuestion();
-        }
-      }, 1000);
-    }
-
-    function selectTestOpt(oIndex) {
-      selectedTestOpt = oIndex;
-      for(let i=0; i<4; i++) {
-        let el = document.getElementById(`tOpt_${i}`);
-        if(el) el.classList.remove('selected');
-      }
-      document.getElementById(`tOpt_${oIndex}`).classList.add('selected');
-    }
-
-    /* 4 Working Lifelines Logic */
-    function useLife5050() {
-      const q = testQuestions[currentTestIdx];
-      let disabledCount = 0;
-      for(let i=0; i<4; i++) {
-        if(i !== q.correct && disabledCount < 2) {
-          let btn = document.getElementById(`tOpt_${i}`);
-          if(btn) btn.classList.add('disabled-opt');
-          disabledCount++;
-        }
-      }
-      let btn = document.getElementById('life50');
-      btn.disabled = true;
-      btn.style.opacity = "0.3";
-    }
-
-    function useLifeHint() {
-      const q = testQuestions[currentTestIdx];
-      alert("🤖 AI Smart Hint: " + (q.hint || "Apne chune hue vikalp ko dhyaan se dekhein."));
-      let btn = document.getElementById('lifeHint');
-      btn.disabled = true;
-      btn.style.opacity = "0.3";
-    }
-
-    function useLifeFreeze() {
-      testTimeLeft += 15;
-      document.getElementById('testTimer').innerText = `${testTimeLeft}s`;
-      let btn = document.getElementById('lifeFreeze');
-      btn.disabled = true;
-      btn.style.opacity = "0.3";
-    }
-
-    function useLifeSkip() {
-      let btn = document.getElementById('lifeSkip');
-      btn.disabled = true;
-      btn.style.opacity = "0.3";
-      nextTestQuestion();
-    }
-
-    function nextTestQuestion() {
-      if(selectedTestOpt === testQuestions[currentTestIdx].correct) {
-        testScore++;
-      }
-
-      if(currentTestIdx < testQuestions.length - 1) {
-        currentTestIdx++;
-        loadTestQuestion();
-      } else {
-        clearInterval(testTimerInterval);
-        let percent = Math.round((testScore / testQuestions.length) * 100);
-        document.getElementById('scoreCorrect').innerText = `${testScore}/${testQuestions.length}`;
-        document.getElementById('scorePercent').innerText = `${percent}%`;
-        document.getElementById('scoreModal').style.display = "flex";
-      }
-    }
-
-    function backToPortal() {
-      if(isSpeaking) synth.cancel();
-      document.getElementById('practiceArena').classList.add('hidden');
-      document.getElementById('testArena').classList.add('hidden');
-      document.getElementById('portalSelection').classList.remove('hidden');
-    }
-
-    function closeScoreModal() {
-      document.getElementById('scoreModal').style.display = "none";
-      backToPortal();
-    }
-
-    /* Admin Panel Functions */
-    function openAdminModal() {
-      document.getElementById('adminModal').style.display = "flex";
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = "none";
-    }
-
-    function saveQuestionToDatabase(e) {
-      e.preventDefault();
-      const targetBox = document.getElementById('adminTargetBox').value;
-      const qObject = {
-        question: document.getElementById('adminQText').value,
-        options: [
-          document.getElementById('adminOpt0').value,
-          document.getElementById('adminOpt1').value,
-          document.getElementById('adminOpt2').value,
-          document.getElementById('adminOpt3').value
-        ],
-        correct: parseInt(document.getElementById('adminCorrectIdx').value),
-        hint: document.getElementById('adminHint').value || ""
-      };
-
-      const refPath = (targetBox === 'practice') ? 'bca_arena_practice' : 'bca_arena_test';
-      db.ref(refPath).push(qObject).then(() => {
-        alert("🎉 Question successfully saved to Database!");
-        closeAdminModal();
-      });
-    }
-  </script>
-</body>
-</html>
+          <span id="scorePercent" class="text-
