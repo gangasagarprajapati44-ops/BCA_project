@@ -108,9 +108,9 @@
           <a href="quiz.html" class="hover:text-white transition flex items-center gap-1.5">
             <i class="fa-solid fa-bolt text-yellow-400"></i> Quiz Arena
           </a>
-          <a href="#" class="hover:text-white transition flex items-center gap-1.5">
+          <button onclick="openTopicViewer()" class="hover:text-white transition flex items-center gap-1.5">
             <i class="fa-solid fa-book-open text-emerald-400"></i> Topic Viewer
-          </a>
+          </button>
         </nav>
 
         <!-- Admin Panel Button -->
@@ -125,7 +125,7 @@
         <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-gray-400 text-sm">
           <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-        <input type="text" placeholder="Search topic, quiz, or 3D model..." class="w-full pl-11 pr-4 py-3 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition shadow-inner">
+        <input type="text" id="homeSearchInput" onkeyup="filterSearchTopics()" placeholder="Search topic, quiz, or 3D model..." class="w-full pl-11 pr-4 py-3 bg-slate-950/80 border border-slate-800 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 transition shadow-inner">
       </div>
 
       <!-- Hero Badge & Title -->
@@ -145,10 +145,10 @@
 
         <!-- Action CTA Buttons -->
         <div class="flex flex-wrap justify-center gap-4 mb-10">
-          <a href="#" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/40 transition flex items-center space-x-2">
+          <button onclick="openTopicViewer()" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg shadow-indigo-600/40 transition flex items-center space-x-2">
             <span>Start Learning</span>
             <i class="fa-solid fa-arrow-right"></i>
-          </a>
+          </button>
           <a href="quiz.html" class="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg shadow-emerald-600/40 transition flex items-center space-x-2">
             <span>Take Quiz</span>
             <i class="fa-regular fa-clock"></i>
@@ -197,31 +197,70 @@
     </div>
   </div>
 
+  <!-- Topic Viewer Modal Screen (Aapka Uploaded Topic Data) -->
+  <div id="topicViewerModal" class="modal-overlay">
+    <div class="bg-slate-900 border-2 border-indigo-500 rounded-3xl p-6 sm:p-8 max-w-3xl w-full max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6 pb-4 border-b border-indigo-500/30">
+        <h3 class="text-xl font-black text-indigo-400 flex items-center gap-2">
+          <i class="fa-solid fa-book-open"></i> BCA Learning Hub - Topic Viewer
+        </h3>
+        <button onclick="closeTopicViewer()" class="text-gray-400 hover:text-white font-bold text-sm">❌ Close</button>
+      </div>
+
+      <div id="topicsContainer" class="space-y-4">
+        <p class="text-gray-400 text-xs text-center py-6">Topics loading from Database...</p>
+      </div>
+    </div>
+  </div>
+
   <!-- Password Protected Admin Panel Modal with sagar9955@# Password -->
   <div id="adminModal" class="modal-overlay">
     <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-4 border-b border-amber-500/30 pb-4">
-        <h3 class="text-lg font-extrabold text-amber-400"><i class="fa-solid fa-sliders mr-2"></i>Admin Chapter & Quiz Manager</h3>
+        <h3 class="text-lg font-extrabold text-amber-400"><i class="fa-solid fa-sliders mr-2"></i>Admin Manager Panel</h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-sm">❌ Close</button>
       </div>
 
       <!-- Tab Buttons -->
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <button id="tabPracticeBtn" onclick="switchAdminTab('practice')" class="py-2.5 rounded-xl bg-cyan-500 text-black font-extrabold text-xs transition shadow-lg">
-          📝 Upload Practice MCQ
+      <div class="grid grid-cols-3 gap-2 mb-6">
+        <button id="tabTopicBtn" onclick="switchAdminTab('topic')" class="py-2 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-[11px] transition">
+          📚 Upload Topic
         </button>
-        <button id="tabTestBtn" onclick="switchAdminTab('test')" class="py-2.5 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-xs transition">
-          🌈 Upload Test Box MCQ
+        <button id="tabPracticeBtn" onclick="switchAdminTab('practice')" class="py-2 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-[11px] transition">
+          📝 Practice MCQ
+        </button>
+        <button id="tabTestBtn" onclick="switchAdminTab('test')" class="py-2 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-[11px] transition">
+          🌈 Test MCQ
         </button>
       </div>
 
-      <!-- Form 1: Practice Box Upload -->
-      <form id="formPractice" onsubmit="saveQuestionToDatabase(event, 'practice')" class="space-y-4 text-xs">
-        <div class="bg-cyan-500/10 border border-cyan-500/30 p-3 rounded-xl text-cyan-300 mb-2 font-semibold">
-          💡 Practice MCQ Box (Chapter-Wise) Data Upload Form
+      <!-- Form 0: Topic Viewer Data Upload -->
+      <form id="formTopic" onsubmit="saveTopicToDatabase(event)" class="space-y-4 text-xs">
+        <div class="bg-indigo-500/10 border border-indigo-500/30 p-3 rounded-xl text-indigo-300 mb-2 font-semibold">
+          📚 Topic Viewer Content Upload Form
         </div>
         <div>
-          <label class="block text-amber-300 font-bold mb-1">Chapter Name (e.g. Chapter 1: Introduction):</label>
+          <label class="block text-amber-300 font-bold mb-1">Semester / Category:</label>
+          <input type="text" id="topCategory" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" placeholder="Semester 1 - Computer Fundamentals" required>
+        </div>
+        <div>
+          <label class="block text-amber-300 font-bold mb-1">Topic Title:</label>
+          <input type="text" id="topTitle" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" placeholder="Generations of Computer" required>
+        </div>
+        <div>
+          <label class="block text-amber-300 font-bold mb-1">Detailed Content / Notes:</label>
+          <textarea id="topContent" class="w-full p-3 bg-slate-950 border border-amber-500/30 rounded-xl text-white h-28" placeholder="Enter topic details here..." required></textarea>
+        </div>
+        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold rounded-xl transition">🚀 Save Topic Content</button>
+      </form>
+
+      <!-- Form 1: Practice Box Upload -->
+      <form id="formPractice" onsubmit="saveQuestionToDatabase(event, 'practice')" class="space-y-4 text-xs hidden">
+        <div class="bg-cyan-500/10 border border-cyan-500/30 p-3 rounded-xl text-cyan-300 mb-2 font-semibold">
+          💡 Practice MCQ Box Upload Form
+        </div>
+        <div>
+          <label class="block text-amber-300 font-bold mb-1">Chapter Name:</label>
           <input type="text" id="pracChapter" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" placeholder="History of Computer" required>
         </div>
         <div>
@@ -246,10 +285,10 @@
       <!-- Form 2: Test Box Upload -->
       <form id="formTest" onsubmit="saveQuestionToDatabase(event, 'test')" class="space-y-4 text-xs hidden">
         <div class="bg-pink-500/10 border border-pink-500/30 p-3 rounded-xl text-pink-300 mb-2 font-semibold">
-          🌈 Rainbow Test Box (Chapter-Wise) Data Upload Form
+          🌈 Rainbow Test Box Upload Form
         </div>
         <div>
-          <label class="block text-amber-300 font-bold mb-1">Chapter Name (e.g. Chapter 1: Introduction):</label>
+          <label class="block text-amber-300 font-bold mb-1">Chapter Name:</label>
           <input type="text" id="testChapter" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" placeholder="History of Computer" required>
         </div>
         <div>
@@ -294,6 +333,57 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    let loadedTopics = [];
+
+    window.onload = function() {
+      // Load Topics from Firebase Database
+      db.ref('bca_topics').on('value', snapshot => {
+        const data = snapshot.val();
+        loadedTopics = data ? Object.values(data) : [];
+        renderTopics(loadedTopics);
+      });
+    };
+
+    /* Topic Viewer Modal Control */
+    function openTopicViewer() {
+      document.getElementById('topicViewerModal').style.display = 'flex';
+    }
+
+    function closeTopicViewer() {
+      document.getElementById('topicViewerModal').style.display = 'none';
+    }
+
+    function renderTopics(data) {
+      const container = document.getElementById('topicsContainer');
+      container.innerHTML = "";
+
+      if(data.length === 0) {
+        container.innerHTML = `<p class="text-gray-400 text-xs text-center py-6">Abhi tak koi topic content upload nahi hua hai. Admin panel se upload karein!</p>`;
+        return;
+      }
+
+      data.forEach((top, idx) => {
+        container.innerHTML += `
+          <div class="bg-slate-950 p-5 rounded-2xl border border-indigo-500/20 text-xs">
+            <span class="px-2.5 py-1 rounded-full bg-indigo-500/20 text-indigo-300 font-bold text-[10px] inline-block mb-2">${top.category || "General"}</span>
+            <h4 class="text-sm font-extrabold text-white mb-2">${top.title}</h4>
+            <p class="text-gray-300 leading-relaxed whitespace-pre-line">${top.content}</p>
+          </div>
+        `;
+      });
+    }
+
+    /* Search Bar Filter */
+    function filterSearchTopics() {
+      let query = document.getElementById('homeSearchInput').value.toLowerCase();
+      let filtered = loadedTopics.filter(t => 
+        (t.title && t.title.toLowerCase().includes(query)) || 
+        (t.category && t.category.toLowerCase().includes(query)) ||
+        (t.content && t.content.toLowerCase().includes(query))
+      );
+      renderTopics(filtered);
+    }
+
     /* Password Auth for Admin Panel */
     function openAdminModalWithAuth() {
       let pass = prompt("🔐 Enter Admin Password:");
@@ -310,19 +400,43 @@
 
     /* Admin Tab Switching Logic */
     function switchAdminTab(type) {
-      if(type === 'practice') {
+      document.getElementById('formTopic').classList.add('hidden');
+      document.getElementById('formPractice').classList.add('hidden');
+      document.getElementById('formTest').classList.add('hidden');
+
+      document.getElementById('tabTopicBtn').className = "py-2 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-[11px] transition";
+      document.getElementById('tabPracticeBtn').className = "py-2 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-[11px] transition";
+      document.getElementById('tabTestBtn').className = "py-2 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-[11px] transition";
+
+      if(type === 'topic') {
+        document.getElementById('formTopic').classList.remove('hidden');
+        document.getElementById('tabTopicBtn').className = "py-2 rounded-xl bg-amber-500 text-slate-950 font-extrabold text-[11px] transition";
+      } else if(type === 'practice') {
         document.getElementById('formPractice').classList.remove('hidden');
-        document.getElementById('formTest').classList.add('hidden');
-        document.getElementById('tabPracticeBtn').className = "py-2.5 rounded-xl bg-cyan-500 text-black font-extrabold text-xs transition shadow-lg";
-        document.getElementById('tabTestBtn').className = "py-2.5 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-xs transition";
+        document.getElementById('tabPracticeBtn').className = "py-2 rounded-xl bg-cyan-500 text-black font-extrabold text-[11px] transition";
       } else {
-        document.getElementById('formPractice').classList.add('hidden');
         document.getElementById('formTest').classList.remove('hidden');
-        document.getElementById('tabTestBtn').className = "py-2.5 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-extrabold text-xs transition shadow-lg";
-        document.getElementById('tabPracticeBtn').className = "py-2.5 rounded-xl bg-slate-800 text-gray-300 font-extrabold text-xs transition";
+        document.getElementById('tabTestBtn').className = "py-2 rounded-xl bg-gradient-to-r from-pink-500 to-purple-600 text-white font-extrabold text-[11px] transition";
       }
     }
 
+    /* Save Topic Content */
+    function saveTopicToDatabase(e) {
+      e.preventDefault();
+      const topicObj = {
+        category: document.getElementById('topCategory').value.trim(),
+        title: document.getElementById('topTitle').value.trim(),
+        content: document.getElementById('topContent').value.trim()
+      };
+
+      db.ref('bca_topics').push(topicObj).then(() => {
+        alert("🎉 Topic Content successfully saved to Database!");
+        closeAdminModal();
+        document.getElementById('formTopic').reset();
+      });
+    }
+
+    /* Save Questions Content */
     function saveQuestionToDatabase(e, targetBox) {
       e.preventDefault();
       const prefix = targetBox === 'practice' ? 'prac' : 'test';
@@ -349,7 +463,7 @@
     }
 
     function toggleSpin() {
-      alert("360° Rotation active!");
+      alert("360° Rotation Engine Active!");
     }
   </script>
 </body>
