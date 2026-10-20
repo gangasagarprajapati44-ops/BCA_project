@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -28,13 +29,11 @@
       overflow-x: hidden;
     }
 
-    /* 3D Perspective Scene Setup */
     .viewport-3d {
       perspective: 1600px;
       transform-style: preserve-3d;
     }
 
-    /* 3D 360 Rotating Wallpaper Frame */
     .wallpaper-3d-card {
       transform-style: preserve-3d;
       will-change: transform;
@@ -49,7 +48,6 @@
       cursor: grabbing;
     }
 
-    /* Glassmorphism Panel with Cyan/Teal Tech Tint */
     .glass-panel-cyan {
       background: rgba(15, 23, 42, 0.94);
       backdrop-filter: blur(24px);
@@ -57,7 +55,6 @@
       border: 1px solid rgba(6, 182, 212, 0.25);
     }
 
-    /* Cyan Neon Gradient Border */
     .neon-border-cyan {
       position: relative;
     }
@@ -74,7 +71,6 @@
       pointer-events: none;
     }
 
-    /* Cyber Matrix Background */
     .matrix-bg {
       background-image: 
         radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.12) 0%, rgba(2, 6, 23, 0.98) 80%),
@@ -120,7 +116,8 @@
     .viewer-container img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      background: #000;
       transition: 0.3s;
     }
 
@@ -190,7 +187,6 @@
     .modal-body model-viewer { width: 100%; height: 100%; }
     .modal-body img { max-width: 100%; max-height: 100%; object-fit: contain; }
 
-    /* Drag and Drop Zone Style */
     .drop-zone {
       border: 2px dashed rgba(6, 182, 212, 0.6);
       background: rgba(15, 23, 42, 0.8);
@@ -205,7 +201,6 @@
       background: rgba(6, 182, 212, 0.15);
     }
 
-    /* Word Art Classes */
     .wordart-neon {
       color: #fff !important;
       text-shadow: 0 0 5px #06b6d4, 0 0 10px #06b6d4, 0 0 20px #06b6d4 !important;
@@ -334,16 +329,21 @@
         }
         document.getElementById('modelViewersSection').innerHTML = viewersHtml ? viewersHtml : "<p class='text-xs text-gray-500'>No 3D models attached for this topic.</p>";
 
-        // Render Diagram Viewers Box
+        // Render Diagram Viewers Box with Auto Base64 Format Correction
         let diagramsHtml = "";
         if (topic.diagrams && topic.diagrams.length > 0) {
             topic.diagrams.forEach((diagPath, dIndex) => {
                 let cleanDiag = diagPath.trim();
                 if (cleanDiag) {
+                    // Auto-fix missing Data-URI header for raw Base64 strings
+                    if (!cleanDiag.startsWith('http') && !cleanDiag.startsWith('data:') && !cleanDiag.startsWith('images/')) {
+                        cleanDiag = 'data:image/png;base64,' + cleanDiag;
+                    }
+
                     diagramsHtml += `
                         <div class="viewer-card-wrapper" onclick="openFullscreenModal('${cleanDiag}', '${topic.title} - Diagram ${dIndex + 1}', 'image')">
                             <div class="viewer-container">
-                                <img src="${cleanDiag}" alt="Diagram">
+                                <img src="${cleanDiag}" alt="Diagram ${dIndex + 1}">
                             </div>
                             <div class="viewer-footer">
                                 <span>📊 Diagram #${dIndex + 1}</span>
@@ -851,7 +851,6 @@
       applyTransform();
     }
 
-    // --- MOUSE DRAG ROTATION LOGIC ---
     let isDragging = false;
     let startX = 0;
     let startY = 0;
