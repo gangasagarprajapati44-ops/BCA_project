@@ -111,6 +111,21 @@
       width: 100%;
       height: 220px;
       background: radial-gradient(circle, #1e293b 0%, #0b0f19 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .viewer-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: 0.3s;
+    }
+
+    .viewer-card-wrapper:hover .viewer-container img {
+      transform: scale(1.05);
     }
 
     model-viewer { width: 100%; height: 100%; }
@@ -171,8 +186,24 @@
       cursor: pointer; 
       font-weight: bold; 
     }
-    .modal-body { flex: 1; width: 100%; height: 100%; background: #0b0f19; }
+    .modal-body { flex: 1; width: 100%; height: 100%; background: #0b0f19; display: flex; align-items: center; justify-content: center; overflow: auto; }
     .modal-body model-viewer { width: 100%; height: 100%; }
+    .modal-body img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+    /* Drag and Drop Zone Style */
+    .drop-zone {
+      border: 2px dashed rgba(6, 182, 212, 0.5);
+      background: rgba(15, 23, 42, 0.6);
+      padding: 20px;
+      text-align: center;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: #06b6d4;
+      background: rgba(6, 182, 212, 0.1);
+    }
 
     /* Word Art Classes */
     .wordart-neon {
@@ -219,13 +250,11 @@
         const urlParams = new URLSearchParams(window.location.search);
         currentTopicId = urlParams.get('id');
 
-        // Check Admin Auth for Edit/Delete Buttons
         if (sessionStorage.getItem("bca_admin_auth") === "true") {
             let adminBtns = document.getElementById('adminActionButtons');
             if(adminBtns) adminBtns.style.display = "flex";
         }
 
-        // Fetch Sidebar List
         db.ref('bca_topics').on('value', (snapshot) => {
             const data = snapshot.val();
             const sidebarList = document.getElementById('sidebarTopicList');
@@ -244,7 +273,6 @@
             }
         });
 
-        // Fetch Specific Topic Details & 3D Models
         if (currentTopicId) {
             db.ref('bca_topics/' + currentTopicId).once('value').then((snapshot) => {
                 const topic = snapshot.val();
@@ -261,6 +289,7 @@
             document.getElementById('displayDef').innerText = "Please select any topic from the left sidebar or home page search to view comprehensive study notes, 3D model previews, and lab codes.";
         }
         applyTransform();
+        setupDragAndDrop();
     };
 
     function renderTopicContent(topic) {
@@ -290,7 +319,7 @@
                 let cleanPath = modelPath.trim();
                 if (cleanPath) {
                     viewersHtml += `
-                        <div class="viewer-card-wrapper" onclick="openFullscreenModal('${cleanPath}', '${topic.title} - Model ${mIndex + 1}')">
+                        <div class="viewer-card-wrapper" onclick="openFullscreenModal('${cleanPath}', '${topic.title} - Model ${mIndex + 1}', 'model')">
                             <div class="viewer-container">
                                 <model-viewer src="${cleanPath}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1" interaction-prompt="none"></model-viewer>
                             </div>
@@ -304,6 +333,74 @@
             });
         }
         document.getElementById('modelViewersSection').innerHTML = viewersHtml ? viewersHtml : "<p class='text-xs text-gray-500'>No 3D models attached for this topic.</p>";
+
+        // Render Diagram Viewers Box
+        let diagramsHtml = "";
+        if (topic.diagrams && topic.diagrams.length > 0) {
+            topic.diagrams.forEach((diagPath, dIndex) => {
+                let cleanDiag = diagPath.trim();
+                if (cleanDiag) {
+                    diagramsHtml += `
+                        <div class="viewer-card-wrapper" onclick="openFullscreenModal('${cleanDiag}', '${topic.title} - Diagram ${dIndex + 1}', 'image')">
+                            <div class="viewer-container">
+                                <img src="${cleanDiag}" alt="Diagram">
+                            </div>
+                            <div class="viewer-footer">
+                                <span>📊 Diagram #${dIndex + 1}</span>
+                                <span style="color:#38bdf8;">[View 🔍]</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+        document.getElementById('diagramViewersSection').innerHTML = diagramsHtml ? diagramsHtml : "<p class='text-xs text-gray-500'>No diagrams attached for this topic.</p>";
+    }
+
+    function setupDragAndDrop() {
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.add('dragover');
+            }, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropZone.addEventListener(eventName, (e) => {
+                e.preventDefault();
+                dropZone.classList.remove('dragover');
+            }, false);
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            let dt = e.dataTransfer;
+            let files = dt.files;
+            handleFiles(files);
+        });
+
+        fileInput.addEventListener('change', function() {
+            handleFiles(this.files);
+        });
+    }
+
+    function handleFiles(files) {
+        const diagramsField = document.getElementById('editDiagrams');
+        let currentVal = diagramsField.value.trim();
+        let pathsArray = currentVal ? currentVal.split(',').map(i => i.trim()).filter(i => i !== "") : [];
+
+        Array.from(files).forEach(file => {
+            if (file.type.startsWith('image/')) {
+                let reader = new FileReader();
+                reader.onload = function(e) {
+                    pathsArray.push(e.target.result);
+                    diagramsField.value = pathsArray.join(', ');
+                }
+                reader.readAsDataURL(file);
+            }
+        });
     }
 
     function openEditModal() {
@@ -316,6 +413,7 @@
                 document.getElementById('editDef').value = topic.definition || "";
                 document.getElementById('editQA').value = topic.qa || "";
                 document.getElementById('editModels').value = topic.models ? topic.models.join(', ') : "";
+                document.getElementById('editDiagrams').value = topic.diagrams ? topic.diagrams.join(', ') : "";
                 document.getElementById('editLab').value = topic.lab || "";
                 document.getElementById('editFontStyle').value = topic.fontStyle || "Inter";
                 document.getElementById('editTextColor').value = topic.textColor || "#ffffff";
@@ -338,6 +436,7 @@
             definition: document.getElementById("editDef").value,
             qa: document.getElementById("editQA").value,
             models: document.getElementById("editModels").value.split(',').map(i => i.trim()).filter(i => i !== ""),
+            diagrams: document.getElementById("editDiagrams").value.split(',').map(i => i.trim()).filter(i => i !== ""),
             lab: document.getElementById("editLab").value,
             fontStyle: document.getElementById("editFontStyle").value,
             textColor: document.getElementById("editTextColor").value,
@@ -362,9 +461,14 @@
         }
     }
 
-    function openFullscreenModal(modelSrc, modelTitle) {
-        document.getElementById("modalTitle").innerText = modelTitle;
-        document.getElementById("modalViewerContainer").innerHTML = `<model-viewer src="${modelSrc}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1"></model-viewer>`;
+    function openFullscreenModal(src, title, type) {
+        document.getElementById("modalTitle").innerText = title;
+        let container = document.getElementById("modalViewerContainer");
+        if (type === 'model') {
+            container.innerHTML = `<model-viewer src="${src}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1"></model-viewer>`;
+        } else {
+            container.innerHTML = `<img src="${src}" alt="Diagram">`;
+        }
         document.getElementById("modalOverlay").style.display = "flex";
     }
 
@@ -430,7 +534,7 @@
           <span id="displaySemester" class="ml-3 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold">Semester 1</span>
         </div>
 
-        <!-- Admin Edit & Delete Actions (Hidden by default, visible if logged in) -->
+        <!-- Admin Edit & Delete Actions -->
         <div id="adminActionButtons" class="hidden items-center space-x-2">
           <button onclick="openEditModal()" class="px-3 py-1 rounded-lg bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition flex items-center space-x-1 shadow">
             <i class="fa-solid fa-pen-to-square"></i>
@@ -498,6 +602,16 @@
             </div>
           </div>
 
+          <!-- Interactive Diagrams Section Boxes -->
+          <div class="bg-gray-950/70 border border-cyan-500/20 rounded-2xl p-5 shadow-inner">
+            <h3 class="text-cyan-400 font-bold text-sm mb-3 flex items-center">
+              <i class="fa-solid fa-image mr-2"></i> Topic Diagrams & Flowcharts (Click to View)
+            </h3>
+            <div id="diagramViewersSection" class="viewers-grid">
+              <!-- Diagram Boxes Loaded Here -->
+            </div>
+          </div>
+
           <!-- Practical Lab Code Box -->
           <div class="bg-gray-950/90 border border-emerald-500/30 rounded-2xl p-5 shadow-inner">
             <h3 class="text-emerald-400 font-bold text-sm mb-2 flex items-center">
@@ -530,7 +644,7 @@
         <h3>✏️ Admin Topic Editor & Styling</h3>
         <button class="close-modal-btn" onclick="closeEditModal()">❌ Close</button>
       </div>
-      <div class="modal-body p-6 overflow-y-auto">
+      <div class="modal-body p-6 overflow-y-auto" style="display: block;">
         <form id="editTopicForm" onsubmit="saveEditedTopic(event)" class="space-y-4 text-xs">
           <div>
             <label class="block text-cyan-400 font-bold mb-1">Select Semester:</label>
@@ -585,8 +699,20 @@
           </div>
           <div>
             <label class="block text-cyan-400 font-bold mb-1">3D Models (Comma Separated Paths):</label>
-            <input type="text" id="editModels" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+            <input type="text" id="editModels" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg" placeholder="models/cpu.glb">
           </div>
+          
+          <!-- Drag and Drop Diagram Uploader Box -->
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Diagrams / Flowcharts (Drag & Drop images here):</label>
+            <div id="dropZone" class="drop-zone mb-2">
+              <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-2xl mb-1"></i>
+              <p class="text-xs text-gray-300">Apni image yahan **Drag & Drop** karein, ya click karke select karein</p>
+              <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
+            </div>
+            <textarea id="editDiagrams" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-16 text-[11px]" placeholder="Yahan automatic image URLs/data show honge..."></textarea>
+          </div>
+
           <div>
             <label class="block text-cyan-400 font-bold mb-1">Practical Lab Code:</label>
             <textarea id="editLab" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-20 font-mono"></textarea>
@@ -597,11 +723,11 @@
     </div>
   </div>
 
-  <!-- Fullscreen 3D Model Modal -->
+  <!-- Fullscreen 3D Model / Diagram Modal -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-content">
       <div class="modal-header">
-        <h3 id="modalTitle">3D Model Interactive View</h3>
+        <h3 id="modalTitle">Interactive Viewer</h3>
         <button class="close-modal-btn" onclick="closeFullscreenModal()">❌ Close [X]</button>
       </div>
       <div class="modal-body" id="modalViewerContainer"></div>
@@ -726,7 +852,7 @@
     let startY = 0;
 
     window.addEventListener('mousedown', (e) => {
-      if (['INPUT', 'BUTTON', 'A', 'SELECT', 'TEXTAREA', 'PRE', 'CODE', 'MODEL-VIEWER'].includes(e.target.tagName)) return;
+      if (['INPUT', 'BUTTON', 'A', 'SELECT', 'TEXTAREA', 'PRE', 'CODE', 'MODEL-VIEWER', 'IMG'].includes(e.target.tagName)) return;
       isDragging = true;
       startX = e.clientX;
       startY = e.clientY;
