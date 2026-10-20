@@ -19,6 +19,7 @@
   
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Orbitron:wght@700&family=Pacifico&family=Reenie+Beanie&family=VT323&display=swap');
 
     body {
       font-family: 'Inter', sans-serif;
@@ -173,6 +174,25 @@
     .modal-body { flex: 1; width: 100%; height: 100%; background: #0b0f19; }
     .modal-body model-viewer { width: 100%; height: 100%; }
 
+    /* Word Art Classes */
+    .wordart-neon {
+      color: #fff;
+      text-shadow: 0 0 5px #06b6d4, 0 0 10px #06b6d4, 0 0 20px #06b6d4;
+    }
+    .wordart-fire {
+      background: linear-gradient(to right, #f59e0b, #ef4444);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+    }
+    .wordart-cyber {
+      background: linear-gradient(to right, #38bdf8, #a855f7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      font-weight: 900;
+      letter-spacing: 2px;
+    }
+
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #020617; }
     ::-webkit-scrollbar-thumb { background: #0e7490; border-radius: 4px; }
@@ -193,9 +213,17 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.database();
 
+    let currentTopicId = null;
+
     window.onload = function() {
         const urlParams = new URLSearchParams(window.location.search);
-        const topicId = urlParams.get('id');
+        currentTopicId = urlParams.get('id');
+
+        // Check Admin Auth for Edit/Delete Buttons
+        if (sessionStorage.getItem("bca_admin_auth") === "true") {
+            let adminBtns = document.getElementById('adminActionButtons');
+            if(adminBtns) adminBtns.style.display = "flex";
+        }
 
         // Fetch Sidebar List
         db.ref('bca_topics').on('value', (snapshot) => {
@@ -204,7 +232,7 @@
             sidebarList.innerHTML = "";
             if (data) {
                 Object.entries(data).forEach(([id, item]) => {
-                    let activeClass = (id === topicId) ? "bg-cyan-500/20 text-cyan-300 border-cyan-500" : "bg-gray-950/60 text-gray-300 border-gray-800 hover:bg-gray-900";
+                    let activeClass = (id === currentTopicId) ? "bg-cyan-500/20 text-cyan-300 border-cyan-500" : "bg-gray-950/60 text-gray-300 border-gray-800 hover:bg-gray-900";
                     sidebarList.innerHTML += `
                         <a href="template.html?id=${id}" class="block p-3 rounded-xl border text-xs font-semibold transition ${activeClass}">
                             📚 ${item.title} <span class="block text-[10px] text-cyan-400 mt-0.5">(${item.semester})</span>
@@ -217,37 +245,14 @@
         });
 
         // Fetch Specific Topic Details & 3D Models
-        if (topicId) {
-            db.ref('bca_topics/' + topicId).once('value').then((snapshot) => {
+        if (currentTopicId) {
+            db.ref('bca_topics/' + currentTopicId).once('value').then((snapshot) => {
                 const topic = snapshot.val();
                 if (topic) {
-                    document.getElementById('displayTitle').innerText = topic.title;
-                    document.getElementById('displaySemester').innerText = topic.semester;
-                    document.getElementById('displayDef').innerText = topic.definition;
-                    document.getElementById('displayQA').innerText = topic.qa || "No extra Q&A specified.";
-                    document.getElementById('displayLab').innerText = topic.lab || "// No code snippet provided.";
-
-                    // Render 3D Model Viewers
-                    let viewersHtml = "";
-                    if (topic.models && topic.models.length > 0) {
-                        topic.models.forEach((modelPath, mIndex) => {
-                            let cleanPath = modelPath.trim();
-                            if (cleanPath) {
-                                viewersHtml += `
-                                    <div class="viewer-card-wrapper" onclick="openFullscreenModal('${cleanPath}', '${topic.title} - Model ${mIndex + 1}')">
-                                        <div class="viewer-container">
-                                            <model-viewer src="${cleanPath}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1" interaction-prompt="none"></model-viewer>
-                                        </div>
-                                        <div class="viewer-footer">
-                                            <span>📦 Model #${mIndex + 1}</span>
-                                            <span style="color:#38bdf8;">[Zoom 🔍]</span>
-                                        </div>
-                                    </div>
-                                `;
-                            }
-                        });
-                    }
-                    document.getElementById('modelViewersSection').innerHTML = viewersHtml ? viewersHtml : "<p class='text-xs text-gray-500'>No 3D models attached for this topic.</p>";
+                    renderTopicContent(topic);
+                } else {
+                    document.getElementById('displayTitle').innerText = "Topic Not Found";
+                    document.getElementById('displayDef').innerText = "Requested topic data does not exist in database.";
                 }
             });
         } else {
@@ -257,6 +262,105 @@
         }
         applyTransform();
     };
+
+    function renderTopicContent(topic) {
+        document.getElementById('displaySemester').innerText = topic.semester || "Semester 1";
+        
+        let titleEl = document.getElementById('displayTitle');
+        titleEl.innerText = topic.title || "";
+        titleEl.style.fontFamily = topic.fontStyle || "'Inter', sans-serif";
+        titleEl.style.color = topic.textColor || "#ffffff";
+        titleEl.className = `text-2xl sm:text-3xl font-extrabold tracking-tight mb-2 ${topic.wordArt || ''}`;
+
+        let defEl = document.getElementById('displayDef');
+        defEl.innerText = topic.definition || "";
+        defEl.style.fontFamily = topic.fontStyle || "'Inter', sans-serif";
+        defEl.style.color = topic.textColor || "#cbd5e1";
+
+        let qaEl = document.getElementById('displayQA');
+        qaEl.innerText = topic.qa || "No extra Q&A specified.";
+        qaEl.style.fontFamily = topic.fontStyle || "'Inter', sans-serif";
+
+        document.getElementById('displayLab').innerText = topic.lab || "// No code snippet provided.";
+
+        // Render 3D Model Viewers
+        let viewersHtml = "";
+        if (topic.models && topic.models.length > 0) {
+            topic.models.forEach((modelPath, mIndex) => {
+                let cleanPath = modelPath.trim();
+                if (cleanPath) {
+                    viewersHtml += `
+                        <div class="viewer-card-wrapper" onclick="openFullscreenModal('${cleanPath}', '${topic.title} - Model ${mIndex + 1}')">
+                            <div class="viewer-container">
+                                <model-viewer src="${cleanPath}" alt="3D Model" auto-rotate camera-controls shadow-intensity="1" interaction-prompt="none"></model-viewer>
+                            </div>
+                            <div class="viewer-footer">
+                                <span>📦 Model #${mIndex + 1}</span>
+                                <span style="color:#38bdf8;">[Zoom 🔍]</span>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+        }
+        document.getElementById('modelViewersSection').innerHTML = viewersHtml ? viewersHtml : "<p class='text-xs text-gray-500'>No 3D models attached for this topic.</p>";
+    }
+
+    function openEditModal() {
+        if (!currentTopicId) return alert("No topic selected to edit!");
+        db.ref('bca_topics/' + currentTopicId).once('value').then((snapshot) => {
+            const topic = snapshot.val();
+            if(topic) {
+                document.getElementById('editSem').value = topic.semester || "Semester 1";
+                document.getElementById('editTitle').value = topic.title || "";
+                document.getElementById('editDef').value = topic.definition || "";
+                document.getElementById('editQA').value = topic.qa || "";
+                document.getElementById('editModels').value = topic.models ? topic.models.join(', ') : "";
+                document.getElementById('editLab').value = topic.lab || "";
+                document.getElementById('editFontStyle').value = topic.fontStyle || "Inter";
+                document.getElementById('editTextColor').value = topic.textColor || "#ffffff";
+                document.getElementById('editWordArt').value = topic.wordArt || "";
+                
+                document.getElementById('editModalOverlay').style.display = "flex";
+            }
+        });
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModalOverlay').style.display = "none";
+    }
+
+    function saveEditedTopic(e) {
+        e.preventDefault();
+        let updatedObject = {
+            semester: document.getElementById("editSem").value,
+            title: document.getElementById("editTitle").value,
+            definition: document.getElementById("editDef").value,
+            qa: document.getElementById("editQA").value,
+            models: document.getElementById("editModels").value.split(',').map(i => i.trim()).filter(i => i !== ""),
+            lab: document.getElementById("editLab").value,
+            fontStyle: document.getElementById("editFontStyle").value,
+            textColor: document.getElementById("editTextColor").value,
+            wordArt: document.getElementById("editWordArt").value,
+            timestamp: new Date().toLocaleString()
+        };
+
+        db.ref('bca_topics/' + currentTopicId).update(updatedObject).then(() => {
+            alert("🎉 Topic Updated Successfully!");
+            closeEditModal();
+            location.reload();
+        });
+    }
+
+    function deleteCurrentTopic() {
+        if (!currentTopicId) return;
+        if (confirm("⚠️ Kya aap sach mein is topic ko delete karna chahte hain?")) {
+            db.ref('bca_topics/' + currentTopicId).remove().then(() => {
+                alert("🗑️ Topic Deleted Successfully!");
+                window.location.href = "index.html";
+            });
+        }
+    }
 
     function openFullscreenModal(modelSrc, modelTitle) {
         document.getElementById("modalTitle").innerText = modelTitle;
@@ -325,7 +429,18 @@
           <span class="w-3 h-3 rounded-full bg-green-500 inline-block shadow-md shadow-green-500/50"></span>
           <span id="displaySemester" class="ml-3 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-300 text-xs font-bold">Semester 1</span>
         </div>
-        <div class="text-xs text-gray-400 font-semibold"><i class="fa-solid fa-cubes text-cyan-400 mr-1"></i> 3D Interactive Layout</div>
+
+        <!-- Admin Edit & Delete Actions (Hidden by default, visible if logged in) -->
+        <div id="adminActionButtons" class="hidden items-center space-x-2">
+          <button onclick="openEditModal()" class="px-3 py-1 rounded-lg bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition flex items-center space-x-1 shadow">
+            <i class="fa-solid fa-pen-to-square"></i>
+            <span>Edit Topic</span>
+          </button>
+          <button onclick="deleteCurrentTopic()" class="px-3 py-1 rounded-lg bg-rose-600 text-white font-bold text-xs hover:bg-rose-500 transition flex items-center space-x-1 shadow">
+            <i class="fa-solid fa-trash"></i>
+            <span>Delete</span>
+          </button>
+        </div>
       </div>
 
       <!-- Original 2-Column Grid Layout -->
@@ -407,6 +522,80 @@
     </div>
 
   </main>
+
+  <!-- Admin Edit Topic Modal -->
+  <div id="editModalOverlay" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="height: auto; max-height: 90vh;">
+      <div class="modal-header">
+        <h3>✏️ Admin Topic Editor & Styling</h3>
+        <button class="close-modal-btn" onclick="closeEditModal()">❌ Close</button>
+      </div>
+      <div class="modal-body p-6 overflow-y-auto">
+        <form id="editTopicForm" onsubmit="saveEditedTopic(event)" class="space-y-4 text-xs">
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Select Semester:</label>
+            <select id="editSem" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+              <option value="Semester 1">Semester 1</option>
+              <option value="Semester 2">Semester 2</option>
+              <option value="Semester 3">Semester 3</option>
+              <option value="Semester 4">Semester 4</option>
+              <option value="Semester 5">Semester 5</option>
+              <option value="Semester 6">Semester 6</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Topic Title:</label>
+            <input type="text" id="editTitle" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg" required>
+          </div>
+          
+          <!-- Styling & Word Art Options -->
+          <div class="grid grid-cols-3 gap-3 bg-gray-950 p-3 rounded-xl border border-cyan-500/20">
+            <div>
+              <label class="block text-cyan-400 font-bold mb-1">Text Style (Font):</label>
+              <select id="editFontStyle" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+                <option value="'Inter', sans-serif">Inter (Default)</option>
+                <option value="'Orbitron', sans-serif">Orbitron (Cyber)</option>
+                <option value="'Cinzel', serif">Cinzel (Classic)</option>
+                <option value="'Pacifico', cursive">Pacifico (Script)</option>
+                <option value="'VT323', monospace">VT323 (Retro Terminal)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-cyan-400 font-bold mb-1">Text Color:</label>
+              <input type="color" id="editTextColor" value="#ffffff" class="w-full h-9 bg-gray-900 border border-cyan-500/30 rounded-lg cursor-pointer">
+            </div>
+            <div>
+              <label class="block text-cyan-400 font-bold mb-1">Word Art Effect:</label>
+              <select id="editWordArt" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+                <option value="">None (Normal)</option>
+                <option value="wordart-neon">Glowing Neon</option>
+                <option value="wordart-fire">Fiery Gradient</option>
+                <option value="wordart-cyber">Cyber Glow</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Definition:</label>
+            <textarea id="editDef" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-24" required></textarea>
+          </div>
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Short/Long Q&A Box:</label>
+            <textarea id="editQA" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-20"></textarea>
+          </div>
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">3D Models (Comma Separated Paths):</label>
+            <input type="text" id="editModels" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+          </div>
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Practical Lab Code:</label>
+            <textarea id="editLab" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-20 font-mono"></textarea>
+          </div>
+          <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition">🚀 Save & Update Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <!-- Fullscreen 3D Model Modal -->
   <div class="modal-overlay" id="modalOverlay">
