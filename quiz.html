@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCA Learning Hub - Smart 3D Quiz Platform</title>
+  <title>BCA Learning Hub - History of Computer Quiz</title>
   
   <!-- Tailwind CSS for utility styling -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -30,12 +30,10 @@
       background-size: 100% 100%, 50px 50px, 50px 50px;
     }
 
-    /* 3D Perspective Wrapper */
     .quiz-container {
       perspective: 1000px;
     }
 
-    /* 3D Card Glassmorphism Effect */
     .card-3d {
       background: rgba(15, 23, 42, 0.94);
       backdrop-filter: blur(24px);
@@ -45,18 +43,8 @@
         0 35px 70px -15px rgba(0, 0, 0, 0.98),
         0 0 60px rgba(6, 182, 212, 0.25),
         inset 0 1px 2px rgba(255, 255, 255, 0.2);
-      transform-style: preserve-3d;
-      transition: transform 0.4s ease, box-shadow 0.4s ease;
     }
 
-    .card-3d:hover {
-      transform: translateY(-3px) rotateX(1deg) rotateY(-1deg);
-      box-shadow: 
-        0 35px 70px rgba(6, 182, 212, 0.3),
-        inset 0 1px 2px rgba(255, 255, 255, 0.3);
-    }
-
-    /* 3D Option Buttons */
     .btn-option-3d {
       background: linear-gradient(145deg, #1e293b, #0f172a);
       border: 1px solid rgba(6, 182, 212, 0.2);
@@ -68,22 +56,19 @@
       background: linear-gradient(145deg, #334155, #1e293b);
       border-color: #38bdf8;
       transform: translateY(-2px);
-      box-shadow: 0 8px 0 #020617, 0 12px 20px rgba(6, 182, 212, 0.2);
     }
 
-    .btn-option-3d:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 #020617, 0 5px 10px rgba(0, 0, 0, 0.4);
-    }
-
-    /* Selected Option Glow */
     .btn-option-3d.selected {
       background: linear-gradient(135deg, #0891b2, #3b82f6);
       box-shadow: 0 6px 0 #1e3a8a, 0 0 20px rgba(6, 182, 212, 0.5);
       border-color: #38bdf8;
     }
 
-    /* 3D Cyan Action Button */
+    .btn-option-3d.disabled-option {
+      opacity: 0.3;
+      pointer-events: none;
+    }
+
     .btn-action-3d {
       background: linear-gradient(135deg, #06b6d4, #3b82f6);
       box-shadow: 0 6px 0 #1e40af, 0 10px 20px rgba(6, 182, 212, 0.4);
@@ -91,10 +76,6 @@
     .btn-action-3d:hover {
       transform: translateY(-2px);
       box-shadow: 0 8px 0 #1e40af, 0 15px 25px rgba(6, 182, 212, 0.6);
-    }
-    .btn-action-3d:active {
-      transform: translateY(4px);
-      box-shadow: 0 2px 0 #1e40af, 0 5px 10px rgba(0, 0, 0, 0.4);
     }
   </style>
 </head>
@@ -104,17 +85,16 @@
   <header class="w-full max-w-3xl px-2 py-4 flex justify-between items-center z-10">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-600 to-blue-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-        <i class="fa-solid fa-brain text-white text-xl"></i>
+        <i class="fa-solid fa-desktop text-white text-xl"></i>
       </div>
       <div>
         <h1 class="text-lg font-extrabold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white via-cyan-200 to-cyan-400">
-          BCA Smart Quiz
+          History of Computer Quiz
         </h1>
-        <span class="text-xs text-cyan-400 font-medium">Interactive Learning Module</span>
+        <span class="text-xs text-cyan-400 font-medium">BCA Learning Hub</span>
       </div>
     </div>
 
-    <!-- Home Navigation Button -->
     <a href="index.html" class="px-3 py-1.5 rounded-lg bg-gray-900 border border-cyan-500/30 text-gray-300 text-xs font-semibold hover:bg-gray-800 transition flex items-center space-x-2">
       <i class="fa-solid fa-house text-cyan-400"></i>
       <span>Home</span>
@@ -124,58 +104,54 @@
   <!-- Main Quiz Container -->
   <main class="quiz-container w-full max-w-3xl my-auto">
     
-    <!-- 3D Card -->
-    <div class="card-3d rounded-3xl p-6 sm:p-10 text-white relative overflow-hidden">
+    <!-- Quiz Card -->
+    <div id="quiz-card" class="card-3d rounded-3xl p-6 sm:p-10 text-white relative overflow-hidden">
       
-      <!-- Top Bar: Timer, Lifelines & Progress -->
+      <!-- Top Bar -->
       <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
-        <!-- Progress Pills -->
         <div class="flex items-center space-x-2">
           <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1 rounded-full text-xs font-semibold tracking-wider">
             <i class="fa-solid fa-layer-group mr-1"></i> Question <span id="current-num">1</span>/<span id="total-num">5</span>
           </span>
           <span class="bg-blue-500/20 text-blue-300 border border-blue-500/30 px-3 py-1 rounded-full text-xs font-semibold">
-            <i class="fa-solid fa-coins mr-1 text-yellow-400"></i> +10 XP
+            <i class="fa-solid fa-coins mr-1 text-yellow-400"></i> <span id="xp-count">0</span> XP
           </span>
         </div>
 
-        <!-- Timer -->
         <div class="flex items-center space-x-2 bg-slate-900/80 px-4 py-1.5 rounded-full border border-cyan-500/30">
           <i class="fa-solid fa-stopwatch text-cyan-400 animate-pulse"></i>
-          <span id="timer" class="font-mono text-lg font-bold text-cyan-300">15s</span>
+          <span id="timer" class="font-mono text-lg font-bold text-cyan-300">20s</span>
         </div>
       </div>
 
-      <!-- Smooth Progress Bar -->
+      <!-- Progress Bar -->
       <div class="w-full bg-slate-900/80 h-2.5 rounded-full mb-8 overflow-hidden border border-cyan-500/20">
-        <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 h-full w-1/5 transition-all duration-300 rounded-full"></div>
+        <div id="progress-bar" class="bg-gradient-to-r from-cyan-500 via-blue-500 to-indigo-500 h-full w-0 transition-all duration-300 rounded-full"></div>
       </div>
 
       <!-- Question Text -->
       <div class="mb-8">
         <h2 id="question-text" class="text-xl sm:text-2xl font-bold leading-relaxed tracking-wide text-slate-100">
-          Question yahan load hoga...
+          Loading Question...
         </h2>
       </div>
 
       <!-- Options List -->
       <div id="options-container" class="grid grid-cols-1 gap-4 mb-8">
-        <!-- Dynamic Options JavaScript se aayenge -->
+        <!-- Dynamic Options -->
       </div>
 
-      <!-- Bottom Bar: Features & Next Button -->
+      <!-- Bottom Bar -->
       <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-cyan-900/50">
-        <!-- Lifeline / Hint Buttons -->
         <div class="flex space-x-3">
-          <button onclick="useHint()" title="Hint lein" class="bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 px-3 py-2 rounded-xl text-xs font-medium text-amber-300 transition-all flex items-center">
+          <button onclick="useFiftyFifty()" id="btn-fifty" class="bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 px-3 py-2 rounded-xl text-xs font-medium text-amber-300 transition-all flex items-center">
             <i class="fa-solid fa-lightbulb mr-1.5 text-amber-400"></i> 50:50
           </button>
-          <button onclick="aiExplain()" title="AI Explanation" class="bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 px-3 py-2 rounded-xl text-xs font-medium text-cyan-300 transition-all flex items-center">
+          <button onclick="aiExplain()" class="bg-slate-900 hover:bg-slate-800 border border-cyan-500/30 px-3 py-2 rounded-xl text-xs font-medium text-cyan-300 transition-all flex items-center">
             <i class="fa-solid fa-wand-magic-sparkles mr-1.5 text-cyan-400"></i> AI Hint
           </button>
         </div>
 
-        <!-- Submit / Next Button -->
         <button id="next-btn" onclick="nextQuestion()" class="btn-action-3d w-full sm:w-auto px-8 py-3 rounded-2xl font-bold tracking-wide text-white flex items-center justify-center space-x-2">
           <span>Aage Badhein</span>
           <i class="fa-solid fa-arrow-right text-sm"></i>
@@ -183,59 +159,99 @@
       </div>
 
     </div>
+
+    <!-- Result Card (Initially Hidden) -->
+    <div id="result-card" class="card-3d rounded-3xl p-8 text-center hidden">
+      <div class="w-16 h-16 bg-gradient-to-tr from-cyan-500 to-blue-600 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-4 shadow-lg shadow-cyan-500/30">
+        <i class="fa-solid fa-trophy text-white"></i>
+      </div>
+      <h2 class="text-2xl font-extrabold text-white mb-2">Quiz Completed! 🎉</h2>
+      <p class="text-cyan-300 text-sm mb-6">Aapne History of Computer quiz successfully poora kar liya hai.</p>
+      
+      <div class="bg-slate-900/80 border border-cyan-500/30 rounded-2xl p-4 max-w-xs mx-auto mb-6 space-y-2">
+        <p class="text-sm text-gray-300">Total Score: <span id="final-score" class="font-bold text-cyan-400">0</span>/5</p>
+        <p class="text-sm text-gray-300">XP Earned: <span id="final-xp" class="font-bold text-yellow-400">0</span> XP</p>
+      </div>
+
+      <button onclick="restartQuiz()" class="btn-action-3d px-8 py-3 rounded-2xl font-bold tracking-wide text-white inline-flex items-center space-x-2">
+        <i class="fa-solid fa-rotate-right mr-2"></i> Phir se Khelein
+      </button>
+    </div>
+
   </main>
 
-  <!-- Footer Info -->
   <footer class="w-full max-w-7xl px-6 py-4 text-center text-xs text-cyan-500/60 z-10">
-    © 2026 BCA Learning Hub | Interactive Quiz Module
+    © 2026 BCA Learning Hub | History of Computer Module
   </footer>
 
   <!-- JavaScript Logic -->
   <script>
-    // Sample Questions Data related to BCA & Web Tech
     const quizData = [
       {
-        question: "1. Web development me styling ke liye sabse popular CSS framework me se ek kaun sa hai?",
-        options: ["Python", "Tailwind CSS", "C++", "MySQL"],
-        correct: 1
+        question: "1. Computer ka pita (Father of Computers) kise kaha jata hai?",
+        options: ["Blaise Pascal", "Charles Babbage", "Alan Turing", "John von Neumann"],
+        correct: 1,
+        hint: "Unhone Difference Engine aur Analytical Engine banaye the."
       },
       {
-        question: "2. JavaScript ka upayog mukhya roop se kis kaam ke liye hota hai?",
-        options: ["Database manage karne", "Page me Interactivity add karne", "Graphics Card design karne", "Operating System banane"],
-        correct: 1
+        question: "2. Charles Babbage dwara banaya gaya pehla mechanical computer kaun sa tha?",
+        options: ["ENIAC", "Analytical Engine", "Abacus", "UNIVAC"],
+        correct: 1,
+        hint: "Yeh modern computer ka base mana jata hai."
       },
       {
-        question: "3. HTML ka pura naam (Full Form) kya hai?",
-        options: ["Hyper Text Markup Language", "High Tech Multi Language", "Hyper Transfer Machine Language", "Home Tool Markup Language"],
-        correct: 0
+        question: "3. Computer ki pehli generation (First Generation) mein kiska upayog kiya jata tha?",
+        options: ["Transistors", "Vacuum Tubes", "Integrated Circuits", "Microprocessors"],
+        correct: 1,
+        hint: "Yeh bade aakar ke glass bulbs hote the jo bahut garmi paida karte the."
       },
       {
-        question: "4. Database se data query karne ke liye kis bhasha ka upayog kiya jata hai?",
-        options: ["HTML", "CSS", "SQL", "XML"],
-        correct: 2
+        question: "4. Integrated Circuits (ICs) ka upayog kis generation mein shuru hua tha?",
+        options: ["First Generation", "Second Generation", "Third Generation", "Fourth Generation"],
+        correct: 2,
+        hint: "Yeh generation 1965 se 1971 ke beech mani jati hai."
       },
       {
-        question: "5. Inme se kaun sa ek Programming Language nahi hai?",
-        options: ["Java", "Python", "HTML", "C++"],
-        correct: 2
+        question: "5. Duniya ka sabse pehla electronic digital computer kaun sa tha?",
+        options: ["ENIAC", "PARAM", "IBM 701", "Apple I"],
+        correct: 0,
+        hint: "Iska pura naam Electronic Numerical Integrator and Computer tha."
       }
     ];
 
     let currentIdx = 0;
     let selectedOption = null;
+    let score = 0;
+    let xp = 0;
+    let timerInterval;
+    let timeLeft = 20;
 
     document.getElementById('total-num').innerText = quizData.length;
 
+    function startTimer() {
+      clearInterval(timerInterval);
+      timeLeft = 20;
+      document.getElementById('timer').innerText = timeLeft + 's';
+      
+      timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = timeLeft + 's';
+        if (timeLeft <= 0) {
+          clearInterval(timerInterval);
+          nextQuestion(); // Auto move when time runs out
+        }
+      }, 1000);
+    }
+
     function loadQuestion() {
+      startTimer();
       const q = quizData[currentIdx];
       document.getElementById('current-num').innerText = currentIdx + 1;
       document.getElementById('question-text').innerText = q.question;
       
-      // Update Progress Bar
       const progressPercent = ((currentIdx + 1) / quizData.length) * 100;
       document.getElementById('progress-bar').style.width = progressPercent + '%';
 
-      // Load Options
       const container = document.getElementById('options-container');
       container.innerHTML = '';
 
@@ -252,6 +268,7 @@
         btn.onclick = () => selectOption(btn, index);
         container.appendChild(btn);
       });
+      selectedOption = null;
     }
 
     function selectOption(element, index) {
@@ -266,30 +283,62 @@
       element.querySelector('.check-icon').className = 'fa-solid fa-circle-check check-icon text-cyan-300';
     }
 
-    function nextQuestion() {
-      if (selectedOption === null) {
-        alert("Kripya pehle ek uttar chunein!");
-        return;
-      }
-      
-      if (currentIdx < quizData.length - 1) {
-        currentIdx++;
-        selectedOption = null;
-        loadQuestion();
-      } else {
-        alert("Quiz Poora Ho Gaya! Shaandar Kaam 🎉");
-        currentIdx = 0;
-        selectedOption = null;
-        loadQuestion();
-      }
-    }
+    function useFiftyFifty() {
+      const q = quizData[currentIdx];
+      const allButtons = document.querySelectorAll('.btn-option-3d');
+      let hiddenCount = 0;
 
-    function useHint() {
-      alert("50:50 Lifeline: Do galat vikalp hata diye gaye hain!");
+      allButtons.forEach((btn, index) => {
+        if (index !== q.correct && hiddenCount < 2) {
+          btn.classList.add('disabled-option');
+          hiddenCount++;
+        }
+      });
+      document.getElementById('btn-fifty').disabled = true;
+      document.getElementById('btn-fifty').classList.opacity = "0.5";
     }
 
     function aiExplain() {
-      alert("🤖 AI Smart Explanation: Apne chune hue vikalp ko dhyaan se dekhein, yeh BCA syllabus se juda mukhy vishay hai.");
+      const q = quizData[currentIdx];
+      alert("🤖 AI Smart Hint: " + q.hint);
+    }
+
+    function nextQuestion() {
+      clearInterval(timerInterval);
+
+      if (selectedOption !== null) {
+        if (selectedOption === quizData[currentIdx].correct) {
+          score++;
+          xp += 10;
+          document.getElementById('xp-count').innerText = xp;
+        }
+      }
+
+      if (currentIdx < quizData.length - 1) {
+        currentIdx++;
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function showResult() {
+      document.getElementById('quiz-card').classList.add('hidden');
+      document.getElementById('result-card').classList.remove('hidden');
+      document.getElementById('final-score').innerText = score;
+      document.getElementById('final-xp').innerText = xp;
+    }
+
+    function restartQuiz() {
+      currentIdx = 0;
+      score = 0;
+      xp = 0;
+      document.getElementById('xp-count').innerText = xp;
+      document.getElementById('result-card').classList.add('hidden');
+      document.getElementById('quiz-card').classList.remove('hidden');
+      document.getElementById('btn-fifty').disabled = false;
+      document.getElementById('btn-fifty').style.opacity = "1";
+      loadQuestion();
     }
 
     // Initial Load
