@@ -302,103 +302,45 @@
     </div>
   </div>
 
-  <!-- Admin Panel Modal with Separate Boxes -->
+  <!-- Admin Panel Modal with 2 Separate Bulk Quiz Designers -->
   <div id="adminModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-5xl w-full max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-6 border-b border-amber-500/30 pb-4">
-        <h3 class="text-lg font-extrabold text-amber-400"><i class="fa-solid fa-sliders mr-2"></i>Admin Quiz Manager - Separate Boxes Upload</h3>
+        <h3 class="text-lg font-extrabold text-amber-400"><i class="fa-solid fa-sliders mr-2"></i>Admin Bulk Quiz Manager (Separate Boxes)</h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-sm">❌ Close</button>
       </div>
 
-      <!-- Grid Layout for Separate Boxes -->
+      <!-- Grid Layout for 2 Separate Bulk Uploaders -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        <!-- Box 1: Practice MCQ Box Upload Form -->
+        <!-- Box 1: Bulk Practice MCQ Box Uploader -->
         <div class="bg-slate-950 p-5 rounded-2xl border-2 border-cyan-500/50 shadow-lg">
-          <h4 class="text-cyan-400 font-bold text-sm mb-3 flex items-center">
-            <i class="fa-solid fa-book-open-reader mr-2"></i> Practice MCQ Box (Cyan)
+          <h4 class="text-cyan-400 font-bold text-sm mb-2 flex items-center">
+            <i class="fa-solid fa-book-open-reader mr-2"></i> 1. Bulk Practice Box (Cyan)
           </h4>
-          <form onsubmit="savePracticeQuestion(event)" class="space-y-3 text-xs">
+          <p class="text-[11px] text-gray-400 mb-3">Practice Box ke liye 20+ questions is format mein paste karein:</p>
+          <form id="bulkPracticeForm" onsubmit="saveBulkPractice(event)" class="space-y-3 text-xs">
             <div>
-              <label class="block text-cyan-300 font-bold mb-1">Question Text:</label>
-              <textarea id="practiceQText" class="w-full p-2.5 bg-slate-900 border border-cyan-500/30 rounded-xl text-white h-16" placeholder="Practice sawal yahan likhein..." required></textarea>
+              <textarea id="bulkPracticeText" placeholder="Q: ... &#10;A: ... &#10;B: ... &#10;C: ... &#10;D: ... &#10;Ans: A" class="w-full p-3 bg-slate-900 border border-cyan-500/30 rounded-xl text-white h-52 font-mono text-[11px]" required></textarea>
             </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-cyan-300 font-bold mb-1">Option A:</label>
-                <input type="text" id="pOpt0" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
-              </div>
-              <div>
-                <label class="block text-cyan-300 font-bold mb-1">Option B:</label>
-                <input type="text" id="pOpt1" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
-              </div>
-              <div>
-                <label class="block text-cyan-300 font-bold mb-1">Option C:</label>
-                <input type="text" id="pOpt2" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
-              </div>
-              <div>
-                <label class="block text-cyan-300 font-bold mb-1">Option D:</label>
-                <input type="text" id="pOpt3" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
-              </div>
-            </div>
-            <div>
-              <label class="block text-cyan-300 font-bold mb-1">Correct Answer Index:</label>
-              <select id="pCorrectIdx" class="w-full p-2.5 bg-slate-900 border border-cyan-500/30 rounded-xl text-white">
-                <option value="0">Option A</option>
-                <option value="1">Option B</option>
-                <option value="2">Option C</option>
-                <option value="3">Option D</option>
-              </select>
-            </div>
-            <button type="submit" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-500 text-black font-extrabold rounded-xl transition shadow-md shadow-cyan-500/30">
-              🚀 Upload to Practice Box
+            <button type="submit" class="w-full py-3 bg-cyan-600 hover:bg-cyan-500 text-black font-extrabold rounded-xl transition shadow-md shadow-cyan-500/30">
+              🚀 Save to Practice Box
             </button>
           </form>
         </div>
 
-        <!-- Box 2: Rainbow Test Arena Box Upload Form -->
+        <!-- Box 2: Bulk Rainbow Test Arena Uploader -->
         <div class="bg-slate-950 p-5 rounded-2xl border-2 border-pink-500/50 shadow-lg">
-          <h4 class="text-pink-400 font-bold text-sm mb-3 flex items-center">
-            <i class="fa-solid fa-stopwatch mr-2"></i> Rainbow Test Arena Box
+          <h4 class="text-pink-400 font-bold text-sm mb-2 flex items-center">
+            <i class="fa-solid fa-stopwatch mr-2"></i> 2. Bulk Rainbow Test Box
           </h4>
-          <form onsubmit="saveTestQuestion(event)" class="space-y-3 text-xs">
+          <p class="text-[11px] text-gray-400 mb-3">Test Box ke liye 20+ questions is format mein paste karein:</p>
+          <form id="bulkTestForm" onsubmit="saveBulkTest(event)" class="space-y-3 text-xs">
             <div>
-              <label class="block text-pink-300 font-bold mb-1">Question Text:</label>
-              <textarea id="testQText" class="w-full p-2.5 bg-slate-900 border border-pink-500/30 rounded-xl text-white h-16" placeholder="Test sawal yahan likhein..." required></textarea>
+              <textarea id="bulkTestText" placeholder="Q: ... &#10;A: ... &#10;B: ... &#10;C: ... &#10;D: ... &#10;Ans: B" class="w-full p-3 bg-slate-900 border border-pink-500/30 rounded-xl text-white h-52 font-mono text-[11px]" required></textarea>
             </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block text-pink-300 font-bold mb-1">Option A:</label>
-                <input type="text" id="tOpt0" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
-              </div>
-              <div>
-                <label class="block text-pink-300 font-bold mb-1">Option B:</label>
-                <input type="text" id="tOpt1" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
-              </div>
-              <div>
-                <label class="block text-pink-300 font-bold mb-1">Option C:</label>
-                <input type="text" id="tOpt2" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
-              </div>
-              <div>
-                <label class="block text-pink-300 font-bold mb-1">Option D:</label>
-                <input type="text" id="tOpt3" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
-              </div>
-            </div>
-            <div>
-              <label class="block text-pink-300 font-bold mb-1">Correct Answer Index:</label>
-              <select id="tCorrectIdx" class="w-full p-2.5 bg-slate-900 border border-pink-500/30 rounded-xl text-white">
-                <option value="0">Option A</option>
-                <option value="1">Option B</option>
-                <option value="2">Option C</option>
-                <option value="3">Option D</option>
-              </select>
-            </div>
-            <div>
-              <label class="block text-pink-300 font-bold mb-1">AI Hint (Optional):</label>
-              <input type="text" id="testHint" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" placeholder="Sawal ke liye hint...">
-            </div>
-            <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl transition shadow-md shadow-pink-500/30">
-              🚀 Upload to Test Box
+            <button type="submit" class="w-full py-3 bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl transition shadow-md shadow-pink-500/30">
+              🚀 Save to Test Arena Box
             </button>
           </form>
         </div>
@@ -709,52 +651,77 @@
       document.getElementById('adminModal').style.display = "none";
     }
 
-    // Practice Box Question Save Handler
-    function savePracticeQuestion(e) {
-        e.preventDefault();
-        const qObject = {
-            question: document.getElementById('practiceQText').value,
-            options: [
-                document.getElementById('pOpt0').value,
-                document.getElementById('pOpt1').value,
-                document.getElementById('pOpt2').value,
-                document.getElementById('pOpt3').value
-            ],
-            correct: parseInt(document.getElementById('pCorrectIdx').value)
-        };
+    // Bulk Practice Box Upload Handler
+    function saveBulkPractice(e) {
+      e.preventDefault();
+      let rawText = document.getElementById("bulkPracticeText").value;
+      let blocks = rawText.split(/\n\s*\n/);
+      let count = 0;
 
-        db.ref('bca_arena_practice').push(qObject).then(() => {
-            alert("🎉 Practice Question successfully Practice Box mein save ho gaya!");
-            document.getElementById('practiceQText').value = "";
-            for(let i=0; i<4; i++) {
-                document.getElementById(`pOpt${i}`).value = "";
-            }
-        });
+      blocks.forEach(block => {
+        let lines = block.split('\n').map(l => l.trim()).filter(l => l !== "");
+        if(lines.length >= 6) {
+          let ansChar = lines[5].replace(/^Ans:\s*/i, '').toUpperCase();
+          let correctIdx = {'A':0, 'B':1, 'C':2, 'D':3}[ansChar] || 0;
+          let qObj = {
+            question: lines[0].replace(/^Q:\s*/i, ''),
+            options: [
+              lines[1].replace(/^A:\s*/i, ''),
+              lines[2].replace(/^B:\s*/i, ''),
+              lines[3].replace(/^C:\s*/i, ''),
+              lines[4].replace(/^D:\s*/i, '')
+            ],
+            correct: correctIdx
+          };
+          db.ref('bca_arena_practice').push(qObj);
+          count++;
+        }
+      });
+
+      if(count > 0) {
+        alert(`🎉 Successfully uploaded ${count} questions to Practice Box!`);
+        document.getElementById("bulkPracticeForm").reset();
+        closeAdminModal();
+      } else {
+        alert("⚠️ Invalid format! Kripya sahi format (Q, A, B, C, D, Ans) mein paste karein.");
+      }
     }
 
-    // Test Arena Box Question Save Handler
-    function saveTestQuestion(e) {
-        e.preventDefault();
-        const qObject = {
-            question: document.getElementById('testQText').value,
-            options: [
-                document.getElementById('tOpt0').value,
-                document.getElementById('tOpt1').value,
-                document.getElementById('tOpt2').value,
-                document.getElementById('tOpt3').value
-            ],
-            correct: parseInt(document.getElementById('tCorrectIdx').value),
-            hint: document.getElementById('testHint').value || ""
-        };
+    // Bulk Test Arena Box Upload Handler
+    function saveBulkTest(e) {
+      e.preventDefault();
+      let rawText = document.getElementById("bulkTestText").value;
+      let blocks = rawText.split(/\n\s*\n/);
+      let count = 0;
 
-        db.ref('bca_arena_test').push(qObject).then(() => {
-            alert("🎉 Test Question successfully Rainbow Test Box mein save ho gaya!");
-            document.getElementById('testQText').value = "";
-            for(let i=0; i<4; i++) {
-                document.getElementById(`tOpt${i}`).value = "";
-            }
-            document.getElementById('testHint').value = "";
-        });
+      blocks.forEach(block => {
+        let lines = block.split('\n').map(l => l.trim()).filter(l => l !== "");
+        if(lines.length >= 6) {
+          let ansChar = lines[5].replace(/^Ans:\s*/i, '').toUpperCase();
+          let correctIdx = {'A':0, 'B':1, 'C':2, 'D':3}[ansChar] || 0;
+          let qObj = {
+            question: lines[0].replace(/^Q:\s*/i, ''),
+            options: [
+              lines[1].replace(/^A:\s*/i, ''),
+              lines[2].replace(/^B:\s*/i, ''),
+              lines[3].replace(/^C:\s*/i, ''),
+              lines[4].replace(/^D:\s*/i, '')
+            ],
+            correct: correctIdx,
+            hint: "Dhyaan se vikalp chunein."
+          };
+          db.ref('bca_arena_test').push(qObj);
+          count++;
+        }
+      });
+
+      if(count > 0) {
+        alert(`🎉 Successfully uploaded ${count} questions to Test Arena Box!`);
+        document.getElementById("bulkTestForm").reset();
+        closeAdminModal();
+      } else {
+        alert("⚠️ Invalid format! Kripya sahi format (Q, A, B, C, D, Ans) mein paste karein.");
+      }
     }
   </script>
 </body>
