@@ -302,66 +302,108 @@
     </div>
   </div>
 
-  <!-- Admin Panel Modal -->
+  <!-- Admin Panel Modal with Separate Boxes -->
   <div id="adminModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+    <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-6 border-b border-amber-500/30 pb-4">
-        <h3 class="text-lg font-extrabold text-amber-400"><i class="fa-solid fa-sliders mr-2"></i>Admin Quiz Manager</h3>
+        <h3 class="text-lg font-extrabold text-amber-400"><i class="fa-solid fa-sliders mr-2"></i>Admin Quiz Manager - Separate Boxes Upload</h3>
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-sm">❌ Close</button>
       </div>
 
-      <form onsubmit="saveQuestionToDatabase(event)" class="space-y-4 text-xs">
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Target Arena Box:</label>
-          <select id="adminTargetBox" class="w-full p-3 bg-slate-950 border border-amber-500/30 rounded-xl text-white">
-            <option value="practice">Practice MCQ Box (Cyan)</option>
-            <option value="test">Rainbow Test Arena Box (Rainbow)</option>
-          </select>
+      <!-- Grid Layout for Separate Boxes -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Box 1: Practice MCQ Box Upload Form -->
+        <div class="bg-slate-950 p-5 rounded-2xl border-2 border-cyan-500/50 shadow-lg">
+          <h4 class="text-cyan-400 font-bold text-sm mb-3 flex items-center">
+            <i class="fa-solid fa-book-open-reader mr-2"></i> Practice MCQ Box (Cyan)
+          </h4>
+          <form onsubmit="savePracticeQuestion(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="block text-cyan-300 font-bold mb-1">Question Text:</label>
+              <textarea id="practiceQText" class="w-full p-2.5 bg-slate-900 border border-cyan-500/30 rounded-xl text-white h-16" placeholder="Practice sawal yahan likhein..." required></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-cyan-300 font-bold mb-1">Option A:</label>
+                <input type="text" id="pOpt0" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
+              </div>
+              <div>
+                <label class="block text-cyan-300 font-bold mb-1">Option B:</label>
+                <input type="text" id="pOpt1" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
+              </div>
+              <div>
+                <label class="block text-cyan-300 font-bold mb-1">Option C:</label>
+                <input type="text" id="pOpt2" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
+              </div>
+              <div>
+                <label class="block text-cyan-300 font-bold mb-1">Option D:</label>
+                <input type="text" id="pOpt3" class="w-full p-2 bg-slate-900 border border-cyan-500/30 rounded-xl text-white" required>
+              </div>
+            </div>
+            <div>
+              <label class="block text-cyan-300 font-bold mb-1">Correct Answer Index:</label>
+              <select id="pCorrectIdx" class="w-full p-2.5 bg-slate-900 border border-cyan-500/30 rounded-xl text-white">
+                <option value="0">Option A</option>
+                <option value="1">Option B</option>
+                <option value="2">Option C</option>
+                <option value="3">Option D</option>
+              </select>
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-500 text-black font-extrabold rounded-xl transition shadow-md shadow-cyan-500/30">
+              🚀 Upload to Practice Box
+            </button>
+          </form>
         </div>
 
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Question Text:</label>
-          <textarea id="adminQText" class="w-full p-3 bg-slate-950 border border-amber-500/30 rounded-xl text-white h-20" required></textarea>
+        <!-- Box 2: Rainbow Test Arena Box Upload Form -->
+        <div class="bg-slate-950 p-5 rounded-2xl border-2 border-pink-500/50 shadow-lg">
+          <h4 class="text-pink-400 font-bold text-sm mb-3 flex items-center">
+            <i class="fa-solid fa-stopwatch mr-2"></i> Rainbow Test Arena Box
+          </h4>
+          <form onsubmit="saveTestQuestion(event)" class="space-y-3 text-xs">
+            <div>
+              <label class="block text-pink-300 font-bold mb-1">Question Text:</label>
+              <textarea id="testQText" class="w-full p-2.5 bg-slate-900 border border-pink-500/30 rounded-xl text-white h-16" placeholder="Test sawal yahan likhein..." required></textarea>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block text-pink-300 font-bold mb-1">Option A:</label>
+                <input type="text" id="tOpt0" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
+              </div>
+              <div>
+                <label class="block text-pink-300 font-bold mb-1">Option B:</label>
+                <input type="text" id="tOpt1" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
+              </div>
+              <div>
+                <label class="block text-pink-300 font-bold mb-1">Option C:</label>
+                <input type="text" id="tOpt2" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
+              </div>
+              <div>
+                <label class="block text-pink-300 font-bold mb-1">Option D:</label>
+                <input type="text" id="tOpt3" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" required>
+              </div>
+            </div>
+            <div>
+              <label class="block text-pink-300 font-bold mb-1">Correct Answer Index:</label>
+              <select id="tCorrectIdx" class="w-full p-2.5 bg-slate-900 border border-pink-500/30 rounded-xl text-white">
+                <option value="0">Option A</option>
+                <option value="1">Option B</option>
+                <option value="2">Option C</option>
+                <option value="3">Option D</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-pink-300 font-bold mb-1">AI Hint (Optional):</label>
+              <input type="text" id="testHint" class="w-full p-2 bg-slate-900 border border-pink-500/30 rounded-xl text-white" placeholder="Sawal ke liye hint...">
+            </div>
+            <button type="submit" class="w-full py-2.5 bg-gradient-to-r from-pink-500 to-purple-600 hover:opacity-90 text-white font-extrabold rounded-xl transition shadow-md shadow-pink-500/30">
+              🚀 Upload to Test Box
+            </button>
+          </form>
         </div>
 
-        <div class="grid grid-cols-2 gap-3">
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option A:</label>
-            <input type="text" id="adminOpt0" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option B:</label>
-            <input type="text" id="adminOpt1" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option C:</label>
-            <input type="text" id="adminOpt2" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-          <div>
-            <label class="block text-amber-300 font-bold mb-1">Option D:</label>
-            <input type="text" id="adminOpt3" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" required>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Correct Option Index (0 = A, 1 = B, 2 = C, 3 = D):</label>
-          <select id="adminCorrectIdx" class="w-full p-3 bg-slate-950 border border-amber-500/30 rounded-xl text-white">
-            <option value="0">Option A</option>
-            <option value="1">Option B</option>
-            <option value="2">Option C</option>
-            <option value="3">Option D</option>
-          </select>
-        </div>
-
-        <div>
-          <label class="block text-amber-300 font-bold mb-1">Optional AI Hint (For Test Box):</label>
-          <input type="text" id="adminHint" class="w-full p-2.5 bg-slate-950 border border-amber-500/30 rounded-xl text-white" placeholder="Sawal se juda koi ishara...">
-        </div>
-
-        <button type="submit" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-extrabold rounded-xl transition">
-          🚀 Save Question
-        </button>
-      </form>
+      </div>
     </div>
   </div>
 
@@ -667,26 +709,52 @@
       document.getElementById('adminModal').style.display = "none";
     }
 
-    function saveQuestionToDatabase(e) {
-      e.preventDefault();
-      const targetBox = document.getElementById('adminTargetBox').value;
-      const qObject = {
-        question: document.getElementById('adminQText').value,
-        options: [
-          document.getElementById('adminOpt0').value,
-          document.getElementById('adminOpt1').value,
-          document.getElementById('adminOpt2').value,
-          document.getElementById('adminOpt3').value
-        ],
-        correct: parseInt(document.getElementById('adminCorrectIdx').value),
-        hint: document.getElementById('adminHint').value || ""
-      };
+    // Practice Box Question Save Handler
+    function savePracticeQuestion(e) {
+        e.preventDefault();
+        const qObject = {
+            question: document.getElementById('practiceQText').value,
+            options: [
+                document.getElementById('pOpt0').value,
+                document.getElementById('pOpt1').value,
+                document.getElementById('pOpt2').value,
+                document.getElementById('pOpt3').value
+            ],
+            correct: parseInt(document.getElementById('pCorrectIdx').value)
+        };
 
-      const refPath = (targetBox === 'practice') ? 'bca_arena_practice' : 'bca_arena_test';
-      db.ref(refPath).push(qObject).then(() => {
-        alert("🎉 Question successfully saved to Database!");
-        closeAdminModal();
-      });
+        db.ref('bca_arena_practice').push(qObject).then(() => {
+            alert("🎉 Practice Question successfully Practice Box mein save ho gaya!");
+            document.getElementById('practiceQText').value = "";
+            for(let i=0; i<4; i++) {
+                document.getElementById(`pOpt${i}`).value = "";
+            }
+        });
+    }
+
+    // Test Arena Box Question Save Handler
+    function saveTestQuestion(e) {
+        e.preventDefault();
+        const qObject = {
+            question: document.getElementById('testQText').value,
+            options: [
+                document.getElementById('tOpt0').value,
+                document.getElementById('tOpt1').value,
+                document.getElementById('tOpt2').value,
+                document.getElementById('tOpt3').value
+            ],
+            correct: parseInt(document.getElementById('tCorrectIdx').value),
+            hint: document.getElementById('testHint').value || ""
+        };
+
+        db.ref('bca_arena_test').push(qObject).then(() => {
+            alert("🎉 Test Question successfully Rainbow Test Box mein save ho gaya!");
+            document.getElementById('testQText').value = "";
+            for(let i=0; i<4; i++) {
+                document.getElementById(`tOpt${i}`).value = "";
+            }
+            document.getElementById('testHint').value = "";
+        });
     }
   </script>
 </body>
