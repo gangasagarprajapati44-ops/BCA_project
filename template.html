@@ -192,17 +192,17 @@
 
     /* Drag and Drop Zone Style */
     .drop-zone {
-      border: 2px dashed rgba(6, 182, 212, 0.5);
-      background: rgba(15, 23, 42, 0.6);
-      padding: 20px;
+      border: 2px dashed rgba(6, 182, 212, 0.6);
+      background: rgba(15, 23, 42, 0.8);
+      padding: 25px;
       text-align: center;
       border-radius: 12px;
       cursor: pointer;
       transition: 0.3s;
     }
     .drop-zone:hover, .drop-zone.dragover {
-      border-color: #06b6d4;
-      background: rgba(6, 182, 212, 0.1);
+      border-color: #38bdf8;
+      background: rgba(6, 182, 212, 0.15);
     }
 
     /* Word Art Classes */
@@ -361,6 +361,10 @@
         const dropZone = document.getElementById('dropZone');
         const fileInput = document.getElementById('fileInput');
 
+        dropZone.addEventListener('click', () => {
+            fileInput.click();
+        });
+
         ['dragenter', 'dragover'].forEach(eventName => {
             dropZone.addEventListener(eventName, (e) => {
                 e.preventDefault();
@@ -397,7 +401,7 @@
                 reader.onload = function(e) {
                     pathsArray.push(e.target.result);
                     diagramsField.value = pathsArray.join(', ');
-                }
+                };
                 reader.readAsDataURL(file);
             }
         });
@@ -702,15 +706,16 @@
             <input type="text" id="editModels" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg" placeholder="models/cpu.glb">
           </div>
           
-          <!-- Drag and Drop Diagram Uploader Box -->
+          <!-- Working Drag and Drop / File Uploader Box -->
           <div>
-            <label class="block text-cyan-400 font-bold mb-1">Diagrams / Flowcharts (Drag & Drop images here):</label>
-            <div id="dropZone" class="drop-zone mb-2">
-              <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-2xl mb-1"></i>
-              <p class="text-xs text-gray-300">Apni image yahan **Drag & Drop** karein, ya click karke select karein</p>
+            <label class="block text-cyan-400 font-bold mb-1">Diagrams / Flowcharts (Click or Drag & Drop images here):</label>
+            <div id="dropZone" class="drop-zone mb-2 flex flex-col items-center justify-center">
+              <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-3xl mb-2"></i>
+              <p class="text-xs font-bold text-cyan-200">Apni image yahan Drop karein, ya Click karke upload karein!</p>
+              <span class="text-[10px] text-gray-400 mt-1">(GitHub par upload karne ki zaroorat nahi, seedha save hoga)</span>
               <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
             </div>
-            <textarea id="editDiagrams" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-16 text-[11px]" placeholder="Yahan automatic image URLs/data show honge..."></textarea>
+            <textarea id="editDiagrams" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-16 text-[11px]" placeholder="Yahan image data/URLs aayenge..."></textarea>
           </div>
 
           <div>
