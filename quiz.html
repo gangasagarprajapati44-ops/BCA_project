@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCA Learning Hub - Chapter-Wise 3D Quiz Arena</title>
+  <title>BCA Learning Hub - Home & Quiz Arena</title>
   
   <!-- Firebase Classic Compatibility Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -118,11 +118,11 @@
   <header class="w-full max-w-6xl py-4 flex justify-between items-center z-10">
     <div class="flex items-center space-x-3">
       <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-cyan-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-        <i class="fa-solid fa-gamepad text-white text-2xl"></i>
+        <i class="fa-solid fa-graduation-cap text-white text-2xl"></i>
       </div>
       <div>
-        <h1 class="text-xl font-black tracking-tight text-white">BCA 3D Quiz Arena</h1>
-        <span class="text-xs text-cyan-400 font-medium">Chapter-Wise Practice & Rainbow Test Box</span>
+        <h1 class="text-xl font-black tracking-tight text-white">BCA Learning Hub</h1>
+        <span class="text-xs text-cyan-400 font-medium">Home & Chapter-Wise Quiz Arena</span>
       </div>
     </div>
 
@@ -131,18 +131,14 @@
         <i class="fa-solid fa-lock text-amber-400"></i>
         <span>Admin Panel</span>
       </button>
-      <a href="index.html" class="px-3.5 py-2 rounded-xl bg-gray-900 border border-cyan-500/30 text-gray-300 text-xs font-bold hover:bg-gray-800 transition flex items-center space-x-2">
-        <i class="fa-solid fa-house text-cyan-400"></i>
-        <span>Home</span>
-      </a>
     </div>
   </header>
 
-  <!-- Main Portal Screen (Mode Selection) -->
+  <!-- Main Home & Portal Screen -->
   <main id="portalSelection" class="w-full max-w-5xl my-auto py-10 z-10">
     <div class="text-center mb-10">
-      <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wide mb-2">Chuniye Apna Arena</h2>
-      <p class="text-gray-400 text-sm">Chapter-Wise Practice Karein Ya Rainbow Test Box Mein Lifelines Ke Sath Attempt Karein</p>
+      <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wide mb-2">BCA Study & Quiz Portal</h2>
+      <p class="text-gray-400 text-sm">Apna Chapter-Wise Practice MCQ Box ya Rainbow Test Box chuniye</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
@@ -309,7 +305,7 @@
     </div>
   </div>
 
-  <!-- Password Protected Admin Panel Modal with Separate Practice & Test Upload Forms -->
+  <!-- Password Protected Admin Panel Modal with sagar9955@# and Separate Tabs -->
   <div id="adminModal" class="modal-overlay">
     <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-4 border-b border-amber-500/30 pb-4">
@@ -317,7 +313,6 @@
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-sm">❌ Close</button>
       </div>
 
-      <!-- Tab Buttons for Practice vs Test Box -->
       <div class="grid grid-cols-2 gap-3 mb-6">
         <button id="tabPracticeBtn" onclick="switchAdminTab('practice')" class="py-2.5 rounded-xl bg-cyan-500 text-black font-extrabold text-xs transition shadow-lg">
           📝 Upload Practice MCQ
@@ -391,7 +386,7 @@
   </div>
 
   <footer class="w-full max-w-6xl py-4 text-center text-xs text-cyan-500/60 z-10">
-    © 2026 BCA Learning Hub | 3D Interactive Dual Quiz Engine
+    © 2026 BCA Learning Hub | Home & Interactive Quiz Module
   </footer>
 
   <!-- JavaScript Logic Engine -->
