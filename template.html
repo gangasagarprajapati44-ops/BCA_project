@@ -552,3 +552,202 @@
           <button onclick="openEditModal()" class="px-3 py-1 rounded-lg bg-amber-500 text-gray-950 font-bold text-xs hover:bg-amber-400 transition flex items-center space-x-1 shadow">
             <i class="fa-solid fa-pen-to-square"></i>
             <span>Edit Topic</span>
+          </button>
+          <button onclick="deleteCurrentTopic()" class="px-3 py-1 rounded-lg bg-rose-600 text-white font-bold text-xs hover:bg-rose-500 transition flex items-center space-x-1 shadow">
+            <i class="fa-solid fa-trash"></i>
+            <span>Delete</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Main Layout Grid -->
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        <!-- Left Sidebar: Topics Navigation List -->
+        <div class="lg:col-span-1 bg-gray-950/80 border border-cyan-500/20 rounded-2xl p-4 flex flex-col max-h-[550px] overflow-y-auto">
+          <h3 class="text-cyan-400 font-bold text-xs uppercase tracking-wider mb-3 flex items-center">
+            <i class="fa-solid fa-list-ul mr-2"></i> All Topics
+          </h3>
+          <div id="sidebarTopicList" class="space-y-2">
+            <!-- Dynamic Topics Loaded Here -->
+          </div>
+        </div>
+
+        <!-- Right Content Workspace -->
+        <div class="lg:col-span-3 space-y-6">
+          
+          <!-- Topic Header Title -->
+          <div class="bg-gray-950/70 border border-cyan-500/20 rounded-2xl p-6 shadow-inner">
+            <h2 id="displayTitle" class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight mb-2">
+              Loading Topic...
+            </h2>
+            <p class="text-xs text-cyan-400 font-medium">BCA Syllabus Detailed Workspace</p>
+          </div>
+
+          <!-- Definition & Q&A Grid -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-gray-950/70 border border-cyan-500/20 rounded-2xl p-5 shadow-inner">
+              <h3 class="text-cyan-400 font-bold text-sm mb-2 flex items-center">
+                <i class="fa-solid fa-book-bookmark mr-2"></i> Comprehensive Definition
+              </h3>
+              <p id="displayDef" class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                Loading definition...
+              </p>
+            </div>
+
+            <div class="bg-gray-950/70 border border-cyan-500/20 rounded-2xl p-5 shadow-inner">
+              <h3 class="text-cyan-400 font-bold text-sm mb-2 flex items-center">
+                <i class="fa-solid fa-circle-question mr-2"></i> Important Q&A / Notes
+              </h3>
+              <p id="displayQA" class="text-xs sm:text-sm text-gray-300 leading-relaxed whitespace-pre-line">
+                Loading Q&A...
+              </p>
+            </div>
+          </div>
+
+          <!-- Interactive 3D Models Section Boxes -->
+          <div class="bg-gray-950/70 border border-cyan-500/20 rounded-2xl p-5 shadow-inner">
+            <h3 class="text-cyan-400 font-bold text-sm mb-3 flex items-center">
+              <i class="fa-solid fa-cube mr-2"></i> Interactive 3D Models (Click to Zoom)
+            </h3>
+            <div id="modelViewersSection" class="viewers-grid">
+              <!-- 3D Model Boxes Loaded Here -->
+            </div>
+          </div>
+
+          <!-- Interactive Diagrams Section Boxes -->
+          <div class="bg-gray-950/70 border border-cyan-500/20 rounded-2xl p-5 shadow-inner">
+            <h3 class="text-cyan-400 font-bold text-sm mb-3 flex items-center">
+              <i class="fa-solid fa-image mr-2"></i> Topic Diagrams & Flowcharts (Click to View)
+            </h3>
+            <div id="diagramViewersSection" class="viewers-grid">
+              <!-- Diagram Boxes Loaded Here -->
+            </div>
+          </div>
+
+          <!-- Practical Lab Code Box -->
+          <div class="bg-gray-950/90 border border-emerald-500/30 rounded-2xl p-5 shadow-inner">
+            <h3 class="text-emerald-400 font-bold text-sm mb-2 flex items-center">
+              <i class="fa-solid fa-code mr-2"></i> Practical Lab Code / Implementation
+            </h3>
+            <pre class="bg-black/80 p-4 rounded-xl text-emerald-300 font-mono text-xs overflow-x-auto border border-emerald-500/20"><code id="displayLab">// Code snippet will appear here...</code></pre>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- Wallpaper Footer Info -->
+      <div class="mt-8 pt-6 border-t border-cyan-900/50 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
+          <span class="font-medium text-cyan-400">3D Immersive Viewer Engine Active</span>
+        </div>
+        <div>© 2026 BCA Learning Hub | Interactive Topic Workspace</div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Admin Edit Topic Modal -->
+  <div id="editModalOverlay" class="modal-overlay" style="display: none;">
+    <div class="modal-content" style="height: auto; max-height: 90vh;">
+      <div class="modal-header">
+        <h3>✏️ Admin Topic Editor & Styling</h3>
+        <button class="close-modal-btn" onclick="closeEditModal()">❌ Close</button>
+      </div>
+      <div class="modal-body p-6 overflow-y-auto" style="display: block; background: #0b0f19;">
+        <form id="editTopicForm" onsubmit="saveEditedTopic(event)" class="space-y-4 text-xs">
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Select Semester:</label>
+            <select id="editSem" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+              <option value="Semester 1">Semester 1</option>
+              <option value="Semester 2">Semester 2</option>
+              <option value="Semester 3">Semester 3</option>
+              <option value="Semester 4">Semester 4</option>
+              <option value="Semester 5">Semester 5</option>
+              <option value="Semester 6">Semester 6</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Topic Title:</label>
+            <input type="text" id="editTitle" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg" required>
+          </div>
+          
+          <div class="grid grid-cols-3 gap-3 bg-gray-950 p-3 rounded-xl border border-cyan-500/20">
+            <div>
+              <label class="block text-cyan-400 font-bold mb-1">Text Style (Font):</label>
+              <select id="editFontStyle" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+                <option value="'Inter', sans-serif">Inter (Default)</option>
+                <option value="'Orbitron', sans-serif">Orbitron (Cyber)</option>
+                <option value="'Cinzel', serif">Cinzel (Classic)</option>
+                <option value="'Pacifico', cursive">Pacifico (Script)</option>
+                <option value="'VT323', monospace">VT323 (Retro Terminal)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-cyan-400 font-bold mb-1">Text Color:</label>
+              <input type="color" id="editTextColor" value="#ffffff" class="w-full h-9 bg-gray-900 border border-cyan-500/30 rounded-lg cursor-pointer">
+            </div>
+            <div>
+              <label class="block text-cyan-400 font-bold mb-1">Word Art Effect:</label>
+              <select id="editWordArt" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg">
+                <option value="">None (Normal)</option>
+                <option value="wordart-neon">Glowing Neon</option>
+                <option value="wordart-fire">Fiery Gradient</option>
+                <option value="wordart-cyber">Cyber Glow</option>
+              </select>
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Definition:</label>
+            <textarea id="editDef" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-24" required></textarea>
+          </div>
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Short/Long Q&A Box:</label>
+            <textarea id="editQA" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-20"></textarea>
+          </div>
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">3D Models (Comma Separated Paths):</label>
+            <input type="text" id="editModels" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg" placeholder="models/cpu.glb">
+          </div>
+          
+          <div>
+            <div class="flex justify-between items-center mb-1">
+              <label class="block text-cyan-400 font-bold">Diagrams / Flowcharts:</label>
+              <button type="button" onclick="clearAllDiagrams()" class="text-[10px] bg-red-600/80 hover:bg-red-600 text-white px-2 py-0.5 rounded">Clear All Diagrams</button>
+            </div>
+            <div id="dropZone" class="drop-zone mb-2 flex flex-col items-center justify-center">
+              <i class="fa-solid fa-cloud-arrow-up text-cyan-400 text-3xl mb-2"></i>
+              <p class="text-xs font-bold text-cyan-200">Apni image yahan Drop karein, ya Click karke upload karein!</p>
+              <span class="text-[10px] text-gray-400 mt-1">(GitHub par upload karne ki zaroorat nahi)</span>
+              <input type="file" id="fileInput" accept="image/*" multiple class="hidden">
+            </div>
+            <textarea id="editDiagrams" class="w-full p-2 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-16 text-[11px]" placeholder="Yahan image data/URLs aayenge..."></textarea>
+          </div>
+
+          <div>
+            <label class="block text-cyan-400 font-bold mb-1">Practical Lab Code:</label>
+            <textarea id="editLab" class="w-full p-2.5 bg-gray-900 border border-cyan-500/30 text-white rounded-lg h-20 font-mono"></textarea>
+          </div>
+          <button type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition">🚀 Save & Update Changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Fullscreen Modal Viewer -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle">Interactive Viewer</h3>
+        <button class="close-modal-btn" onclick="closeFullscreenModal()">❌ Close [X]</button>
+      </div>
+      <div class="modal-body" id="modalViewerContainer"></div>
+    </div>
+  </div>
+
+</body>
+</html>
