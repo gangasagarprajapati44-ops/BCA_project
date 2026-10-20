@@ -166,3 +166,43 @@
           <span class="text-xs text-cyan-400 font-bold"><i class="fa-solid fa-volume-high mr-1"></i> Continuous Audio Reader</span>
           <button class="w-10 h-10 rounded-xl bg-cyan-500 text-black flex items-center justify-center font-bold shadow-lg shadow-cyan-500/50 group-hover:translate-x-1 transition">
             <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Live Test Arena Box -->
+      <div onclick="startTestMode()" class="box-3d-rainbow p-8 cursor-pointer flex flex-col justify-between h-80 relative overflow-hidden group">
+        <div class="absolute -right-6 -top-6 text-pink-500/10 text-9xl group-hover:scale-110 transition duration-500">
+          <i class="fa-solid fa-stopwatch"></i>
+        </div>
+        <div>
+          <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/40 text-xs font-bold">4 Lifelines Included</span>
+          <h3 class="text-2xl font-black rainbow-text mt-4 mb-2">Rainbow Test Arena</h3>
+          <p class="text-xs text-gray-300 leading-relaxed">Timed challenge, 4 active lifelines (50:50, AI Hint, +15s Time Freeze, Skip), and ultra 3D rainbow scorecard.</p>
+        </div>
+        <div class="flex items-center justify-between border-t border-purple-500/20 pt-4">
+          <span class="text-xs text-pink-400 font-bold"><i class="fa-solid fa-trophy mr-1"></i> Rainbow 3D Scoreboard</span>
+          <button class="w-10 h-10 rounded-xl bg-gradient-to-tr from-pink-500 to-purple-600 text-white flex items-center justify-center font-bold shadow-lg shadow-pink-500/50 group-hover:translate-x-1 transition">
+            <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Practice Arena Screen -->
+  <section id="practiceArena" class="w-full max-w-4xl my-auto hidden z-10 py-6">
+    <div class="bg-slate-900/90 border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
+      
+      <!-- Top Action Bar -->
+      <div class="flex flex-wrap justify-between items-center gap-4 pb-6 border-b border-cyan-900/50 mb-6">
+        <div>
+          <button onclick="backToPortal()" class="text-xs text-cyan-400 font-bold hover:underline flex items-center">
+            <i class="fa-solid fa-arrow-left mr-1"></i> Exit Practice
+          </button>
+          <h2 class="text-xl font-extrabold text-white mt-1">Practice MCQ Arena</h2>
+        </div>
+
+        <!-- Continuous Full Page Speech Audio Button -->
+        <button id="audioReaderBtn" onclick="toggleContinuousAudio()" class="px-4 py-2.5 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-bold text-xs shadow-lg shadow-cyan
