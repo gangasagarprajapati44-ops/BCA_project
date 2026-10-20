@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCA Learning Hub - 3D Quiz Arena</title>
+  <title>BCA Learning Hub - Home & Quiz Arena</title>
   
   <!-- Firebase Classic Compatibility Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
@@ -25,7 +25,6 @@
       overflow-x: hidden;
     }
 
-    /* Cyber Matrix Background */
     .matrix-bg {
       background-image: 
         radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.12) 0%, rgba(2, 6, 23, 0.98) 80%),
@@ -34,7 +33,6 @@
       background-size: 100% 100%, 50px 50px, 50px 50px;
     }
 
-    /* 3D Cyan Box (Practice) */
     .box-3d-cyan {
       background: rgba(15, 23, 42, 0.85);
       backdrop-filter: blur(20px);
@@ -48,7 +46,6 @@
       box-shadow: 0 30px 60px rgba(6, 182, 212, 0.4);
     }
 
-    /* 3D Rainbow Box (Test Box) */
     .box-3d-rainbow {
       background: rgba(15, 23, 42, 0.9);
       backdrop-filter: blur(20px);
@@ -73,7 +70,6 @@
       box-shadow: 0 30px 60px rgba(236, 72, 153, 0.3), 0 0 40px rgba(6, 182, 212, 0.3);
     }
 
-    /* Option Item 3D Buttons */
     .opt-btn {
       background: #0f172a;
       border: 1px solid rgba(255, 255, 255, 0.1);
@@ -126,7 +122,7 @@
       </div>
       <div>
         <h1 class="text-xl font-black tracking-tight text-white">BCA Learning Hub</h1>
-        <span class="text-xs text-cyan-400 font-medium">Chapter-Wise Practice & Rainbow Test Box</span>
+        <span class="text-xs text-cyan-400 font-medium">Home & Chapter-Wise Quiz Arena</span>
       </div>
     </div>
 
@@ -138,11 +134,11 @@
     </div>
   </header>
 
-  <!-- Main Portal Screen (Mode Selection) -->
+  <!-- Main Home & Portal Screen -->
   <main id="portalSelection" class="w-full max-w-5xl my-auto py-10 z-10">
     <div class="text-center mb-10">
-      <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wide mb-2">Chuniye Apna Arena</h2>
-      <p class="text-gray-400 text-sm">Chapter-Wise Practice Karein Ya Rainbow Test Box Mein Lifelines Ke Sath Attempt Karein</p>
+      <h2 class="text-3xl sm:text-4xl font-black text-white tracking-wide mb-2">BCA Study & Quiz Portal</h2>
+      <p class="text-gray-400 text-sm">Apna Chapter-Wise Practice MCQ Box ya Rainbow Test Box chuniye</p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 px-4">
@@ -309,7 +305,7 @@
     </div>
   </div>
 
-  <!-- Password Protected Admin Panel Modal with sagar9955@# Password -->
+  <!-- Password Protected Admin Panel Modal with sagar9955@# and Separate Tabs -->
   <div id="adminModal" class="modal-overlay">
     <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 sm:p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
       <div class="flex justify-between items-center mb-4 border-b border-amber-500/30 pb-4">
@@ -317,7 +313,6 @@
         <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-sm">❌ Close</button>
       </div>
 
-      <!-- Tab Buttons -->
       <div class="grid grid-cols-2 gap-3 mb-6">
         <button id="tabPracticeBtn" onclick="switchAdminTab('practice')" class="py-2.5 rounded-xl bg-cyan-500 text-black font-extrabold text-xs transition shadow-lg">
           📝 Upload Practice MCQ
@@ -327,7 +322,7 @@
         </button>
       </div>
 
-      <!-- Form 1: Practice Box Upload -->
+      <!-- Practice Form -->
       <form id="formPractice" onsubmit="saveQuestionToDatabase(event, 'practice')" class="space-y-4 text-xs">
         <div class="bg-cyan-500/10 border border-cyan-500/30 p-3 rounded-xl text-cyan-300 mb-2 font-semibold">
           💡 Practice MCQ Box (Chapter-Wise) Data Upload Form
@@ -355,7 +350,7 @@
         <button type="submit" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-black font-extrabold rounded-xl transition">🚀 Save to Practice Box</button>
       </form>
 
-      <!-- Form 2: Test Box Upload -->
+      <!-- Test Box Form -->
       <form id="formTest" onsubmit="saveQuestionToDatabase(event, 'test')" class="space-y-4 text-xs hidden">
         <div class="bg-pink-500/10 border border-pink-500/30 p-3 rounded-xl text-pink-300 mb-2 font-semibold">
           🌈 Rainbow Test Box (Chapter-Wise) Data Upload Form
@@ -391,7 +386,7 @@
   </div>
 
   <footer class="w-full max-w-6xl py-4 text-center text-xs text-cyan-500/60 z-10">
-    © 2026 BCA Learning Hub | Interactive Quiz Engine
+    © 2026 BCA Learning Hub | Home & Interactive Quiz Module
   </footer>
 
   <!-- JavaScript Logic Engine -->
@@ -438,7 +433,7 @@
       });
     };
 
-    /* Password Auth for Admin Panel */
+    /* Password Protected Admin Auth with sagar9955@# */
     function openAdminModalWithAuth() {
       let pass = prompt("🔐 Enter Admin Password:");
       if (pass === "sagar9955@#") {
@@ -730,7 +725,6 @@
       backToPortal();
     }
 
-    /* Admin Tab Switching Logic */
     function switchAdminTab(type) {
       if(type === 'practice') {
         document.getElementById('formPractice').classList.remove('hidden');
