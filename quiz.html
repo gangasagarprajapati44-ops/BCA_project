@@ -99,6 +99,7 @@
     let isAdminLoggedIn = false;
 
     const synth = window.speechSynthesis;
+    let isSpeaking = false;
 
     window.onload = function() {
       if (sessionStorage.getItem("bca_admin_auth") === "true") {
@@ -169,7 +170,7 @@
                 </button>
               </div>
               
-              <button onclick="openTopicQuizPage('${key}')" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-extrabold text-xs transition flex items-center space-x-1 ml-auto">
+              <button onclick="openTopicQuizPage('${key}')" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-extrabold text-xs transition flex items-center space-x-1 ml-auto cursor-pointer">
                 <span>Start Quiz</span>
                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
               </button>
@@ -233,14 +234,9 @@
           <div class="bg-slate-950 p-5 rounded-2xl border border-cyan-500/20 relative">
             <div class="flex justify-between items-center mb-2">
               <span class="text-xs font-bold text-cyan-400">Q${qIdx + 1}.</span>
-              <div class="flex items-center space-x-3">
-                <button onclick="speakMCQ(${qIdx})" class="text-xs text-cyan-300 font-bold bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-lg hover:bg-cyan-500/20 transition flex items-center">
-                  <i class="fa-solid fa-volume-high text-cyan-400 mr-1.5"></i> Listen MCQ
-                </button>
-                <button onclick="openEditSingleQuestion(${qIdx})" class="admin-only ${adminClass} text-[11px] text-amber-400 font-bold hover:underline flex items-center">
-                  <i class="fa-solid fa-pen mr-1"></i> Edit MCQ
-                </button>
-              </div>
+              <button onclick="openEditSingleQuestion(${qIdx})" class="admin-only ${adminClass} text-[11px] text-amber-400 font-bold hover:underline flex items-center">
+                <i class="fa-solid fa-pen mr-1"></i> Edit MCQ
+              </button>
             </div>
 
             <h4 class="text-sm font-bold text-white mb-3">${q.question}</h4>
@@ -259,21 +255,48 @@
       });
     }
 
-    /* Single Click MCQ Audio Reader */
-    function speakMCQ(qIdx) {
+    /* Single Click Continuous Speech Reader for Whole Topic */
+    function toggleFullTopicAudio() {
       if (!synth) return alert("Speech API is not supported in this browser.");
-      const q = allQuizTopics[currentTopicId].questions[qIdx];
-      
-      let textToSpeak = `Question ${qIdx + 1}. ${q.question}. `;
-      q.options.forEach((opt, oIdx) => {
-        textToSpeak += `Option ${String.fromCharCode(65 + oIdx)}, ${opt}. `;
+
+      const btnText = document.getElementById('audioBtnText');
+      const btnIcon = document.getElementById('audioBtnIcon');
+
+      if (isSpeaking) {
+        synth.cancel();
+        isSpeaking = false;
+        btnText.innerText = "Listen Full Topic Quiz";
+        btnIcon.className = "fa-solid fa-volume-high text-cyan-400 mr-2";
+        return;
+      }
+
+      const topicData = allQuizTopics[currentTopicId];
+      if (!topicData || !topicData.questions || topicData.questions.length === 0) return;
+
+      let fullText = `Starting quiz for ${topicData.topic}, ${topicData.chapter}. `;
+
+      topicData.questions.forEach((q, qIdx) => {
+        fullText += `Question number ${qIdx + 1}. ${q.question}. `;
+        q.options.forEach((opt, oIdx) => {
+          fullText += `Option ${String.fromCharCode(65 + oIdx)}, ${opt}. `;
+        });
+        fullText += `Correct answer is Option ${String.fromCharCode(65 + q.correct)}, ${q.options[q.correct]}. `;
       });
-      textToSpeak += `Correct Answer is Option ${String.fromCharCode(65 + q.correct)}, ${q.options[q.correct]}.`;
 
       synth.cancel();
-      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      const utterance = new SpeechSynthesisUtterance(fullText);
       utterance.rate = 0.95;
+
+      utterance.onend = function() {
+        isSpeaking = false;
+        btnText.innerText = "Listen Full Topic Quiz";
+        btnIcon.className = "fa-solid fa-volume-high text-cyan-400 mr-2";
+      };
+
       synth.speak(utterance);
+      isSpeaking = true;
+      btnText.innerText = "Stop Playing Audio";
+      btnIcon.className = "fa-solid fa-circle-stop text-rose-500 animate-pulse mr-2";
     }
 
     function selectOption(qIdx, oIdx) {
@@ -314,7 +337,12 @@
     }
 
     function backToHomePortal() {
-      if (synth) synth.cancel();
+      if (synth) {
+        synth.cancel();
+        isSpeaking = false;
+        document.getElementById('audioBtnText').innerText = "Listen Full Topic Quiz";
+        document.getElementById('audioBtnIcon').className = "fa-solid fa-volume-high text-cyan-400 mr-2";
+      }
       document.getElementById('quizTopicPage').classList.add('hidden');
       document.getElementById('portalHome').classList.remove('hidden');
     }
@@ -525,10 +553,11 @@
   <section id="quizTopicPage" class="w-full max-w-4xl my-auto hidden z-10 py-6">
     <div class="bg-slate-900/90 border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
       
+      <!-- Top Action Bar -->
       <div class="flex flex-wrap justify-between items-center gap-4 pb-6 border-b border-cyan-900/50 mb-6">
         <div>
-          <button onclick="backToHomePortal()" class="text-xs text-cyan-400 font-bold hover:underline flex items-center cursor-pointer mb-1">
-            <i class="fa-solid fa-arrow-left mr-1"></i> Back to Topics List
+          <button onclick="backToHomePortal()" class="px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-300 font-bold hover:bg-cyan-500/20 transition flex items-center cursor-pointer mb-2">
+            <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to All Quiz Topics
           </button>
           <div class="flex items-center space-x-2">
             <span id="displaySemBadge" class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold">Semester 1</span>
@@ -536,6 +565,12 @@
           </div>
           <h2 id="displayTopicTitle" class="text-2xl font-extrabold text-white mt-1">Topic Title</h2>
         </div>
+
+        <!-- Whole Topic Audio Reader Button -->
+        <button onclick="toggleFullTopicAudio()" class="px-4 py-2.5 rounded-xl bg-slate-950 border border-cyan-500/40 text-xs font-bold text-cyan-300 hover:bg-slate-800 transition flex items-center shadow cursor-pointer">
+          <i id="audioBtnIcon" class="fa-solid fa-volume-high text-cyan-400 mr-2"></i>
+          <span id="audioBtnText">Listen Full Topic Quiz</span>
+        </button>
       </div>
 
       <!-- Questions List -->
