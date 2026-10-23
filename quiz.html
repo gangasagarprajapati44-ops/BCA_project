@@ -96,14 +96,26 @@
     let currentTopicId = null;
     let selectedAnswers = {};
     let currentFilterSem = "All";
+    let isAdminLoggedIn = false;
+
+    const synth = window.speechSynthesis;
 
     window.onload = function() {
+      if (sessionStorage.getItem("bca_admin_auth") === "true") {
+        isAdminLoggedIn = true;
+        showAdminControls();
+      }
+
       db.ref('bca_structured_quizzes').on('value', (snapshot) => {
         const data = snapshot.val();
         allQuizTopics = data || {};
         renderTopicCards();
       });
     };
+
+    function showAdminControls() {
+      document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
+    }
 
     function renderTopicCards() {
       const container = document.getElementById('topicCardsGrid');
@@ -120,7 +132,7 @@
         container.innerHTML = `
           <div class="col-span-full text-center py-16 text-gray-400 bg-slate-900/50 rounded-2xl border border-cyan-500/20">
             <i class="fa-solid fa-folder-open text-4xl mb-3 text-cyan-400 opacity-50 block"></i>
-            Is Semester ke liye koi Quiz Topic upload nahi hua hai. Admin panel se add karein.
+            Is Semester ke liye koi Quiz Topic nahi mila.
           </div>
         `;
         return;
@@ -129,6 +141,7 @@
       filteredKeys.forEach(key => {
         const item = allQuizTopics[key];
         const qCount = item.questions ? item.questions.length : 0;
+        const adminClass = isAdminLoggedIn ? "" : "hidden";
 
         container.innerHTML += `
           <div class="topic-card rounded-2xl p-5 flex flex-col justify-between relative">
@@ -147,11 +160,16 @@
             </div>
 
             <div class="flex items-center justify-between pt-3 border-t border-cyan-500/20">
-              <button onclick="openEditTopicModal('${key}')" class="text-xs text-amber-400 font-bold hover:underline flex items-center">
-                <i class="fa-solid fa-pen-to-square mr-1"></i> Edit Topic
-              </button>
+              <div class="flex items-center space-x-2 admin-only ${adminClass}">
+                <button onclick="openEditTopicModal('${key}')" class="text-xs text-amber-400 font-bold hover:underline" title="Edit Topic Header">
+                  <i class="fa-solid fa-pen-to-square"></i> Edit
+                </button>
+                <button onclick="deleteTopic('${key}')" class="text-xs text-rose-500 font-bold hover:underline" title="Delete Topic">
+                  <i class="fa-solid fa-trash"></i> Delete
+                </button>
+              </div>
               
-              <button onclick="openTopicQuizPage('${key}')" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-extrabold text-xs transition flex items-center space-x-1">
+              <button onclick="openTopicQuizPage('${key}')" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-black font-extrabold text-xs transition flex items-center space-x-1 ml-auto">
                 <span>Start Quiz</span>
                 <i class="fa-solid fa-arrow-right text-[10px]"></i>
               </button>
@@ -172,7 +190,7 @@
       renderTopicCards();
     }
 
-    /* Open Dedicated Quiz Page */
+    /* Dedicated Quiz Page View */
     function openTopicQuizPage(topicId) {
       currentTopicId = topicId;
       selectedAnswers = {};
@@ -198,6 +216,8 @@
         return;
       }
 
+      const adminClass = isAdminLoggedIn ? "" : "hidden";
+
       questions.forEach((q, qIdx) => {
         let optionsHtml = "";
         q.options.forEach((opt, oIdx) => {
@@ -213,9 +233,14 @@
           <div class="bg-slate-950 p-5 rounded-2xl border border-cyan-500/20 relative">
             <div class="flex justify-between items-center mb-2">
               <span class="text-xs font-bold text-cyan-400">Q${qIdx + 1}.</span>
-              <button onclick="openEditSingleQuestion(${qIdx})" class="text-[11px] text-amber-400 font-bold hover:underline flex items-center">
-                <i class="fa-solid fa-pen mr-1"></i> Edit Question
-              </button>
+              <div class="flex items-center space-x-3">
+                <button onclick="speakMCQ(${qIdx})" class="text-xs text-cyan-300 font-bold bg-cyan-500/10 border border-cyan-500/30 px-2.5 py-1 rounded-lg hover:bg-cyan-500/20 transition flex items-center">
+                  <i class="fa-solid fa-volume-high text-cyan-400 mr-1.5"></i> Listen MCQ
+                </button>
+                <button onclick="openEditSingleQuestion(${qIdx})" class="admin-only ${adminClass} text-[11px] text-amber-400 font-bold hover:underline flex items-center">
+                  <i class="fa-solid fa-pen mr-1"></i> Edit MCQ
+                </button>
+              </div>
             </div>
 
             <h4 class="text-sm font-bold text-white mb-3">${q.question}</h4>
@@ -232,6 +257,23 @@
           </div>
         `;
       });
+    }
+
+    /* Single Click MCQ Audio Reader */
+    function speakMCQ(qIdx) {
+      if (!synth) return alert("Speech API is not supported in this browser.");
+      const q = allQuizTopics[currentTopicId].questions[qIdx];
+      
+      let textToSpeak = `Question ${qIdx + 1}. ${q.question}. `;
+      q.options.forEach((opt, oIdx) => {
+        textToSpeak += `Option ${String.fromCharCode(65 + oIdx)}, ${opt}. `;
+      });
+      textToSpeak += `Correct Answer is Option ${String.fromCharCode(65 + q.correct)}, ${q.options[q.correct]}.`;
+
+      synth.cancel();
+      const utterance = new SpeechSynthesisUtterance(textToSpeak);
+      utterance.rate = 0.95;
+      synth.speak(utterance);
     }
 
     function selectOption(qIdx, oIdx) {
@@ -272,6 +314,7 @@
     }
 
     function backToHomePortal() {
+      if (synth) synth.cancel();
       document.getElementById('quizTopicPage').classList.add('hidden');
       document.getElementById('portalHome').classList.remove('hidden');
     }
@@ -281,14 +324,23 @@
       backToHomePortal();
     }
 
-    /* Admin Password Lock */
-    function openAdminUploadModal() {
+    /* Admin Password Authentication */
+    function authenticateAdmin() {
       let pass = prompt("🔑 Enter Admin Password:");
       if (pass === "sagar9955@#") {
-        document.getElementById('adminModal').style.display = "flex";
+        sessionStorage.setItem("bca_admin_auth", "true");
+        isAdminLoggedIn = true;
+        showAdminControls();
+        renderTopicCards();
+        alert("🎉 Admin Unlocked!");
       } else if (pass !== null) {
-        alert("❌ Galat Password!");
+        alert("❌ Incorrect Password!");
       }
+    }
+
+    function openAdminUploadModal() {
+      if (!isAdminLoggedIn) return authenticateAdmin();
+      document.getElementById('adminModal').style.display = "flex";
     }
 
     function closeAdminModal() {
@@ -325,7 +377,7 @@
       });
 
       if (parsedQuestions.length === 0) {
-        return alert("⚠️ Questions format galat hai! Example format follow karein.");
+        return alert("⚠️ Question format galat hai!");
       }
 
       let payload = {
@@ -337,17 +389,23 @@
       };
 
       db.ref('bca_structured_quizzes').push(payload).then(() => {
-        alert("🎉 Topic-wise Quiz Published Successfully!");
+        alert("🎉 Topic Quiz Uploaded Successfully!");
         document.getElementById('uploadQuizForm').reset();
         closeAdminModal();
       });
     }
 
+    /* Delete Topic */
+    function deleteTopic(key) {
+      if (confirm("⚠️ Kya aap sach mein is topic ko delete karna chahte hain?")) {
+        db.ref(`bca_structured_quizzes/${key}`).remove().then(() => {
+          alert("🗑️ Topic Deleted!");
+        });
+      }
+    }
+
     /* Edit Topic Header Modal */
     function openEditTopicModal(key) {
-      let pass = prompt("🔑 Enter Admin Password to Edit Topic:");
-      if (pass !== "sagar9955@#") return alert("Wrong Password!");
-
       currentTopicId = key;
       const topicData = allQuizTopics[key];
       if (!topicData) return;
@@ -376,9 +434,6 @@
     let editingQuestionIdx = null;
 
     function openEditSingleQuestion(qIdx) {
-      let pass = prompt("🔑 Enter Admin Password to Edit Question:");
-      if (pass !== "sagar9955@#") return alert("Wrong Password!");
-
       editingQuestionIdx = qIdx;
       const q = allQuizTopics[currentTopicId].questions[qIdx];
 
@@ -408,7 +463,7 @@
       };
 
       db.ref(`bca_structured_quizzes/${currentTopicId}/questions`).set(topicData.questions).then(() => {
-        alert("🎉 Question Updated Successfully!");
+        alert("🎉 MCQ Updated Successfully!");
         document.getElementById('editQuestionModal').style.display = "none";
         openTopicQuizPage(currentTopicId);
       });
@@ -430,8 +485,12 @@
     </div>
 
     <div class="flex items-center space-x-3">
-      <button onclick="openAdminUploadModal()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition flex items-center space-x-1.5 cursor-pointer">
-        <i class="fa-solid fa-plus text-amber-400"></i>
+      <button onclick="authenticateAdmin()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition flex items-center space-x-1.5 cursor-pointer">
+        <i class="fa-solid fa-lock text-amber-400"></i>
+        <span>Admin Login</span>
+      </button>
+      <button onclick="openAdminUploadModal()" class="admin-only hidden px-3.5 py-2 rounded-xl bg-cyan-500 text-black text-xs font-extrabold hover:bg-cyan-400 transition flex items-center space-x-1.5 cursor-pointer shadow">
+        <i class="fa-solid fa-plus"></i>
         <span>Add Topic Quiz</span>
       </button>
       <a href="flashcard.html" class="px-3.5 py-2 rounded-xl bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs font-bold hover:bg-purple-800 transition">
@@ -443,10 +502,10 @@
     </div>
   </header>
 
-  <!-- HOME PORTAL (Topic Cards Filter View) -->
+  <!-- HOME PORTAL -->
   <main id="portalHome" class="w-full max-w-6xl my-auto py-6 z-10">
     
-    <!-- Semester Filter Buttons -->
+    <!-- Semester Filters -->
     <div class="flex flex-wrap justify-center gap-2 mb-8">
       <button onclick="filterBySemester('All', this)" class="sem-btn px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-black shadow-lg transition cursor-pointer">All Semesters</button>
       <button onclick="filterBySemester('Semester 1', this)" class="sem-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-gray-300 border border-cyan-500/30 hover:bg-slate-800 transition cursor-pointer">Sem 1</button>
@@ -458,9 +517,7 @@
     </div>
 
     <!-- Topic Cards Grid -->
-    <div id="topicCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
-      <!-- Cards rendered dynamically -->
-    </div>
+    <div id="topicCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2"></div>
 
   </main>
 
@@ -468,7 +525,6 @@
   <section id="quizTopicPage" class="w-full max-w-4xl my-auto hidden z-10 py-6">
     <div class="bg-slate-900/90 border border-cyan-500/30 rounded-3xl p-6 sm:p-8 shadow-2xl relative">
       
-      <!-- Top Action Bar -->
       <div class="flex flex-wrap justify-between items-center gap-4 pb-6 border-b border-cyan-900/50 mb-6">
         <div>
           <button onclick="backToHomePortal()" class="text-xs text-cyan-400 font-bold hover:underline flex items-center cursor-pointer mb-1">
@@ -482,10 +538,8 @@
         </div>
       </div>
 
-      <!-- Questions List Container -->
-      <div id="questionsContainer" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2">
-        <!-- Dynamic Questions Load -->
-      </div>
+      <!-- Questions List -->
+      <div id="questionsContainer" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
 
       <!-- Submit Quiz -->
       <div class="mt-8 pt-6 border-t border-cyan-900/50 flex justify-end">
@@ -566,7 +620,7 @@
         </div>
         <div class="flex justify-end space-x-2 pt-2">
           <button type="button" onclick="document.getElementById('editTopicModal').style.display='none'" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-lg">Cancel</button>
-          <button type="submit" class="px-4 py-1.5 bg-amber-500 text-black font-bold rounded-lg">Update</button>
+          <button type="submit" class="px-4 py-1.5 bg-amber-500 text-black font-bold rounded-lg">Update Header</button>
         </div>
       </form>
     </div>
@@ -575,20 +629,21 @@
   <!-- EDIT SINGLE QUESTION MODAL -->
   <div id="editQuestionModal" class="modal-overlay">
     <div class="bg-slate-900 border-2 border-amber-500 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-      <h3 class="text-amber-400 font-bold text-sm mb-3">✏️ Edit Question Text & Options</h3>
+      <h3 class="text-amber-400 font-bold text-sm mb-3">✏️ Edit MCQ Question & Options</h3>
       <form onsubmit="saveSingleQuestionEdit(event)" class="space-y-3 text-xs">
         <div>
           <label class="block text-gray-300 font-bold mb-1">Question Text:</label>
           <textarea id="editQText" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg h-16" required></textarea>
         </div>
         <div class="space-y-1.5">
+          <label class="block text-gray-300 font-bold">Options A, B, C, D:</label>
           <input type="text" id="editOpt0" placeholder="Option A" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
           <input type="text" id="editOpt1" placeholder="Option B" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
           <input type="text" id="editOpt2" placeholder="Option C" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
           <input type="text" id="editOpt3" placeholder="Option D" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
         </div>
         <div>
-          <label class="block text-gray-300 font-bold mb-1">Correct Answer Option Index:</label>
+          <label class="block text-gray-300 font-bold mb-1">Correct Option:</label>
           <select id="editCorrectIdx" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg">
             <option value="0">Option A</option>
             <option value="1">Option B</option>
@@ -598,7 +653,7 @@
         </div>
         <div class="flex justify-end space-x-2 pt-2">
           <button type="button" onclick="document.getElementById('editQuestionModal').style.display='none'" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-lg">Cancel</button>
-          <button type="submit" class="px-4 py-1.5 bg-amber-500 text-black font-bold rounded-lg">Save Edit</button>
+          <button type="submit" class="px-4 py-1.5 bg-amber-500 text-black font-bold rounded-lg">Save Changes</button>
         </div>
       </form>
     </div>
