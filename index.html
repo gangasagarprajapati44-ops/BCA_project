@@ -351,4 +351,281 @@
       </nav>
 
       <!-- Search Bar with Live Redirection Dropdown -->
-      <div class="my-6
+      <div class="my-6 relative">
+        <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-indigo-400">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </div>
+        <input 
+          type="text" 
+          id="searchInput"
+          oninput="handleSearchInput(this.value)"
+          placeholder="🔍 Search topic, quiz, or 3D model..." 
+          class="w-full bg-gray-950/80 border border-indigo-500/30 rounded-2xl py-3.5 pl-11 pr-4 text-sm text-gray-100 placeholder-gray-400 focus:outline-none focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/30 transition shadow-inner"
+        >
+        <div class="search-results-dropdown" id="searchResults"></div>
+      </div>
+
+      <!-- Admin Panel: Topic Designer Form (With Diagram Drag & Drop Box, Quiz Builder Removed) -->
+      <div id="adminTopicPanel" class="hidden mb-6 bg-gray-950/90 border-2 border-amber-500 p-5 rounded-2xl">
+          <h3 class="text-amber-400 font-bold text-lg mb-3">✍️ Admin Topic Designer (Content & Diagram Publisher)</h3>
+          <form id="topicForm" onsubmit="saveTopicData(event)" class="space-y-3">
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Select Semester:</label>
+                  <select id="topicSem" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
+                      <option value="Semester 1">Semester 1</option>
+                      <option value="Semester 2">Semester 2</option>
+                      <option value="Semester 3">Semester 3</option>
+                      <option value="Semester 4">Semester 4</option>
+                      <option value="Semester 5">Semester 5</option>
+                      <option value="Semester 6">Semester 6</option>
+                  </select>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Topic Title:</label>
+                  <input type="text" id="topicTitle" placeholder="e.g. CPU Architecture" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs" required>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Definition:</label>
+                  <textarea id="topicDef" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-20" required></textarea>
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Short/Long Q&A Box:</label>
+                  <textarea id="topicQA" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-16"></textarea>
+              </div>
+
+              <!-- Topic Diagram Image Upload & Drag & Drop Box -->
+              <div>
+                <label class="block text-xs text-indigo-400 font-bold mb-1">Topic Diagram Image (Drag & Drop or Click):</label>
+                <div 
+                  id="dropZone"
+                  ondragover="handleDragOver(event)"
+                  ondragleave="handleDragLeave(event)"
+                  ondrop="handleDrop(event)"
+                  onclick="document.getElementById('diagramFileInput').click()"
+                  class="drag-drop-area rounded-xl p-4 text-center cursor-pointer relative"
+                >
+                  <input type="file" id="diagramFileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
+                  
+                  <div id="dropZoneText">
+                    <i class="fa-solid fa-cloud-arrow-up text-2xl text-indigo-400 mb-1 block"></i>
+                    <p class="text-xs text-gray-300 font-bold">Drag & Drop Topic Diagram Image here</p>
+                    <p class="text-[10px] text-gray-400 mt-0.5">or click to browse from device (PNG, JPG, SVG)</p>
+                  </div>
+
+                  <div id="previewContainer" class="hidden flex flex-col items-center">
+                    <img id="imagePreview" src="" alt="Diagram Preview" class="max-h-32 rounded-lg border border-indigo-500/40 shadow mb-2">
+                    <button type="button" onclick="event.stopPropagation(); removeDiagramImage();" class="text-xs text-rose-400 font-bold hover:underline">
+                      ❌ Remove Image
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">3D Models (Comma Separated):</label>
+                  <input type="text" id="topicModels" placeholder="models/cpu.glb, models/ram.glb" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs">
+              </div>
+              <div>
+                  <label class="block text-xs text-indigo-400 font-bold mb-1">Practical Lab Code:</label>
+                  <textarea id="topicLab" class="w-full p-2.5 bg-gray-900 border border-indigo-500/30 text-white rounded-lg text-xs h-16"></textarea>
+              </div>
+              <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg text-xs transition">🚀 Save & Live Update</button>
+          </form>
+      </div>
+
+      <!-- Hero Content -->
+      <div class="py-8 text-center flex flex-col items-center">
+        <span class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-4 shadow-sm">
+          <i class="fa-solid fa-cubes text-indigo-400"></i>
+          <span>Interactive Semester 1 to 6 Curriculum</span>
+        </span>
+
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight mb-4 leading-snug">
+          LEARN BCA WITH <span class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400">3D VISUALS & QUIZZES</span>
+        </h2>
+
+        <p class="text-sm sm:text-base text-gray-300 max-w-2xl font-normal leading-relaxed mb-8">
+          Explore complete BCA curriculum from Semester 1 to 6 with interactive 360° 3D models, timed quizzes and 3D flashcards.
+        </p>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap justify-center items-center gap-4">
+          <a href="template.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold text-sm hover:from-blue-500 hover:to-indigo-500 transition-all shadow-lg shadow-indigo-600/30 flex items-center space-x-2 group">
+            <span>Start Learning</span>
+            <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+          </a>
+
+          <a href="quiz.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold text-sm hover:from-emerald-500 hover:to-teal-500 transition-all shadow-lg shadow-emerald-600/30 flex items-center space-x-2 group">
+            <span>Take Quiz</span>
+            <i class="fa-solid fa-clock group-hover:rotate-12 transition-transform"></i>
+          </a>
+
+          <a href="flashcard.html" class="px-6 py-3 rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold text-sm hover:from-purple-500 hover:to-pink-500 transition-all shadow-lg shadow-purple-600/30 flex items-center space-x-2 group">
+            <span>3D Flashcards</span>
+            <i class="fa-solid fa-layer-group group-hover:rotate-12 transition-transform"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Wallpaper Footer Info -->
+      <div class="pt-6 border-t border-gray-800/80 flex flex-col sm:flex-row justify-between items-center text-xs text-gray-400 gap-2">
+        <div class="flex items-center space-x-2">
+          <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
+          <span class="font-medium text-emerald-400">3D 360° Engine Active (Drag mouse anywhere to rotate)</span>
+        </div>
+        <div>© 2026 BCA Learning Hub | 3D Immersive Education Platform</div>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- Bottom 3D Control Dock -->
+  <footer class="w-full max-w-4xl px-4 py-4 z-20">
+    <div class="glass-panel rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-4 shadow-2xl">
+      
+      <!-- Yaw Slider (360 Spin) -->
+      <div class="flex items-center space-x-3 w-full md:w-auto flex-1">
+        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-arrows-spin mr-1"></i>360° Spin:</span>
+        <input 
+          type="range" 
+          id="yawSlider" 
+          min="0" 
+          max="360" 
+          value="0" 
+          oninput="updateYaw(this.value)"
+          class="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+        >
+        <span id="yawVal" class="text-xs text-gray-400 w-10 text-right">0°</span>
+      </div>
+
+      <!-- Pitch Slider (3D Tilt) -->
+      <div class="flex items-center space-x-3 w-full md:w-auto flex-1">
+        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-up-down-left-right mr-1"></i>3D Tilt:</span>
+        <input 
+          type="range" 
+          id="pitchSlider" 
+          min="-30" 
+          max="30" 
+          value="0" 
+          oninput="updatePitch(this.value)"
+          class="w-full h-1.5 bg-gray-800 rounded-lg appearance-none cursor-pointer accent-indigo-500"
+        >
+        <span id="pitchVal" class="text-xs text-gray-400 w-10 text-right">0°</span>
+      </div>
+
+      <!-- Rotation Speed -->
+      <div class="flex items-center space-x-3 w-full md:w-auto">
+        <span class="text-xs font-semibold text-indigo-400 whitespace-nowrap"><i class="fa-solid fa-gauge-high mr-1"></i>Speed:</span>
+        <select id="speedSelect" onchange="changeSpeed(this.value)" class="bg-gray-900 border border-gray-700 text-xs text-gray-200 rounded-lg px-2 py-1 focus:outline-none">
+          <option value="1">1x Normal</option>
+          <option value="2" selected>2x Fast</option>
+          <option value="4">4x Turbo</option>
+        </select>
+      </div>
+
+    </div>
+  </footer>
+
+  <script>
+    let currentYaw = 0;
+    let currentPitch = 0;
+    let isAutoSpinning = false;
+    let spinSpeed = 2;
+    let spinInterval = null;
+
+    const wallpaperCard = document.getElementById('wallpaperCard');
+    const yawSlider = document.getElementById('yawSlider');
+    const pitchSlider = document.getElementById('pitchSlider');
+    const yawVal = document.getElementById('yawVal');
+    const pitchVal = document.getElementById('pitchVal');
+    const spinBtnText = document.getElementById('spinBtnText');
+    const btnAutoSpin = document.getElementById('btnAutoSpin');
+
+    function applyTransform() {
+      if (wallpaperCard) {
+        wallpaperCard.style.transform = `rotateY(${currentYaw}deg) rotateX(${currentPitch}deg)`;
+      }
+      if (yawSlider) yawSlider.value = (currentYaw % 360 + 360) % 360;
+      if (pitchSlider) pitchSlider.value = currentPitch;
+      if (yawVal) yawVal.innerText = `${Math.round((currentYaw % 360 + 360) % 360)}°`;
+      if (pitchVal) pitchVal.innerText = `${Math.round(currentPitch)}°`;
+    }
+
+    function updateYaw(val) {
+      currentYaw = parseFloat(val);
+      applyTransform();
+    }
+
+    function updatePitch(val) {
+      currentPitch = parseFloat(val);
+      applyTransform();
+    }
+
+    function toggleAutoSpin() {
+      isAutoSpinning = !isAutoSpinning;
+      if (isAutoSpinning) {
+        spinBtnText.innerText = "Stop Spin";
+        btnAutoSpin.classList.remove("bg-indigo-600");
+        btnAutoSpin.classList.add("bg-rose-600");
+        
+        spinInterval = setInterval(() => {
+          currentYaw = (currentYaw + spinSpeed) % 360;
+          applyTransform();
+        }, 30);
+      } else {
+        spinBtnText.innerText = "Spin 360°";
+        btnAutoSpin.classList.remove("bg-rose-600");
+        btnAutoSpin.classList.add("bg-indigo-600");
+        clearInterval(spinInterval);
+      }
+    }
+
+    function changeSpeed(val) {
+      spinSpeed = parseFloat(val);
+    }
+
+    function resetRotation() {
+      if (isAutoSpinning) toggleAutoSpin();
+      currentYaw = 0;
+      currentPitch = 0;
+      applyTransform();
+    }
+
+    // --- MOUSE DRAG ROTATION LOGIC ---
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+
+    window.addEventListener('mousedown', (e) => {
+      if (['INPUT', 'BUTTON', 'A', 'SELECT', 'TEXTAREA'].includes(e.target.tagName)) return;
+      isDragging = true;
+      startX = e.clientX;
+      startY = e.clientY;
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      let deltaX = e.clientX - startX;
+      let deltaY = e.clientY - startY;
+
+      currentYaw += deltaX * 0.4;
+      currentPitch -= deltaY * 0.4;
+
+      if (currentPitch > 30) currentPitch = 30;
+      if (currentPitch < -30) currentPitch = -30;
+
+      startX = e.clientX;
+      startY = e.clientY;
+
+      applyTransform();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+    });
+
+    applyTransform();
+  </script>
+</body>
+</html>
