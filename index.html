@@ -9,9 +9,6 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-  <!-- Google Model Viewer -->
-  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
-
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Font Awesome Icons -->
@@ -36,21 +33,45 @@
       background-size: 100% 100%, 50px 50px, 50px 50px;
     }
 
-    /* 3D Rotating Canvas / Sphere Wrapper */
-    .canvas-3d-wrapper {
+    /* Reliable 3D Glowing Orb Visual Element */
+    .orb-3d-container {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 1.5rem auto;
       position: relative;
-      width: 100%;
-      height: 380px;
       display: flex;
       justify-content: center;
       align-items: center;
-      perspective: 1000px;
     }
 
-    model-viewer {
-      width: 100%;
-      height: 100%;
-      --poster-color: transparent;
+    .orb-core {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #a855f7, #6366f1, #090d16);
+      box-shadow: 0 0 50px rgba(168, 85, 247, 0.6), inset 0 0 20px rgba(255, 255, 255, 0.4);
+      animation: floatOrb 4s ease-in-out infinite alternate;
+    }
+
+    .orb-ring {
+      position: absolute;
+      width: 170px;
+      height: 60px;
+      border: 3px solid rgba(168, 85, 247, 0.6);
+      border-radius: 50%;
+      transform: rotateX(70deg) rotateY(-20deg);
+      box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
+      animation: rotateRing 8s linear infinite;
+    }
+
+    @keyframes floatOrb {
+      0% { transform: translateY(0px) scale(1); }
+      100% { transform: translateY(-12px) scale(1.05); }
+    }
+
+    @keyframes rotateRing {
+      0% { transform: rotateX(70deg) rotateY(-20deg) rotate(0deg); }
+      100% { transform: rotateX(70deg) rotateY(-20deg) rotate(360deg); }
     }
 
     .glass-card {
@@ -219,4 +240,81 @@
       reader.onload = function(evt) {
         uploadedDiagramBase64 = evt.target.result;
         document.getElementById('imagePreview').src = uploadedDiagramBase64;
-        document.
+        document.getElementById('previewContainer').classList.remove('hidden');
+        document.getElementById('dropZoneText').classList.add('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeDiagramImage() {
+      uploadedDiagramBase64 = "";
+      document.getElementById('imagePreview').src = "";
+      document.getElementById('previewContainer').classList.add('hidden');
+      document.getElementById('dropZoneText').classList.remove('hidden');
+      document.getElementById('diagramFileInput').value = "";
+    }
+
+    /* Save Topic Data to Firebase */
+    function saveTopicData(e) {
+      e.preventDefault();
+
+      let payload = {
+        semester: document.getElementById('topicSem').value,
+        subject: document.getElementById('topicSubject').value.trim(),
+        topicTitle: document.getElementById('topicTitle').value.trim(),
+        overview: document.getElementById('topicOverview').value.trim(),
+        glbUrl: document.getElementById('topicGlbUrl').value.trim(),
+        diagramBase64: uploadedDiagramBase64,
+        definitionText: document.getElementById('topicDef').value.trim(),
+        labCode: document.getElementById('topicLabCode').value.trim(),
+        timestamp: new Date().toLocaleString()
+      };
+
+      db.ref('bca_topics').push(payload).then(() => {
+        alert("🎉 Topic Published Successfully!");
+        document.getElementById('topicForm').reset();
+        removeDiagramImage();
+        closeAdminModal();
+      });
+    }
+  </script>
+</head>
+<body class="matrix-bg min-h-screen flex flex-col justify-between items-center p-4">
+
+  <!-- Header -->
+  <header class="w-full max-w-6xl py-4 flex justify-between items-center z-10">
+    <div class="flex items-center space-x-3">
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
+        <i class="fa-solid fa-cube text-white text-xl"></i>
+      </div>
+      <div>
+        <h1 class="text-xl font-black text-white tracking-tight">BCA Learning Hub</h1>
+        <span class="text-xs text-purple-400 font-medium">3D Interactive Study Portal</span>
+      </div>
+    </div>
+
+    <div class="flex items-center space-x-3">
+      <button onclick="openAdminModal()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition flex items-center space-x-1.5 cursor-pointer shadow">
+        <i class="fa-solid fa-sliders text-amber-400"></i>
+        <span>Admin Panel</span>
+      </button>
+      <a href="quiz.html" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-cyan-500/30 text-cyan-300 text-xs font-bold hover:bg-slate-800 transition">
+        <i class="fa-solid fa-graduation-cap mr-1"></i> Quiz Arena
+      </a>
+      <a href="flashcard.html" class="px-3.5 py-2 rounded-xl bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs font-bold hover:bg-purple-800 transition">
+        <i class="fa-solid fa-layer-group mr-1"></i> Flashcards
+      </a>
+    </div>
+  </header>
+
+  <!-- Hero & 3D Interactive Center -->
+  <main class="w-full max-w-6xl my-auto py-4 z-10">
+    
+    <!-- 3D Glowing Orb Visual Sphere -->
+    <div class="orb-3d-container">
+      <div class="orb-ring"></div>
+      <div class="orb-core"></div>
+    </div>
+
+    <!-- Hero Header -->
+    <div class="text-center max-w-2
