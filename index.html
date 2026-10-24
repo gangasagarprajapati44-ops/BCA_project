@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCA Learning Hub - 3D Educational Platform</title>
+  <title>BCA Learning Hub - 3D Interactive Platform</title>
 
   <!-- Firebase Compatibility Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
 
-  <!-- Google Model Viewer for 3D Models -->
+  <!-- Google Model Viewer -->
   <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
 
   <!-- Tailwind CSS CDN -->
@@ -30,10 +30,27 @@
 
     .matrix-bg {
       background-image: 
-        radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.12) 0%, rgba(2, 6, 23, 0.98) 80%),
-        linear-gradient(rgba(124, 58, 237, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(124, 58, 237, 0.03) 1px, transparent 1px);
+        radial-gradient(circle at 50% 50%, rgba(124, 58, 237, 0.15) 0%, rgba(2, 6, 23, 0.98) 80%),
+        linear-gradient(rgba(124, 58, 237, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(124, 58, 237, 0.04) 1px, transparent 1px);
       background-size: 100% 100%, 50px 50px, 50px 50px;
+    }
+
+    /* 3D Rotating Canvas / Sphere Wrapper */
+    .canvas-3d-wrapper {
+      position: relative;
+      width: 100%;
+      height: 380px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      perspective: 1000px;
+    }
+
+    model-viewer {
+      width: 100%;
+      height: 100%;
+      --poster-color: transparent;
     }
 
     .glass-card {
@@ -45,17 +62,17 @@
     .glass-card:hover {
       transform: translateY(-5px);
       border-color: #a855f7;
-      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.2);
+      box-shadow: 0 20px 40px rgba(139, 92, 246, 0.25);
     }
 
     .drag-drop-area {
       border: 2px dashed rgba(168, 85, 247, 0.4);
-      background: rgba(15, 23, 42, 0.6);
+      background: rgba(15, 23, 42, 0.7);
       transition: all 0.2s ease;
     }
     .drag-drop-area.dragover {
       border-color: #a855f7;
-      background: rgba(168, 85, 247, 0.15);
+      background: rgba(168, 85, 247, 0.2);
     }
 
     .modal-overlay {
@@ -148,13 +165,13 @@
       }
     }
 
-    /* Admin Password Lock */
+    /* Admin Password Authentication */
     function openAdminModal() {
       let pass = prompt("🔑 Enter Admin Password:");
       if (pass === "sagar9955@#") {
         document.getElementById('adminModal').style.display = "flex";
       } else if (pass !== null) {
-        alert("❌ Galat Password!");
+        alert("❌ Incorrect Password!");
       }
     }
 
@@ -162,7 +179,7 @@
       document.getElementById('adminModal').style.display = "none";
     }
 
-    /* Drag and Drop Image Handler */
+    /* Drag & Drop Image Handler */
     function handleDragOver(e) {
       e.preventDefault();
       e.stopPropagation();
@@ -202,204 +219,4 @@
       reader.onload = function(evt) {
         uploadedDiagramBase64 = evt.target.result;
         document.getElementById('imagePreview').src = uploadedDiagramBase64;
-        document.getElementById('previewContainer').classList.remove('hidden');
-        document.getElementById('dropZoneText').classList.add('hidden');
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function removeDiagramImage() {
-      uploadedDiagramBase64 = "";
-      document.getElementById('imagePreview').src = "";
-      document.getElementById('previewContainer').classList.add('hidden');
-      document.getElementById('dropZoneText').classList.remove('hidden');
-      document.getElementById('diagramFileInput').value = "";
-    }
-
-    /* Save Topic to Firebase */
-    function saveTopicData(e) {
-      e.preventDefault();
-
-      let payload = {
-        semester: document.getElementById('topicSem').value,
-        subject: document.getElementById('topicSubject').value.trim(),
-        topicTitle: document.getElementById('topicTitle').value.trim(),
-        overview: document.getElementById('topicOverview').value.trim(),
-        glbUrl: document.getElementById('topicGlbUrl').value.trim(),
-        diagramBase64: uploadedDiagramBase64,
-        definitionText: document.getElementById('topicDef').value.trim(),
-        labCode: document.getElementById('topicLabCode').value.trim(),
-        timestamp: new Date().toLocaleString()
-      };
-
-      db.ref('bca_topics').push(payload).then(() => {
-        alert("🎉 Topic Published Successfully!");
-        document.getElementById('topicForm').reset();
-        removeDiagramImage();
-        closeAdminModal();
-      });
-    }
-  </script>
-</head>
-<body class="matrix-bg min-h-screen flex flex-col justify-between items-center p-4">
-
-  <!-- Header -->
-  <header class="w-full max-w-6xl py-4 flex justify-between items-center z-10">
-    <div class="flex items-center space-x-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 to-pink-500 flex items-center justify-center shadow-lg shadow-purple-500/30">
-        <i class="fa-solid fa-cube text-white text-xl"></i>
-      </div>
-      <div>
-        <h1 class="text-xl font-black text-white tracking-tight">BCA Learning Hub</h1>
-        <span class="text-xs text-purple-400 font-medium">3D Interactive Study Portal</span>
-      </div>
-    </div>
-
-    <div class="flex items-center space-x-3">
-      <button onclick="openAdminModal()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition flex items-center space-x-1.5 cursor-pointer shadow">
-        <i class="fa-solid fa-sliders text-amber-400"></i>
-        <span>Admin Panel</span>
-      </button>
-      <a href="quiz.html" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-cyan-500/30 text-cyan-300 text-xs font-bold hover:bg-slate-800 transition">
-        <i class="fa-solid fa-graduation-cap mr-1"></i> Quiz Arena
-      </a>
-      <a href="flashcard.html" class="px-3.5 py-2 rounded-xl bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs font-bold hover:bg-purple-800 transition">
-        <i class="fa-solid fa-layer-group mr-1"></i> Flashcards
-      </a>
-    </div>
-  </header>
-
-  <!-- Hero & 3D Interactive Center -->
-  <main class="w-full max-w-6xl my-auto py-6 z-10">
-    
-    <!-- Hero Header -->
-    <div class="text-center max-w-2xl mx-auto mb-8">
-      <h2 class="text-3xl sm:text-4xl font-black text-white tracking-tight mb-2">
-        Explore BCA Concepts in <span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">3D Interactive</span>
-      </h2>
-      <p class="text-xs sm:text-sm text-gray-400">
-        Visualise definitions, 3D models, diagrams, practical lab codes, and structured quizzes.
-      </p>
-
-      <!-- Live Search Bar -->
-      <div class="relative mt-6 max-w-md mx-auto">
-        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-purple-400">
-          <i class="fa-solid fa-magnifying-glass text-xs"></i>
-        </div>
-        <input 
-          type="text" 
-          id="searchInput"
-          oninput="renderTopicGrid()"
-          placeholder="Search subject, topic or semester..." 
-          class="w-full bg-slate-950/90 border border-purple-500/30 rounded-2xl py-3 pl-9 pr-4 text-xs text-white placeholder-gray-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/30 transition shadow-inner"
-        >
-      </div>
-    </div>
-
-    <!-- Topics Grid Container -->
-    <div id="topicGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2">
-      <!-- Topics rendered dynamically -->
-    </div>
-
-  </main>
-
-  <!-- ADMIN TOPIC DESIGNER MODAL -->
-  <div id="adminModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-      
-      <div class="flex justify-between items-center mb-4 pb-3 border-b border-amber-500/30">
-        <h3 class="text-amber-400 font-extrabold text-sm flex items-center">
-          <i class="fa-solid fa-palette mr-2"></i>Admin Topic Designer
-        </h3>
-        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-xs cursor-pointer">❌ Close</button>
-      </div>
-
-      <form id="topicForm" onsubmit="saveTopicData(event)" class="space-y-4 text-xs">
-        
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-purple-400 font-bold mb-1">Semester:</label>
-            <select id="topicSem" class="w-full p-2.5 bg-slate-950 border border-purple-500/30 text-white rounded-xl" required>
-              <option value="Semester 1">Semester 1</option>
-              <option value="Semester 2">Semester 2</option>
-              <option value="Semester 3">Semester 3</option>
-              <option value="Semester 4">Semester 4</option>
-              <option value="Semester 5">Semester 5</option>
-              <option value="Semester 6">Semester 6</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-purple-400 font-bold mb-1">Subject Name:</label>
-            <input type="text" id="topicSubject" placeholder="e.g. Operating System" class="w-full p-2.5 bg-slate-950 border border-purple-500/30 text-white rounded-xl" required>
-          </div>
-          <div>
-            <label class="block text-purple-400 font-bold mb-1">Topic Title:</label>
-            <input type="text" id="topicTitle" placeholder="e.g. CPU Scheduling" class="w-full p-2.5 bg-slate-950 border border-purple-500/30 text-white rounded-xl" required>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-purple-400 font-bold mb-1">Short Overview / Subtitle:</label>
-          <input type="text" id="topicOverview" placeholder="e.g. Understanding FCFS and SJF Scheduling Algorithm" class="w-full p-2.5 bg-slate-950 border border-purple-500/30 text-white rounded-xl" required>
-        </div>
-
-        <!-- Diagram / Image Drag & Drop Upload Box -->
-        <div>
-          <label class="block text-purple-400 font-bold mb-1">Topic Diagram Image (Drag & Drop or Click):</label>
-          <div 
-            id="dropZone"
-            ondragover="handleDragOver(event)"
-            ondragleave="handleDragLeave(event)"
-            ondrop="handleDrop(event)"
-            onclick="document.getElementById('diagramFileInput').click()"
-            class="drag-drop-area rounded-2xl p-6 text-center cursor-pointer relative"
-          >
-            <input type="file" id="diagramFileInput" accept="image/*" class="hidden" onchange="handleFileSelect(event)">
-            
-            <div id="dropZoneText">
-              <i class="fa-solid fa-cloud-arrow-up text-3xl text-purple-400 mb-2 block"></i>
-              <p class="text-xs text-gray-300 font-bold">Drag & Drop Topic Diagram Image here</p>
-              <p class="text-[10px] text-gray-500 mt-1">or click to browse from device (PNG, JPG, SVG)</p>
-            </div>
-
-            <!-- Preview Container -->
-            <div id="previewContainer" class="hidden flex flex-col items-center">
-              <img id="imagePreview" src="" alt="Diagram Preview" class="max-h-36 rounded-xl border border-purple-500/40 shadow mb-2">
-              <button type="button" onclick="event.stopPropagation(); removeDiagramImage();" class="text-xs text-rose-400 font-bold hover:underline">
-                ❌ Remove Image
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-purple-400 font-bold mb-1">3D Model GLB File URL (Optional):</label>
-          <input type="url" id="topicGlbUrl" placeholder="e.g. https://modelviewer.dev/shared-assets/models/Astronaut.glb" class="w-full p-2.5 bg-slate-950 border border-purple-500/30 text-white rounded-xl">
-        </div>
-
-        <div>
-          <label class="block text-purple-400 font-bold mb-1">Detailed Explanation / Definition:</label>
-          <textarea id="topicDef" placeholder="Enter complete topic notes and definition..." class="w-full p-3 bg-slate-950 border border-purple-500/30 text-white rounded-xl h-24" required></textarea>
-        </div>
-
-        <div>
-          <label class="block text-purple-400 font-bold mb-1">Practical Lab Code / Example (Optional):</label>
-          <textarea id="topicLabCode" placeholder="Paste C, C++, Java or SQL code here..." class="w-full p-3 bg-slate-950 border border-purple-500/30 text-white rounded-xl h-20 font-mono text-[11px]"></textarea>
-        </div>
-
-        <button type="submit" class="w-full py-3 bg-gradient-to-r from-purple-600 to-pink-600 hover:opacity-90 text-white font-extrabold rounded-xl transition shadow-lg shadow-purple-600/30 cursor-pointer">
-          🚀 Save & Publish Topic
-        </button>
-
-      </form>
-
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="w-full max-w-6xl py-4 text-center text-xs text-purple-400/60 z-10">
-    © 2026 BCA Learning Hub | Interactive 3D Educational Portal
-  </footer>
-
-</body>
-</html>
+        document.
