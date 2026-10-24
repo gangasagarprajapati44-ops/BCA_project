@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
@@ -169,7 +170,7 @@
             return;
         }
 
-        const filtered = allSearchableItems.filter(item => item.title.toLowerCase().includes(query.toLowerCase()));
+        const filtered = allSearchableItems.filter(item => item.title && item.title.toLowerCase().includes(query.toLowerCase()));
 
         if (filtered.length > 0) {
             resultsBox.style.display = "block";
@@ -187,7 +188,7 @@
         }
     }
 
-    /* Updated Admin Password to sagar9955@# */
+    /* Admin Password: sagar9955@# */
     function toggleAdminLogin() {
         let pass = prompt("🔑 Enter Owner Password:");
         if (pass === "sagar9955@#") {
@@ -365,7 +366,7 @@
         <div class="search-results-dropdown" id="searchResults"></div>
       </div>
 
-      <!-- Admin Panel: Topic Designer Form (With Diagram Drag & Drop Box, Quiz Builder Removed) -->
+      <!-- Admin Panel: Topic Designer Form -->
       <div id="adminTopicPanel" class="hidden mb-6 bg-gray-950/90 border-2 border-amber-500 p-5 rounded-2xl">
           <h3 class="text-amber-400 font-bold text-lg mb-3">✍️ Admin Topic Designer (Content & Diagram Publisher)</h3>
           <form id="topicForm" onsubmit="saveTopicData(event)" class="space-y-3">
