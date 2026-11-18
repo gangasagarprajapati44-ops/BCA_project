@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>BCA Learning Hub - Hologram Quiz Arena</title>
+  <title>BCA Learning Hub - Hologram Sci-Fi Quiz Arena</title>
 
   <!-- Firebase Compatibility Scripts -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+
+  <!-- Three.js for Hologram Particle Background & Audio Waves -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -25,54 +28,78 @@
       overflow-x: hidden;
     }
 
-    /* Holographic Sci-Fi Theme */
-    .hologram-bg {
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.15) 0%, rgba(2, 6, 23, 0.98) 80%),
-        linear-gradient(rgba(6, 182, 212, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(6, 182, 212, 0.04) 1px, transparent 1px);
-      background-size: 100% 100%, 45px 45px, 45px 45px;
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
-    .hologram-panel {
-      background: rgba(6, 182, 212, 0.04);
-      backdrop-filter: blur(16px);
-      border: 1px solid rgba(6, 182, 212, 0.4);
-      box-shadow: 0 0 30px rgba(6, 182, 212, 0.15), inset 0 0 15px rgba(6, 182, 212, 0.1);
+    /* Iron Man Style Hologram Glass */
+    .hologram-screen {
+      background: rgba(6, 182, 212, 0.06);
+      backdrop-filter: blur(18px);
+      border: 2px solid rgba(6, 182, 212, 0.5);
+      box-shadow: 0 0 40px rgba(6, 182, 212, 0.25), inset 0 0 25px rgba(6, 182, 212, 0.15);
+      animation: hologramPulse 4s infinite alternate;
+    }
+
+    @keyframes hologramPulse {
+      0% { border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 0 30px rgba(6, 182, 212, 0.2); }
+      100% { border-color: rgba(56, 189, 248, 0.8); box-shadow: 0 0 50px rgba(56, 189, 248, 0.4); }
+    }
+
+    /* Neon Shockwave on Correct Answer */
+    @keyframes neonShockwave {
+      0% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { box-shadow: 0 0 0 20px rgba(16, 185, 129, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+
+    .correct-shockwave {
+      animation: neonShockwave 0.8s ease-out;
+      background: rgba(16, 185, 129, 0.3) !important;
+      border-color: #10b981 !important;
+      color: #34d399 !important;
+    }
+
+    /* Digital Glitch on Wrong Answer */
+    @keyframes glitchEffect {
+      0% { transform: translate(0); }
+      20% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); }
+      40% { transform: translate(-3px, -3px); }
+      60% { transform: translate(3px, 3px); }
+      80% { transform: translate(3px, -3px); }
+      100% { transform: translate(0); }
+    }
+
+    .glitch-anim {
+      animation: glitchEffect 0.3s ease infinite;
+      border-color: #ef4444 !important;
+      background: rgba(239, 68, 68, 0.2) !important;
     }
 
     .topic-card {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.88);
       backdrop-filter: blur(16px);
-      border: 1px solid rgba(6, 182, 212, 0.3);
+      border: 1px solid rgba(6, 182, 212, 0.35);
       transition: all 0.3s ease;
     }
     .topic-card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-6px);
       border-color: #06b6d4;
-      box-shadow: 0 15px 30px rgba(6, 182, 212, 0.25);
+      box-shadow: 0 15px 35px rgba(6, 182, 212, 0.3);
     }
 
     .opt-btn {
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px solid rgba(6, 182, 212, 0.2);
+      background: rgba(15, 23, 42, 0.92);
+      border: 1px solid rgba(6, 182, 212, 0.25);
       transition: all 0.2s ease;
       cursor: pointer;
     }
     .opt-btn:hover {
       border-color: #38bdf8;
-      background: rgba(56, 189, 248, 0.1);
-    }
-    .opt-btn.selected {
-      background: rgba(6, 182, 212, 0.25);
-      border-color: #06b6d4;
-      box-shadow: 0 0 15px rgba(6, 182, 212, 0.3);
-    }
-    .opt-btn.correct {
-      background: rgba(16, 185, 129, 0.3) !important;
-      border-color: #10b981 !important;
-      color: #34d399 !important;
-      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+      background: rgba(56, 189, 248, 0.12);
     }
 
     .modal-overlay {
@@ -110,6 +137,7 @@
 
     const synth = window.speechSynthesis;
     let isSpeaking = false;
+    let scene, camera, renderer, waveMesh;
 
     window.onload = function() {
       if (sessionStorage.getItem("bca_admin_auth") === "true") {
@@ -122,7 +150,49 @@
         allQuizTopics = data || {};
         renderTopicCards();
       });
+
+      initHologramThreeJS();
     };
+
+    /* Three.js Hologram Background & Audio Reactive Waves */
+    function initHologramThreeJS() {
+      const canvas = document.getElementById('bg-canvas');
+      scene = new THREE.Scene();
+      camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 8, 22);
+      camera.lookAt(0, 0, 0);
+
+      renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+
+      const geo = new THREE.PlaneGeometry(50, 30, 40, 30);
+      const mat = new THREE.MeshBasicMaterial({ color: 0x06b6d4, wireframe: true, transparent: true, opacity: 0.2 });
+      waveMesh = new THREE.Mesh(geo, mat);
+      waveMesh.rotation.x = -Math.PI / 2.2;
+      waveMesh.position.y = -4;
+      scene.add(waveMesh);
+
+      window.addEventListener('resize', () => {
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+      });
+
+      animateHologram();
+    }
+
+    function animateHologram() {
+      requestAnimationFrame(animateHologram);
+      const time = Date.now() * 0.002;
+      const pos = waveMesh.geometry.attributes.position;
+      for (let i = 0; i < pos.count; i++) {
+        const x = pos.getX(i);
+        const y = pos.getY(i);
+        pos.setZ(i, Math.sin(x * 0.3 + time) * Math.cos(y * 0.3 + time) * 1.5);
+      }
+      pos.needsUpdate = true;
+      renderer.render(scene, camera);
+    }
 
     function showAdminControls() {
       document.querySelectorAll('.admin-only').forEach(el => el.classList.remove('hidden'));
@@ -131,21 +201,11 @@
     function renderTopicCards() {
       const container = document.getElementById('topicCardsGrid');
       container.innerHTML = "";
-
       const keys = Object.keys(allQuizTopics);
-      let filteredKeys = keys;
-
-      if (currentFilterSem !== "All") {
-        filteredKeys = keys.filter(k => allQuizTopics[k].semester === currentFilterSem);
-      }
+      let filteredKeys = currentFilterSem === "All" ? keys : keys.filter(k => allQuizTopics[k].semester === currentFilterSem);
 
       if (filteredKeys.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full text-center py-16 text-gray-400 bg-slate-900/50 rounded-2xl border border-cyan-500/20">
-            <i class="fa-solid fa-folder-open text-4xl mb-3 text-cyan-400 opacity-50 block"></i>
-            Is Semester ke liye koi Quiz Topic nahi mila.
-          </div>
-        `;
+        container.innerHTML = `<div class="col-span-full text-center py-16 text-gray-400 bg-slate-900/50 rounded-2xl border border-cyan-500/20">Is Semester ke liye koi Quiz Topic nahi mila.</div>`;
         return;
       }
 
@@ -158,31 +218,19 @@
           <div class="topic-card rounded-2xl p-5 flex flex-col justify-between relative">
             <div>
               <div class="flex justify-between items-center mb-2">
-                <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-bold">
-                  ${item.semester}
-                </span>
-                <span class="text-[11px] text-gray-400 font-medium">
-                  <i class="fa-solid fa-book-bookmark text-cyan-400 mr-1"></i>${item.chapter}
-                </span>
+                <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 text-[10px] font-bold">${item.semester}</span>
+                <span class="text-[11px] text-gray-400 font-medium"><i class="fa-solid fa-book-bookmark text-cyan-400 mr-1"></i>${item.chapter}</span>
               </div>
-              
               <h3 class="text-base font-bold text-white mt-2 mb-1">${item.topic}</h3>
               <p class="text-xs text-gray-400 font-medium mb-4">Total Questions: <span class="text-cyan-400 font-bold">${qCount}</span></p>
             </div>
-
             <div class="flex items-center justify-between pt-3 border-t border-cyan-500/20">
               <div class="flex items-center space-x-2 admin-only ${adminClass}">
-                <button onclick="openEditTopicModal('${key}')" class="text-xs text-amber-400 font-bold hover:underline" title="Edit Topic Header">
-                  <i class="fa-solid fa-pen-to-square"></i> Edit
-                </button>
-                <button onclick="deleteTopic('${key}')" class="text-xs text-rose-500 font-bold hover:underline" title="Delete Topic">
-                  <i class="fa-solid fa-trash"></i> Delete
-                </button>
+                <button onclick="openEditTopicModal('${key}')" class="text-xs text-amber-400 font-bold hover:underline"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+                <button onclick="deleteTopic('${key}')" class="text-xs text-rose-500 font-bold hover:underline"><i class="fa-solid fa-trash"></i> Delete</button>
               </div>
-              
               <button onclick="openTopicQuizPage('${key}')" class="px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold text-xs transition flex items-center space-x-1 ml-auto cursor-pointer shadow-lg shadow-cyan-500/30">
-                <span>Hologram Quiz</span>
-                <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                <span>Hologram Quiz</span><i class="fa-solid fa-arrow-right text-[10px]"></i>
               </button>
             </div>
           </div>
@@ -192,10 +240,7 @@
 
     function filterBySemester(sem, btn) {
       currentFilterSem = sem;
-      document.querySelectorAll('.sem-btn').forEach(b => {
-        b.classList.remove('bg-cyan-500', 'text-slate-950', 'shadow-lg');
-        b.classList.add('bg-slate-900', 'text-gray-300');
-      });
+      document.querySelectorAll('.sem-btn').forEach(b => { b.classList.remove('bg-cyan-500', 'text-slate-950', 'shadow-lg'); b.classList.add('bg-slate-900', 'text-gray-300'); });
       btn.classList.remove('bg-slate-900', 'text-gray-300');
       btn.classList.add('bg-cyan-500', 'text-slate-950', 'shadow-lg');
       renderTopicCards();
@@ -209,7 +254,6 @@
 
       document.getElementById('portalHome').classList.add('hidden');
       document.getElementById('quizTopicPage').classList.remove('hidden');
-
       document.getElementById('displaySemBadge').innerText = topicData.semester;
       document.getElementById('displayChapterName').innerText = topicData.chapter;
       document.getElementById('displayTopicTitle').innerText = topicData.topic;
@@ -220,19 +264,13 @@
     function renderQuestionsList(questions) {
       const container = document.getElementById('questionsContainer');
       container.innerHTML = "";
-
-      if (questions.length === 0) {
-        container.innerHTML = `<p class="text-xs text-gray-400">Is topic mein abhi koi question nahi hai.</p>`;
-        return;
-      }
-
       const adminClass = isAdminLoggedIn ? "" : "hidden";
 
       questions.forEach((q, qIdx) => {
         let optionsHtml = "";
         q.options.forEach((opt, oIdx) => {
           optionsHtml += `
-            <button id="opt_${qIdx}_${oIdx}" onclick="selectOption(${qIdx}, ${oIdx})" class="opt-btn w-full p-3 rounded-xl text-left text-xs font-semibold text-gray-200 flex justify-between items-center">
+            <button id="opt_${qIdx}_${oIdx}" onclick="selectHologramOption(${qIdx}, ${oIdx}, ${q.correct})" class="opt-btn w-full p-3 rounded-xl text-left text-xs font-semibold text-gray-200 flex justify-between items-center">
               <span>${String.fromCharCode(65 + oIdx)}. ${opt}</span>
               <i class="fa-regular fa-circle text-cyan-400/50"></i>
             </button>
@@ -240,147 +278,93 @@
         });
 
         container.innerHTML += `
-          <div class="hologram-panel p-5 rounded-2xl relative">
+          <div class="hologram-screen p-5 rounded-2xl relative">
             <div class="flex justify-between items-center mb-2">
-              <span class="text-xs font-bold text-cyan-400">Q${qIdx + 1}.</span>
-              <button onclick="openEditSingleQuestion(${qIdx})" class="admin-only ${adminClass} text-[11px] text-amber-400 font-bold hover:underline flex items-center">
-                <i class="fa-solid fa-pen mr-1"></i> Edit MCQ
-              </button>
+              <span class="text-xs font-bold text-cyan-400">Q${qIdx + 1} (Hologram Mode).</span>
+              <button onclick="openEditSingleQuestion(${qIdx})" class="admin-only ${adminClass} text-[11px] text-amber-400 font-bold hover:underline"><i class="fa-solid fa-pen mr-1"></i> Edit MCQ</button>
             </div>
-
             <h4 class="text-sm font-bold text-white mb-3">${q.question}</h4>
             <div class="space-y-2 mb-3">${optionsHtml}</div>
-
             <div class="flex justify-between items-center pt-2">
-              <button onclick="toggleAnswerView(${qIdx}, ${q.correct})" class="text-xs text-amber-400 font-bold hover:underline">
-                <i class="fa-solid fa-eye mr-1"></i> Show Correct Hologram Answer
-              </button>
-              <span id="ansText_${qIdx}" class="text-xs font-bold text-emerald-400 hidden">
-                Correct: Option ${String.fromCharCode(65 + q.correct)}
-              </span>
+              <button onclick="toggleAnswerView(${qIdx}, ${q.correct})" class="text-xs text-amber-400 font-bold hover:underline"><i class="fa-solid fa-eye mr-1"></i> Show Correct Answer</button>
+              <span id="ansText_${qIdx}" class="text-xs font-bold text-emerald-400 hidden">Correct: Option ${String.fromCharCode(65 + q.correct)}</span>
             </div>
           </div>
         `;
       });
     }
 
-    function toggleFullTopicAudio() {
-      if (!synth) return alert("Speech API is not supported in this browser.");
-
-      const btnText = document.getElementById('audioBtnText');
-      const btnIcon = document.getElementById('audioBtnIcon');
-
-      if (isSpeaking) {
-        synth.cancel();
-        isSpeaking = false;
-        btnText.innerText = "Listen Full Topic Quiz";
-        btnIcon.className = "fa-solid fa-volume-high text-cyan-400 mr-2";
-        return;
-      }
-
-      const topicData = allQuizTopics[currentTopicId];
-      if (!topicData || !topicData.questions || topicData.questions.length === 0) return;
-
-      let fullText = `Starting hologram quiz for ${topicData.topic}, ${topicData.chapter}. `;
-
-      topicData.questions.forEach((q, qIdx) => {
-        fullText += `Question number ${qIdx + 1}. ${q.question}. `;
-        q.options.forEach((opt, oIdx) => {
-          fullText += `Option ${String.fromCharCode(65 + oIdx)}, ${opt}. `;
-        });
-        fullText += `Correct answer is Option ${String.fromCharCode(65 + q.correct)}, ${q.options[q.correct]}. `;
-      });
-
-      synth.cancel();
-      const utterance = new SpeechSynthesisUtterance(fullText);
-      utterance.rate = 0.95;
-
-      utterance.onend = function() {
-        isSpeaking = false;
-        btnText.innerText = "Listen Full Topic Quiz";
-        btnIcon.className = "fa-solid fa-volume-high text-cyan-400 mr-2";
-      };
-
-      synth.speak(utterance);
-      isSpeaking = true;
-      btnText.innerText = "Stop Playing Audio";
-      btnIcon.className = "fa-solid fa-circle-stop text-rose-500 animate-pulse mr-2";
-    }
-
-    function selectOption(qIdx, oIdx) {
+    /* Holographic Option Selection with Neon Shockwave / Glitch Effect */
+    function selectHologramOption(qIdx, oIdx, correctIdx) {
       selectedAnswers[qIdx] = oIdx;
       for (let i = 0; i < 4; i++) {
-        let el = document.getElementById(`opt_${qIdx}_${i}`);
-        if (el) el.classList.remove('selected');
+        let btn = document.getElementById(`opt_${qIdx}_${i}`);
+        if (btn) {
+          btn.classList.remove('correct-shockwave', 'glitch-anim', 'selected');
+        }
       }
-      document.getElementById(`opt_${qIdx}_${oIdx}`).classList.add('selected');
+
+      let selectedBtn = document.getElementById(`opt_${qIdx}_${oIdx}`);
+      if (oIdx === correctIdx) {
+        selectedBtn.classList.add('correct-shockwave');
+      } else {
+        selectedBtn.classList.add('glitch-anim');
+        setTimeout(() => { selectedBtn.classList.remove('glitch-anim'); selectedBtn.classList.add('selected'); }, 400);
+      }
     }
 
     function toggleAnswerView(qIdx, correctIdx) {
       let ansSpan = document.getElementById(`ansText_${qIdx}`);
       let btn = document.getElementById(`opt_${qIdx}_${correctIdx}`);
-
       if (ansSpan.classList.contains('hidden')) {
         ansSpan.classList.remove('hidden');
-        if (btn) btn.classList.add('correct');
+        if (btn) btn.classList.add('correct-shockwave');
       } else {
         ansSpan.classList.add('hidden');
-        if (btn) btn.classList.remove('correct');
+        if (btn) btn.classList.remove('correct-shockwave');
       }
+    }
+
+    function toggleFullTopicAudio() {
+      if (!synth) return;
+      if (isSpeaking) { synth.cancel(); isSpeaking = false; document.getElementById('audioBtnText').innerText = "Listen Full Topic Quiz"; return; }
+      const topicData = allQuizTopics[currentTopicId];
+      if (!topicData || !topicData.questions) return;
+      let fullText = `Hologram quiz for ${topicData.topic}. `;
+      topicData.questions.forEach((q, idx) => { fullText += `Q ${idx + 1}. ${q.question}. `; });
+      synth.cancel();
+      const utterance = new SpeechSynthesisUtterance(fullText);
+      utterance.onend = () => { isSpeaking = false; document.getElementById('audioBtnText').innerText = "Listen Full Topic Quiz"; };
+      synth.speak(utterance);
+      isSpeaking = true;
+      document.getElementById('audioBtnText').innerText = "Stop Audio";
     }
 
     function submitQuizResult() {
       const topicData = allQuizTopics[currentTopicId];
       if (!topicData || !topicData.questions) return;
-
-      let correctCount = 0;
-      topicData.questions.forEach((q, idx) => {
-        if (selectedAnswers[idx] === q.correct) correctCount++;
-      });
-
-      let percent = Math.round((correctCount / topicData.questions.length) * 100);
-      document.getElementById('scoreCorrect').innerText = `${correctCount}/${topicData.questions.length}`;
+      let correct = 0;
+      topicData.questions.forEach((q, idx) => { if (selectedAnswers[idx] === q.correct) correct++; });
+      let percent = Math.round((correct / topicData.questions.length) * 100);
+      document.getElementById('scoreCorrect').innerText = `${correct}/${topicData.questions.length}`;
       document.getElementById('scorePercent').innerText = `${percent}%`;
       document.getElementById('scoreModal').style.display = "flex";
     }
 
     function backToHomePortal() {
-      if (synth) {
-        synth.cancel();
-        isSpeaking = false;
-        document.getElementById('audioBtnText').innerText = "Listen Full Topic Quiz";
-        document.getElementById('audioBtnIcon').className = "fa-solid fa-volume-high text-cyan-400 mr-2";
-      }
+      if (synth) synth.cancel();
       document.getElementById('quizTopicPage').classList.add('hidden');
       document.getElementById('portalHome').classList.remove('hidden');
     }
 
-    function closeScoreModal() {
-      document.getElementById('scoreModal').style.display = "none";
-      backToHomePortal();
-    }
-
+    function closeScoreModal() { document.getElementById('scoreModal').style.display = "none"; backToHomePortal(); }
     function authenticateAdmin() {
       let pass = prompt("🔑 Enter Admin Password:");
-      if (pass === "sagar9955@#") {
-        sessionStorage.setItem("bca_admin_auth", "true");
-        isAdminLoggedIn = true;
-        showAdminControls();
-        renderTopicCards();
-        alert("🎉 Admin Unlocked!");
-      } else if (pass !== null) {
-        alert("❌ Incorrect Password!");
-      }
+      if (pass === "sagar9955@#") { sessionStorage.setItem("bca_admin_auth", "true"); isAdminLoggedIn = true; showAdminControls(); renderTopicCards(); alert("🎉 Admin Unlocked!"); }
+      else if (pass !== null) alert("❌ Wrong Password!");
     }
-
-    function openAdminUploadModal() {
-      if (!isAdminLoggedIn) return authenticateAdmin();
-      document.getElementById('adminModal').style.display = "flex";
-    }
-
-    function closeAdminModal() {
-      document.getElementById('adminModal').style.display = "none";
-    }
+    function openAdminUploadModal() { if (!isAdminLoggedIn) return authenticateAdmin(); document.getElementById('adminModal').style.display = "flex"; }
+    function closeAdminModal() { document.getElementById('adminModal').style.display = "none"; }
 
     function saveStructuredQuiz(e) {
       e.preventDefault();
@@ -388,155 +372,82 @@
       let chapter = document.getElementById('uploadChapter').value.trim();
       let topic = document.getElementById('uploadTopic').value.trim();
       let rawText = document.getElementById('uploadBulkText').value;
-
       let blocks = rawText.split(/\n\s*\n/);
       let parsedQuestions = [];
-
       blocks.forEach(block => {
         let lines = block.split('\n').map(l => l.trim()).filter(l => l !== "");
         if (lines.length >= 6) {
           let ansChar = lines[5].replace(/^Ans:\s*/i, '').toUpperCase();
           let correctIdx = {'A':0, 'B':1, 'C':2, 'D':3}[ansChar] || 0;
-          parsedQuestions.push({
-            question: lines[0].replace(/^Q:\s*/i, ''),
-            options: [
-              lines[1].replace(/^A:\s*/i, ''),
-              lines[2].replace(/^B:\s*/i, ''),
-              lines[3].replace(/^C:\s*/i, ''),
-              lines[4].replace(/^D:\s*/i, '')
-            ],
-            correct: correctIdx
-          });
+          parsedQuestions.push({ question: lines[0].replace(/^Q:\s*/i, ''), options: [lines[1].replace(/^A:\s*/i, ''), lines[2].replace(/^B:\s*/i, ''), lines[3].replace(/^C:\s*/i, ''), lines[4].replace(/^D:\s*/i, '')], correct: correctIdx });
         }
       });
-
-      if (parsedQuestions.length === 0) {
-        return alert("⚠️ Question format galat hai!");
-      }
-
-      let payload = {
-        semester: sem,
-        chapter: chapter,
-        topic: topic,
-        questions: parsedQuestions,
-        timestamp: new Date().toLocaleString()
-      };
-
-      db.ref('bca_structured_quizzes').push(payload).then(() => {
+      if (parsedQuestions.length === 0) return alert("⚠️ Question format galat hai!");
+      db.ref('bca_structured_quizzes').push({ semester: sem, chapter, topic, questions: parsedQuestions, timestamp: new Date().toLocaleString() }).then(() => {
         alert("🎉 Topic Quiz Uploaded Successfully!");
         document.getElementById('uploadQuizForm').reset();
         closeAdminModal();
       });
     }
 
-    function deleteTopic(key) {
-      if (confirm("⚠️ Kya aap sach mein is topic ko delete karna chahte hain?")) {
-        db.ref(`bca_structured_quizzes/${key}`).remove().then(() => {
-          alert("🗑️ Topic Deleted!");
-        });
-      }
-    }
-
+    function deleteTopic(key) { if (confirm("Delete this topic?")) db.ref(`bca_structured_quizzes/${key}`).remove(); }
     function openEditTopicModal(key) {
       currentTopicId = key;
-      const topicData = allQuizTopics[key];
-      if (!topicData) return;
-
-      document.getElementById('editSem').value = topicData.semester;
-      document.getElementById('editChapter').value = topicData.chapter;
-      document.getElementById('editTopicTitle').value = topicData.topic;
+      const d = allQuizTopics[key];
+      document.getElementById('editSem').value = d.semester;
+      document.getElementById('editChapter').value = d.chapter;
+      document.getElementById('editTopicTitle').value = d.topic;
       document.getElementById('editTopicModal').style.display = "flex";
     }
-
     function saveEditedTopicHeader(e) {
       e.preventDefault();
-      let updatedData = {
-        semester: document.getElementById('editSem').value,
-        chapter: document.getElementById('editChapter').value,
-        topic: document.getElementById('editTopicTitle').value
-      };
-
-      db.ref(`bca_structured_quizzes/${currentTopicId}`).update(updatedData).then(() => {
-        alert("🎉 Topic Info Updated!");
-        document.getElementById('editTopicModal').style.display = "none";
+      db.ref(`bca_structured_quizzes/${currentTopicId}`).update({ semester: document.getElementById('editSem').value, chapter: document.getElementById('editChapter').value, topic: document.getElementById('editTopicTitle').value }).then(() => {
+        alert("Updated!"); document.getElementById('editTopicModal').style.display = "none";
       });
     }
-
     let editingQuestionIdx = null;
-
-    function openEditSingleQuestion(qIdx) {
-      editingQuestionIdx = qIdx;
-      const q = allQuizTopics[currentTopicId].questions[qIdx];
-
+    function openEditSingleQuestion(idx) {
+      editingQuestionIdx = idx;
+      const q = allQuizTopics[currentTopicId].questions[idx];
       document.getElementById('editQText').value = q.question;
       document.getElementById('editOpt0').value = q.options[0];
       document.getElementById('editOpt1').value = q.options[1];
       document.getElementById('editOpt2').value = q.options[2];
       document.getElementById('editOpt3').value = q.options[3];
       document.getElementById('editCorrectIdx').value = q.correct;
-
       document.getElementById('editQuestionModal').style.display = "flex";
     }
-
     function saveSingleQuestionEdit(e) {
       e.preventDefault();
-      let topicData = allQuizTopics[currentTopicId];
-
-      topicData.questions[editingQuestionIdx] = {
-        question: document.getElementById('editQText').value,
-        options: [
-          document.getElementById('editOpt0').value,
-          document.getElementById('editOpt1').value,
-          document.getElementById('editOpt2').value,
-          document.getElementById('editOpt3').value
-        ],
-        correct: parseInt(document.getElementById('editCorrectIdx').value)
-      };
-
-      db.ref(`bca_structured_quizzes/${currentTopicId}/questions`).set(topicData.questions).then(() => {
-        alert("🎉 MCQ Updated Successfully!");
-        document.getElementById('editQuestionModal').style.display = "none";
-        openTopicQuizPage(currentTopicId);
-      });
+      let d = allQuizTopics[currentTopicId];
+      d.questions[editingQuestionIdx] = { question: document.getElementById('editQText').value, options: [document.getElementById('editOpt0').value, document.getElementById('editOpt1').value, document.getElementById('editOpt2').value, document.getElementById('editOpt3').value], correct: parseInt(document.getElementById('editCorrectIdx').value) };
+      db.ref(`bca_structured_quizzes/${currentTopicId}/questions`).set(d.questions).then(() => { alert("Updated!"); document.getElementById('editQuestionModal').style.display = "none"; openTopicQuizPage(currentTopicId); });
     }
   </script>
 </head>
-<body class="hologram-bg min-h-screen flex flex-col justify-between items-center p-4">
+<body class="min-h-screen flex flex-col justify-between items-center p-4">
 
-  <!-- Header Navigation -->
-  <header class="w-full max-w-6xl py-4 flex justify-between items-center z-10 hologram-panel px-6 rounded-2xl mb-4">
+  <canvas id="bg-canvas"></canvas>
+
+  <header class="w-full max-w-6xl py-4 flex justify-between items-center z-10 hologram-screen px-6 rounded-2xl mb-4">
     <div class="flex items-center space-x-3">
       <div class="w-10 h-10 rounded-xl bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center shadow-lg shadow-cyan-500/30">
-        <i class="fa-solid fa-bolt text-cyan-400 text-xl"></i>
+        <i class="fa-solid fa-atom text-cyan-400 text-xl"></i>
       </div>
       <div>
         <h1 class="text-xl font-black text-white tracking-tight" style="font-family: 'Orbitron', sans-serif;">Hologram Quiz Arena</h1>
-        <span class="text-xs text-cyan-400 font-medium">Semester ➔ Chapter ➔ Topic System</span>
+        <span class="text-xs text-cyan-400 font-medium">Iron Man Sci-Fi Hologram UI</span>
       </div>
     </div>
-
     <div class="flex items-center space-x-3">
-      <button onclick="authenticateAdmin()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition flex items-center space-x-1.5 cursor-pointer">
-        <i class="fa-solid fa-lock text-amber-400"></i>
-        <span>Admin Login</span>
-      </button>
-      <button onclick="openAdminUploadModal()" class="admin-only hidden px-3.5 py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-extrabold hover:bg-cyan-400 transition flex items-center space-x-1.5 cursor-pointer shadow">
-        <i class="fa-solid fa-plus"></i>
-        <span>Add Topic Quiz</span>
-      </button>
-      <a href="flashcard.html" class="px-3.5 py-2 rounded-xl bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs font-bold hover:bg-purple-800 transition">
-        Flashcards
-      </a>
-      <a href="index.html" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-cyan-500/30 text-gray-300 text-xs font-bold hover:bg-slate-800 transition">
-        Home
-      </a>
+      <button onclick="authenticateAdmin()" class="px-3.5 py-2 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs font-bold hover:bg-amber-500/20 transition cursor-pointer"><i class="fa-solid fa-lock mr-1"></i>Admin</button>
+      <button onclick="openAdminUploadModal()" class="admin-only hidden px-3.5 py-2 rounded-xl bg-cyan-500 text-slate-950 text-xs font-extrabold hover:bg-cyan-400 transition cursor-pointer"><i class="fa-solid fa-plus mr-1"></i>Add Quiz</button>
+      <a href="flashcard.html" class="px-3.5 py-2 rounded-xl bg-purple-900/40 border border-purple-500/30 text-purple-300 text-xs font-bold hover:bg-purple-800 transition">Flashcards</a>
+      <a href="index.html" class="px-3.5 py-2 rounded-xl bg-slate-900 border border-cyan-500/30 text-gray-300 text-xs font-bold hover:bg-slate-800 transition">Home</a>
     </div>
   </header>
 
-  <!-- HOME PORTAL -->
   <main id="portalHome" class="w-full max-w-6xl my-auto py-6 z-10">
-    
-    <!-- Semester Filters -->
     <div class="flex flex-wrap justify-center gap-2 mb-8">
       <button onclick="filterBySemester('All', this)" class="sem-btn px-4 py-2 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 shadow-lg transition cursor-pointer">All Semesters</button>
       <button onclick="filterBySemester('Semester 1', this)" class="sem-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-gray-300 border border-cyan-500/30 hover:bg-slate-800 transition cursor-pointer">Sem 1</button>
@@ -546,184 +457,38 @@
       <button onclick="filterBySemester('Semester 5', this)" class="sem-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-gray-300 border border-cyan-500/30 hover:bg-slate-800 transition cursor-pointer">Sem 5</button>
       <button onclick="filterBySemester('Semester 6', this)" class="sem-btn px-3.5 py-2 rounded-xl text-xs font-bold bg-slate-900 text-gray-300 border border-cyan-500/30 hover:bg-slate-800 transition cursor-pointer">Sem 6</button>
     </div>
-
-    <!-- Topic Cards Grid -->
     <div id="topicCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2"></div>
-
   </main>
 
-  <!-- DEDICATED TOPIC QUIZ PAGE -->
   <section id="quizTopicPage" class="w-full max-w-4xl my-auto hidden z-10 py-6">
-    <div class="hologram-panel rounded-3xl p-6 sm:p-8 shadow-2xl relative">
-      
+    <div class="hologram-screen rounded-3xl p-6 sm:p-8 shadow-2xl relative">
       <div class="flex flex-wrap justify-between items-center gap-4 pb-6 border-b border-cyan-500/30 mb-6">
         <div>
-          <button onclick="backToHomePortal()" class="px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-300 font-bold hover:bg-cyan-500/20 transition flex items-center cursor-pointer mb-2">
-            <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to All Topics
-          </button>
+          <button onclick="backToHomePortal()" class="px-3 py-1.5 rounded-xl bg-cyan-500/10 border border-cyan-500/30 text-xs text-cyan-300 font-bold hover:bg-cyan-500/25 transition cursor-pointer mb-2"><i class="fa-solid fa-arrow-left mr-1.5"></i> Back</button>
           <div class="flex items-center space-x-2">
             <span id="displaySemBadge" class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold">Semester 1</span>
             <span id="displayChapterName" class="text-xs text-gray-400 font-semibold">Chapter Name</span>
           </div>
           <h2 id="displayTopicTitle" class="text-2xl font-extrabold text-white mt-1">Topic Title</h2>
         </div>
-
         <button onclick="toggleFullTopicAudio()" class="px-4 py-2.5 rounded-xl bg-slate-950 border border-cyan-500/40 text-xs font-bold text-cyan-300 hover:bg-slate-800 transition flex items-center shadow cursor-pointer">
-          <i id="audioBtnIcon" class="fa-solid fa-volume-high text-cyan-400 mr-2"></i>
-          <span id="audioBtnText">Listen Full Topic Quiz</span>
+          <i id="audioBtnIcon" class="fa-solid fa-volume-high text-cyan-400 mr-2"></i><span id="audioBtnText">Listen Quiz Audio</span>
         </button>
       </div>
-
-      <!-- Questions List -->
       <div id="questionsContainer" class="space-y-6 max-h-[60vh] overflow-y-auto pr-2"></div>
-
-      <!-- Submit Quiz -->
       <div class="mt-8 pt-6 border-t border-cyan-500/30 flex justify-end">
-        <button onclick="submitQuizResult()" class="px-8 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-extrabold rounded-2xl shadow-lg shadow-cyan-500/40 hover:scale-105 transition cursor-pointer">
-          Submit & Scorecard 🚀
-        </button>
+        <button onclick="submitQuizResult()" class="px-8 py-3 bg-gradient-to-r from-cyan-400 to-blue-500 text-slate-950 font-extrabold rounded-2xl shadow-lg shadow-cyan-500/40 hover:scale-105 transition cursor-pointer">Submit & Scorecard 🚀</button>
       </div>
-
     </div>
   </section>
 
-  <!-- ADMIN ADD TOPIC QUIZ MODAL -->
-  <div id="adminModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
-      <div class="flex justify-between items-center mb-4 pb-3 border-b border-amber-500/30">
-        <h3 class="text-amber-400 font-bold text-sm"><i class="fa-solid fa-plus-circle mr-2"></i>Add Topic-wise Bulk Quiz</h3>
-        <button onclick="closeAdminModal()" class="text-gray-400 hover:text-white font-bold text-xs cursor-pointer">❌ Close</button>
-      </div>
+  <!-- ADMIN MODALS & SCORE MODAL -->
+  <div id="adminModal" class="modal-overlay"><div class="bg-slate-900 border-2 border-amber-500 rounded-3xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl"><div class="flex justify-between items-center mb-4 pb-3 border-b border-amber-500/30"><h3 class="text-amber-400 font-bold text-sm">Add Topic Quiz</h3><button onclick="closeAdminModal()" class="text-gray-400 hover:text-white text-xs">Close</button></div><form id="uploadQuizForm" onsubmit="saveStructuredQuiz(event)" class="space-y-4 text-xs"><div class="grid grid-cols-3 gap-3"><div><label class="block text-cyan-400 font-bold mb-1">Semester:</label><select id="uploadSem" class="w-full p-2.5 bg-slate-950 border text-white rounded-xl"><option value="Semester 1">Semester 1</option><option value="Semester 2">Semester 2</option><option value="Semester 3">Semester 3</option><option value="Semester 4">Semester 4</option><option value="Semester 5">Semester 5</option><option value="Semester 6">Semester 6</option></select></div><div><label class="block text-cyan-400 font-bold mb-1">Chapter:</label><input type="text" id="uploadChapter" class="w-full p-2.5 bg-slate-950 border text-white rounded-xl" required></div><div><label class="block text-cyan-400 font-bold mb-1">Topic:</label><input type="text" id="uploadTopic" class="w-full p-2.5 bg-slate-950 border text-white rounded-xl" required></div></div><div><label class="block text-cyan-400 font-bold mb-1">Bulk Questions (Format: Q / A / B / C / D / Ans: A):</label><textarea id="uploadBulkText" class="w-full p-3 bg-slate-950 border text-white rounded-xl h-48 font-mono text-[11px]" required></textarea></div><button type="submit" class="w-full py-3 bg-cyan-500 text-slate-950 font-extrabold rounded-xl cursor-pointer">Publish Quiz</button></form></div></div>
+  
+  <div id="editTopicModal" class="modal-overlay"><div class="bg-slate-900 border-2 border-amber-500 rounded-2xl p-6 max-w-md w-full shadow-2xl"><h3 class="text-amber-400 font-bold text-sm mb-3">Edit Header</h3><form onsubmit="saveEditedTopicHeader(event)" class="space-y-3 text-xs"><div><label class="block text-gray-300 mb-1">Semester:</label><select id="editSem" class="w-full p-2 bg-slate-950 border text-white rounded-lg"><option value="Semester 1">Semester 1</option><option value="Semester 2">Semester 2</option><option value="Semester 3">Semester 3</option></select></div><div><label class="block text-gray-300 mb-1">Chapter:</label><input type="text" id="editChapter" class="w-full p-2 bg-slate-950 border text-white rounded-lg" required></div><div><label class="block text-gray-300 mb-1">Topic:</label><input type="text" id="editTopicTitle" class="w-full p-2 bg-slate-950 border text-white rounded-lg" required></div><button type="submit" class="w-full py-2 bg-amber-500 text-slate-950 font-bold rounded-lg mt-2">Update</button></form></div></div>
+  <div id="editQuestionModal" class="modal-overlay"><div class="bg-slate-900 border-2 border-amber-500 rounded-2xl p-6 max-w-md w-full shadow-2xl"><h3 class="text-amber-400 font-bold text-sm mb-3">Edit MCQ</h3><form onsubmit="saveSingleQuestionEdit(event)" class="space-y-3 text-xs"><div><label class="block text-gray-300 mb-1">Question:</label><textarea id="editQText" class="w-full p-2 bg-slate-950 border text-white rounded-lg h-16" required></textarea></div><div class="space-y-1"><input type="text" id="editOpt0" class="w-full p-2 bg-slate-950 border text-white rounded-lg" required><input type="text" id="editOpt1" class="w-full p-2 bg-slate-950 border text-white rounded-lg" required><input type="text" id="editOpt2" class="w-full p-2 bg-slate-950 border text-white rounded-lg" required><input type="text" id="editOpt3" class="w-full p-2 bg-slate-950 border text-white rounded-lg" required></div><div><label class="block text-gray-300 mb-1">Correct Option:</label><select id="editCorrectIdx" class="w-full p-2 bg-slate-950 border text-white rounded-lg"><option value="0">A</option><option value="1">B</option><option value="2">C</option><option value="3">D</option></select></div><button type="submit" class="w-full py-2 bg-amber-500 text-slate-950 font-bold rounded-lg mt-2">Save</button></form></div></div>
 
-      <form id="uploadQuizForm" onsubmit="saveStructuredQuiz(event)" class="space-y-4 text-xs">
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-          <div>
-            <label class="block text-cyan-400 font-bold mb-1">Select Semester:</label>
-            <select id="uploadSem" class="w-full p-2.5 bg-slate-950 border border-cyan-500/30 text-white rounded-xl" required>
-              <option value="Semester 1">Semester 1</option>
-              <option value="Semester 2">Semester 2</option>
-              <option value="Semester 3">Semester 3</option>
-              <option value="Semester 4">Semester 4</option>
-              <option value="Semester 5">Semester 5</option>
-              <option value="Semester 6">Semester 6</option>
-            </select>
-          </div>
-          <div>
-            <label class="block text-cyan-400 font-bold mb-1">Chapter Name:</label>
-            <input type="text" id="uploadChapter" placeholder="e.g. Chapter 1: Pointers" class="w-full p-2.5 bg-slate-950 border border-cyan-500/30 text-white rounded-xl" required>
-          </div>
-          <div>
-            <label class="block text-cyan-400 font-bold mb-1">Topic Name:</label>
-            <input type="text" id="uploadTopic" placeholder="e.g. Pointer Arithmetic" class="w-full p-2.5 bg-slate-950 border border-cyan-500/30 text-white rounded-xl" required>
-          </div>
-        </div>
-
-        <div>
-          <label class="block text-cyan-400 font-bold mb-1">Paste Unlimited Questions (Bulk Format):</label>
-          <textarea id="uploadBulkText" placeholder="Q: What is a pointer?&#10;A: Variable that stores address&#10;B: Data type&#10;C: Keyword&#10;D: Loop&#10;Ans: A" class="w-full p-3 bg-slate-950 border border-cyan-500/30 text-white rounded-xl h-48 font-mono text-[11px]" required></textarea>
-        </div>
-
-        <button type="submit" class="w-full py-3 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-extrabold rounded-xl transition shadow-lg shadow-cyan-500/30 cursor-pointer">
-          🚀 Save & Publish Topic Quiz
-        </button>
-      </form>
-    </div>
-  </div>
-
-  <!-- EDIT TOPIC HEADER MODAL -->
-  <div id="editTopicModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-      <h3 class="text-amber-400 font-bold text-sm mb-3">✏️ Edit Topic Header Info</h3>
-      <form onsubmit="saveEditedTopicHeader(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block text-gray-300 font-bold mb-1">Semester:</label>
-          <select id="editSem" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg">
-            <option value="Semester 1">Semester 1</option>
-            <option value="Semester 2">Semester 2</option>
-            <option value="Semester 3">Semester 3</option>
-            <option value="Semester 4">Semester 4</option>
-            <option value="Semester 5">Semester 5</option>
-            <option value="Semester 6">Semester 6</option>
-          </select>
-        </div>
-        <div>
-          <label class="block text-gray-300 font-bold mb-1">Chapter Name:</label>
-          <input type="text" id="editChapter" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
-        </div>
-        <div>
-          <label class="block text-gray-300 font-bold mb-1">Topic Title:</label>
-          <input type="text" id="editTopicTitle" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
-        </div>
-        <div class="flex justify-end space-x-2 pt-2">
-          <button type="button" onclick="document.getElementById('editTopicModal').style.display='none'" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-lg">Cancel</button>
-          <button type="submit" class="px-4 py-1.5 bg-amber-500 text-slate-950 font-bold rounded-lg">Update Header</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- EDIT SINGLE QUESTION MODAL -->
-  <div id="editQuestionModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-amber-500 rounded-2xl p-6 max-w-md w-full shadow-2xl">
-      <h3 class="text-amber-400 font-bold text-sm mb-3">✏️ Edit MCQ Question & Options</h3>
-      <form onsubmit="saveSingleQuestionEdit(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block text-gray-300 font-bold mb-1">Question Text:</label>
-          <textarea id="editQText" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg h-16" required></textarea>
-        </div>
-        <div class="space-y-1.5">
-          <label class="block text-gray-300 font-bold">Options A, B, C, D:</label>
-          <input type="text" id="editOpt0" placeholder="Option A" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
-          <input type="text" id="editOpt1" placeholder="Option B" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
-          <input type="text" id="editOpt2" placeholder="Option C" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
-          <input type="text" id="editOpt3" placeholder="Option D" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg" required>
-        </div>
-        <div>
-          <label class="block text-gray-300 font-bold mb-1">Correct Option:</label>
-          <select id="editCorrectIdx" class="w-full p-2 bg-slate-950 border border-cyan-500/30 text-white rounded-lg">
-            <option value="0">Option A</option>
-            <option value="1">Option B</option>
-            <option value="2">Option C</option>
-            <option value="3">Option D</option>
-          </select>
-        </div>
-        <div class="flex justify-end space-x-2 pt-2">
-          <button type="button" onclick="document.getElementById('editQuestionModal').style.display='none'" class="px-3 py-1.5 bg-gray-800 text-gray-300 rounded-lg">Cancel</button>
-          <button type="submit" class="px-4 py-1.5 bg-amber-500 text-slate-950 font-bold rounded-lg">Save Changes</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- Scorecard Modal -->
-  <div id="scoreModal" class="modal-overlay">
-    <div class="bg-slate-900 border-2 border-cyan-500 p-8 max-w-sm w-full text-center rounded-3xl relative shadow-2xl">
-      <div class="w-16 h-16 bg-cyan-500/20 text-cyan-400 rounded-2xl mx-auto flex items-center justify-center text-3xl mb-3 border border-cyan-500/30">
-        <i class="fa-solid fa-trophy"></i>
-      </div>
-      <h3 class="text-xl font-black text-white mb-1">Quiz Completed!</h3>
-      <p class="text-xs text-gray-400 mb-6">Topic Assessment Result</p>
-
-      <div class="grid grid-cols-2 gap-3 mb-6">
-        <div class="bg-slate-950 p-3 rounded-xl border border-cyan-500/20">
-          <span class="block text-gray-400 text-[10px] uppercase font-bold">Score</span>
-          <span id="scoreCorrect" class="text-xl font-black text-emerald-400">0</span>
-        </div>
-        <div class="bg-slate-950 p-3 rounded-xl border border-cyan-500/20">
-          <span class="block text-gray-400 text-[10px] uppercase font-bold">Accuracy</span>
-          <span id="scorePercent" class="text-xl font-black text-cyan-400">0%</span>
-        </div>
-      </div>
-
-      <button onclick="closeScoreModal()" class="w-full py-3 bg-cyan-500 text-slate-950 font-black rounded-xl hover:bg-cyan-400 transition cursor-pointer">
-        Awesome, Close!
-      </button>
-    </div>
-  </div>
-
-  <footer class="w-full max-w-6xl py-4 text-center text-xs text-cyan-500/50 z-10">
-    © 2026 BCA Learning Hub | Hologram Quiz Engine
-  </footer>
+  <div id="scoreModal" class="modal-overlay"><div class="bg-slate-900 border-2 border-cyan-500 p-8 max-w-sm w-full text-center rounded-3xl shadow-2xl"><h3 class="text-xl font-black text-white mb-2">Quiz Completed!</h3><div class="grid grid-cols-2 gap-3 mb-6"><div class="bg-slate-950 p-3 rounded-xl"><span class="text-gray-400 text-[10px]">Score</span><span id="scoreCorrect" class="text-xl font-black text-emerald-400 block">0</span></div><div class="bg-slate-950 p-3 rounded-xl"><span class="text-gray-400 text-[10px]">Accuracy</span><span id="scorePercent" class="text-xl font-black text-cyan-400 block">0%</span></div></div><button onclick="closeScoreModal()" class="w-full py-3 bg-cyan-500 text-slate-950 font-black rounded-xl cursor-pointer">Close</button></div></div>
 
 </body>
 </html>
